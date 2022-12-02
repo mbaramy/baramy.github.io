@@ -1,3 +1,69 @@
+/* 선택한 환수를 객체로 변환 */
+function parseSelectedItem(data) {
+    var result = [];
+    for (var i=0; i<data.length; i++) {
+        var obj = {};
+        obj.ic = data.eq(i).attr('data-id');
+        obj.name = data.eq(i).attr('data-name');
+        obj.influence = data.eq(i).attr('data-influence');
+        obj.type = data.eq(i).attr('data-type');
+        obj.grade = data.eq(i).attr('data-grade');
+        
+        var level = 0;
+        var input = parseInt(data.eq(i).find('.mob-level').val());
+        if (input > level) { level = input; }
+        obj.level = level;
+        
+        const option = getOption(optionObj[obj.ic], level);
+        obj.option = option.o;
+        obj.equip_option = option.e;
+
+        console.log(obj);
+        result.push(obj);
+    }
+    return result;
+}
+
+function getOption(option, level) {
+    var result = {};
+    var optionObj = {};
+    var equipObj = {};
+    for (var key of Object.keys(option)) {
+        const value = option[key][level];
+        optionObj[key] = value;
+
+        const rate = getRate(key, level);
+        var equipValue =  Math.floor(value * rate);
+        if (equipValue < 1) equipValue = 1;
+        equipObj[key] = equipValue;
+    }
+    result.o = optionObj;
+    result.e = equipObj;
+    return result;
+}
+
+function getRate(key, level) {
+    //0~8: 0
+    //9~13: 1
+    //14~16: 2
+    var rate = 0;
+    if (level > 8 && level < 14) {
+        rate = 1;
+    } else if (level > 13) {
+        rate = 2;
+    }
+
+    for (var i=0; i<optionRate.length; i++) {
+        if (optionRate[i].name == key) {
+            let value = optionRate[i]['rate' + rate];
+            if (value == '') value = 0;
+            return value;
+        }
+    }
+
+    return 0;
+}
+
 const UNITE_EQUIP_EFFECT = 0;
 const UNITE_OPTION = 1;
 
@@ -12,5 +78,18 @@ const uniteInfo = {
     {"결의": [{"피해저항관통": 30, "피해흡수": 700, "이동속도": 1},{"피해저항관통": 50, "피해흡수": 1200, "이동속도": 1},{"피해저항관통": 80, "피해흡수": 2000, "이동속도": 3}], "고요": [{"피해저항관통": 30, "대인방어": 1000, "이동속도": 1},{"피해저항관통": 50, "대인방어": 1500, "이동속도": 1},{"피해저항관통": 80, "대인방어": 2500, "이동속도": 3}], "의지": [{"피해저항": 50, "치명피해저항": 120, "이동속도": 1},{"피해저항": 80, "치명피해저항": 200, "이동속도": 1},{"피해저항": 130, "치명피해저항": 300, "이동속도": 3}], "침착": [{"피해저항": 50, "일반몬스터 추가피해": 120, "이동속도": 1},{"피해저항": 80, "일반몬스터 추가피해": 200, "이동속도": 1},{"피해저항": 130, "일반몬스터 추가피해": 300, "이동속도": 3}], "냉정": [{"피해저항관통": 30, "시전향상": 100, "이동속도": 1},{"피해저항관통": 50, "시전향상": 150, "이동속도": 1},{"피해저항관통": 80, "시전향상": 250, "이동속도": 3}], "활력": [{"피해저항": 50, "보스몬스터 추가피해": 120, "이동속도": 1},{"피해저항": 80, "보스몬스터 추가피해": 200, "이동속도": 1},{"피해저항": 130, "보스몬스터 추가피해": 300, "이동속도": 3}]}]
 };
 
+function getRecommendData(t, s, b) {
+    var result_t = [];
+    var result_s = [];
+    var result_b = [];
 
+    if (t.length > 4) {
+        for (var i=0; i<t.length; i++) {
+            var equipOption = {};
+
+        }
+    } else {
+        result_t = t;
+    }
+}
 

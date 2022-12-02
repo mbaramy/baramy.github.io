@@ -66,9 +66,6 @@ var parse = function (data) {
                 result[rows_idx][columns[row_idx]] = value;
             }
         }
-        if (result[rows_idx].grade != undefined) {
-            result[rows_idx].level = -1;
-        }
     }
     return result.slice(1);
 };
@@ -125,18 +122,7 @@ var parse2 = function (data) {
                 value = "";
             }
             
-            if ((columns[row_idx] + '') == 'option' && value != '?' && value != 'option') {
-                try {
-                    result[rows_idx][columns[row_idx]] = JSON.parse(value);
-                } catch (e) {
-                    console.log(value);
-                }
-            } else {
-                result[rows_idx][columns[row_idx]] = value;
-            }
-        }
-        if (result[rows_idx].grade != undefined) {
-            result[rows_idx].level = -1;
+            result[rows_idx][columns[row_idx]] = value;
         }
     }
     return result.slice(1);

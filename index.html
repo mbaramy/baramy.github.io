@@ -35,14 +35,6 @@
 ======================================================== -->
 
 <style>
-.ri-checkbox-blank-line {
-  color: red;
-}
-
-.ri-checkbox-fill {
-  color: green;
-}
-
 .mob-list {
   list-style-type: none;
   display: inline-block;
@@ -65,93 +57,9 @@
   transition: background-color 0.1s ease-in-out 100ms;
 }
 
-.mob-item > .mob-level {
-  display: none;
-}
-
-.mob-item-selected {
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgb(0 0 0 / 20%);
-  padding: 7px;
-  overflow: hidden;
-  background-color: #e4a00c;
-  margin: 0 5px 5px 0;
-  float: left;
-}
-
-.mob-item-selected > .mob-level {
-  display: none;
-}
-
-.mob-item-level {
-  display: inline-flex;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgb(0 0 0 / 20%);
-  padding: 7px;
-  overflow: hidden;
-  background-color: #e4a00c;
-  margin: 0 5px 5px 0;
-  float: left;
-  width: 48%;
-}
-
-@media (max-width: 576px) {
-  .mob-item-level {
-    width: 48%;
-  }
-}
-@media (min-width: 577px) and (max-width: 720px) {
-  .mob-item-level {
-    width: 32%;
-  }
-}
-@media (min-width: 721px) {
-  .mob-item-level {
-    width: 24%;
-  }
-}
-
 .mob-img {
   width: 45px;
   border-radius: 4px;
-}
-
-.mob-level {
-  margin-left: 7px;
-}
-
-.priority-list {
-  list-style-type: none;
-  display: inline-block;
-  padding: 0;
-  width: 100%;
-}
-
-.priority-item {
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgb(0 0 0 / 20%);
-  padding: 15px;
-  overflow: hidden;
-  background-color: #fff;
-  margin: 0 0 20px 0;
-  width: 100%;
-  text-align: center;
-}
-
-.priority-item:hover {
-  background-color: #e4a00c;
-  transition: background-color 0.1s ease-in-out 100ms;
-}
-
-.priority-item-selected {
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgb(0 0 0 / 20%);
-  padding: 15px;
-  overflow: hidden;
-  background-color: #e4a00c;
-  margin: 0 0 20px 0;
-  width: 100%;
-  text-align: center;
 }
 
 .opt-img {
@@ -164,6 +72,10 @@
   font-weight: 600;
   font-size: 15px;
   vertical-align: middle;
+}
+
+.text-align-right {
+  text-align: right;
 }
   
 </style>
@@ -187,14 +99,7 @@
       <li class="nav-item">
         <a class="nav-link " href="index.html">
           <i class="bi bi-card-list"></i>
-          <span>List</span>
-        </a>
-      </li>
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="add.html">
-          <i class="bi bi-grid"></i>
-          <span>Add</span>
+          <span>환수 정보</span>
         </a>
       </li>
     </ul>
@@ -203,10 +108,10 @@
 
   <main id="main" class="main">
     <div class="pagetitle">
-      <h1>List</h1>
+      <h1>환수 정보</h1>
       <nav>
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item"><a href="index.html">환수 정보</a></li>
         </ol>
       </nav>
     </div><!-- End Page Title -->
@@ -214,9 +119,8 @@
     <section class="section">
       <div class="row">
         <div class="col-lg-12">
-          <div class="card">
-            <div id="mob-select-card" class="card-body" style="padding: 0 20px 0px 20px;">
-              <h5 class="card-title">환수 선택</h5>
+          <div class="card" id="mob-select-card">
+            <div class="card-body" style="padding: 20px 20px 0px 20px;">
               <ul class="nav nav-tabs nav-tabs-bordered d-flex" id="type-tab" role="tablist">
                 <li class="nav-item flex-fill" role="presentation">
                   <button class="nav-link w-100 active" id="t-tab" data-bs-toggle="tab" data-bs-target="#type-justified-t" type="button" role="tab" aria-selected="true">탑승</button>
@@ -243,27 +147,31 @@
                 </div>
               </div>
             </div>
+          </div>
 
-            <div id="mob-option-card" class="card-body" style="padding: 0 20px 0px 20px; display: none;">
-              <h5 class="card-title">우선순위 설정</h5>
+          <div class="card" id="mob-option-card" style="display: none;">
+            <div class="card-header">
+                <img class="opt-img" />
+                <span class="opt-span"></span>
+                <button id="btn-close" type="button" class="btn btn-primary" style="float: right;"><i class="bi bi-x-lg"></i></button>
+            </div>
 
-              <div class="col-12">
-                <ul class="priority-list">
-                  <li class="priority-item-selected"><img class="opt-img" src="assets/img/opt/ic_opt_001.jpg"/><span class="opt-span">피해저항관통</span></li>
-                  <li class="priority-item"><img class="opt-img" src="assets/img/opt/ic_opt_002.jpg"/><span class="opt-span">피해저항</span></li>
-                  <li class="priority-item"><img class="opt-img" src="assets/img/opt/ic_opt_003.jpg"/><span class="opt-span">보스몬스터 추가피해</span></li>
-                  <li class="priority-item"><img class="opt-img" src="assets/img/opt/ic_opt_004.jpg"/><span class="opt-span">경험치 획득증가</span></li>
-                </ul>
+            <div class="card-body" style="padding: 0 20px 0px 20px;">
+              <div class="row">
+                <div class="col-lg-6 col-md-12" id="option-view">
+                </div>
+
+                <div class="col-lg-6 col-md-12" id="equip-option-view">
+                </div>
               </div>
             </div>
 
             <div class="card-footer">
-              <button type="button" class="btn btn-info btn-type" data-type="보물" style="margin-right: 8px;">보물 전체 선택</button>
-              <button type="button" class="btn btn-danger btn-type" data-type="전설" style="margin-right: 8px;">전설 전체 선택</button>
-              <button type="button" class="btn btn-secondary" id="btn-type-remove"><i class="bi bi-trash"></i></button>
-
-              <button id="btn-next" type="button" class="btn btn-primary" style="float: right;"><i class="bi bi-chevron-right"></i></button>
-              <button id="btn-prev" type="button" class="btn btn-primary" style="margin-right: 8px; float: right; display: none;"><i class="bi bi-chevron-left"></i></button>
+              <div class="input-group">
+                <button id="btn-minus" type="button" class="btn btn-primary" style="float: right;"><i class="bi bi-dash-lg"></i></button>
+                <input id="option-level" type="text" class="form-control" value="0" readonly style="text-align: center;">
+                <button id="btn-plus" type="button" class="btn btn-primary" style="float: right;"><i class="bi bi-plus-lg"></i></button>
+              </div>
             </div>
           </div>
         </div>
@@ -311,10 +219,11 @@
     $(document).ready(function() {
       var datas = [];
       query("SELECT *", 'my_callback');
-
       optionQuery("SELECT *", 'option_callback');
     });
 
+    var optionObj = {};
+    var optionRate = [];
     var my_callback = function (data) {
       data = parse(data);
 
@@ -322,9 +231,8 @@
       var html_b = '';
       var html_t = '';
       for (var i=0; i<data.length; i++) {
-        var li = '<li class="mob-item" data-type="' + data[i].type + '" data-grade="' + data[i].grade + '">';
+        var li = '<li class="mob-item" data-id="' + data[i].ic + '" data-type="' + data[i].type + '" data-grade="' + data[i].grade + '" data-influence="' + data[i].influence + '" data-name="' + data[i].name + '">';
         li += '<img class="mob-img" src="assets/img/mob/ic_' + data[i].ic + '.jpg"/>';
-        li += '<input type="number" class="form-control mob-level" placeholder="0레벨" max="15" min="0">';
         li += '</li>';
 
         if (data[i].type === '수호') {
@@ -334,6 +242,8 @@
         } else if (data[i].type === '탑승') {
           html_t += li;
         }
+
+        optionObj[data[i].ic] = data[i].option;
       }
       $('#mob-list-s').html(html_s);
       $('#mob-list-b').html(html_b);
@@ -342,105 +252,63 @@
 
     var option_callback = function (data) {
       data = parse2(data);
-
-
+      optionRate = data;
     }
 
-    var currentType = '탑승';
-    var currentStep = 0;
-
-    $('#type-tab > li > button').on('click', function() {
-      currentType = $(this).text();
-    });
-
-    $('.btn-type').on('click', function() {
-      const list = currentType === '탑승' ? 'mob-list-t' : currentType === '수호' ? 'mob-list-s' : 'mob-list-b';
-      var li = $('#' + list + ' > li');
-      for (var i = 0; i< li.length; i++) {
-        if (li.eq(i).attr('data-grade') == $(this).attr('data-type')) {
-          li.eq(i).removeClass('mob-item');
-          li.eq(i).addClass('mob-item-selected');
-        }
-      }
-    });
-
-    $('#btn-type-remove').on('click', function() {
-      const list = currentType === '탑승' ? 'mob-list-t' : currentType === '수호' ? 'mob-list-s' : 'mob-list-b';
-      var li = $('#' + list + ' > li');
-      for (var i = 0; i< li.length; i++) {
-        li.eq(i).removeClass('mob-item-selected');
-        li.eq(i).addClass('mob-item');
-      }
-    });
-
     $(document).on('click', '.mob-item', function() {
-      $(this).removeClass('mob-item');
-      $(this).addClass('mob-item-selected');
+      $('#mob-select-card').hide();
+      $('#mob-option-card').show();
+
+      const id = $(this).attr('data-id');
+
+      $('.opt-img').attr('src', 'assets/img/mob/ic_' + id + '.jpg');
+      $('.opt-img').attr('data-id', id);
+      $('.opt-span').text($(this).attr('data-name'));
+      $('#option-level').val("0");
+      setOption(optionObj[id], 0);
     });
 
-    $(document).on('click', '.mob-item-selected', function() {
-      $(this).removeClass('mob-item-selected');
-      $(this).addClass('mob-item');
+    $('#btn-close').on('click', function() {
+      $('#mob-select-card').show();
+      $('#mob-option-card').hide();
     });
 
-    $(document).on('click', '.priority-item', function() {
-      var li = $('.priority-list > li');
-      for (var i=0; i<li.length; i++) {
-        li.eq(i).addClass('priority-item');
-        li.eq(i).removeClass('priority-item-selected')
-      }
-      $(this).removeClass('priority-item');
-      $(this).addClass('priority-item-selected');
-    });
-
-    $(document).on('click', '.priority-item-selected', function() {
-      $(this).removeClass('priority-item-selected');
-      $(this).addClass('priority-item');
-    });
-
-    $('#btn-next').on('click', function() {
-      if (currentStep == 0) {
-        currentStep = 1;
-        $('#btn-prev').show();
-
-        var mobItem = $('.mob-item');
-        for (var i=0; i<mobItem.length; i++) {
-          mobItem.eq(i).hide();
-        }
-
-        var mobItemSelected = $('.mob-item-selected');
-        for (var i=0; i<mobItemSelected.length; i++) {
-          mobItemSelected.eq(i).removeClass('mob-item-selected');
-          mobItemSelected.eq(i).addClass('mob-item-level');
-        }
-      } else if (currentStep == 1) {
-        currentStep = 2;
-        $('#mob-select-card').hide();
-        $('#mob-option-card').show();
+    $('#btn-minus').on('click', function() {
+      var level = parseInt($('#option-level').val());
+      if (level > 0) {
+        level -= 1;
+        $('#option-level').val(level);
+        setOption(optionObj[$('.opt-img').attr('data-id')], level);
       }
     });
 
-    $('#btn-prev').on('click', function() {
-      if (currentStep == 1) {
-        currentStep = 0;
-        $('#btn-prev').hide();
-
-        var mobItem = $('.mob-item');
-        for (var i=0; i<mobItem.length; i++) {
-          mobItem.eq(i).css('display', 'inline-flex');
-        }
-
-        var mobItemSelected = $('.mob-item-level');
-        for (var i=0; i<mobItemSelected.length; i++) {
-          mobItemSelected.eq(i).removeClass('mob-item-level');
-          mobItemSelected.eq(i).addClass('mob-item-selected');
-        }
-      } else if (currentStep == 2) {
-        currentStep = 1;
-        $('#mob-select-card').show();
-        $('#mob-option-card').hide();
+    $('#btn-plus').on('click', function() {
+      var level = parseInt($('#option-level').val());
+      if (level < 15) {
+        level += 1;
+        $('#option-level').val(level);
+        setOption(optionObj[$('.opt-img').attr('data-id')], level);
       }
     });
+
+    function setOption(option, level) {
+      const value = getOption(option, level);
+      var html_o = '<h5 class="card-title">소환 효과</h5><table class="table"><tbody>';
+      var html_e = '<h5 class="card-title">결속 장착 효과</h5><table class="table"><tbody>';
+      for (var key of Object.keys(value.o)) {
+        html_o += '<tr><th>' + key + '</th><td class="text-align-right">' + addComma(value.o[key]) + '</td></tr>';
+        html_e += '<tr><th>' + key + '</th><td class="text-align-right">' + addComma(value.e[key]) + '</td></tr>';
+      }
+      html_o += '</tbody>';
+      html_e += '</tbody>';
+      $('#option-view').html(html_o);
+      $('#equip-option-view').html(html_e);
+    }
+
+    function addComma(num) {
+        var regexp = /\B(?=(\d{3})+(?!\d))/g;
+        return num.toString().replace(regexp, ',');
+    }
   </script>
 </body>
 </html>
