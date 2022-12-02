@@ -30,7 +30,7 @@ function getOption(option, level) {
     for (var key of Object.keys(option)) {
         const value = option[key][level];
         optionObj[key] = value;
-        if (value != option[key][15]) isEmpty = false;
+        if (option[key][0] != option[key][15 && isEmpty]) isEmpty = false;
 
         const rate = getRate(key, level);
         var equipValue =  Math.floor(value * rate.value);
@@ -48,21 +48,25 @@ function getRate(key, level) {
     //9~13: 1
     //14~15: 2
     var rate = 0;
-    if (level > 8 && level < 14) {
+    if (level > 5) {
         rate = 1;
-    } else if (level > 13) {
+    } else if (level > 8 && level < 14) {
         rate = 2;
+    } else if (level > 13) {
+        rate = 3;
     }
 
     for (var i=0; i<optionRate.length; i++) {
         if (optionRate[i].name == key) {
             let value = optionRate[i]['rate' + rate];
+            var roundup = optionRate[i].roundup;
             if (value == '') value = 0;
-            return {'index': rate, 'value': value, 'roundup': optionRate[i].roundup};
+            if (roundup == '') roundup = 0;
+            return {'index': rate, 'value': value, 'roundup': roundup};
         }
     }
 
-    return {'index': rate, 'value': 0, 'roundup': optionRate[i].roundup};
+    return {'index': rate, 'value': 0, 'roundup': 0};
 }
 
 const UNITE_EQUIP_EFFECT = 0;

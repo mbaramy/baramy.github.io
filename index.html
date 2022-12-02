@@ -171,7 +171,7 @@
             <div class="card-footer">
               <div class="input-group">
                 <button id="btn-minus" type="button" class="btn btn-primary" style="float: right;"><i class="bi bi-dash-lg"></i></button>
-                <input id="option-level" type="text" class="form-control" value="0" readonly style="text-align: center;">
+                <input id="option-level" type="number" class="form-control" value="0" min="0" max="15" style="text-align: center;">
                 <button id="btn-plus" type="button" class="btn btn-primary" style="float: right;"><i class="bi bi-plus-lg"></i></button>
               </div>
             </div>
@@ -293,19 +293,39 @@
       }
     });
 
+    $('#option-level').on('change', function() {
+      var value = $('#option-level').val();
+      var level = 0;
+      if (value != undefined && value.length > 0) {
+        level = parseInt(value);
+        if (level > 15) {
+          level = 15;
+          $('#option-level').val(level);
+        } else if (level < 0) {
+          level = 0;
+          $('#option-level').val(level);
+        }
+      } else {
+        $('#option-level').val('0');
+      }
+      setOption(optionObj[$('.opt-img').attr('data-id')], level);
+    });
+
     function setOption(option, level) {
       const value = getOption(option, level);
       var html_o = '<h5 class="card-title">소환 효과</h5><table class="table"><tbody>';
       var html_e = '<h5 class="card-title">결속 장착 효과</h5><table class="table"><tbody>';
       for (var key of Object.keys(value.o)) {
         html_o += '<tr><th>' + key + '</th><td class="text-align-right">' + addComma(value.o[key]) + '</td></tr>';
-        html_e += '<tr><th>' + key + '</th><td class="text-align-right">' + addComma(value.e[key]) + '</td></tr>';
+        if (value.e[key] > 0) {
+          html_e += '<tr><th>' + key + '</th><td class="text-align-right">' + addComma(value.e[key]) + '</td></tr>';
+        }
       }
       html_o += '</tbody>';
       html_e += '</tbody>';
       $('#option-view').html(html_o);
       $('#equip-option-view').html(html_e);
-      if (value.isEmpty) {
+      if (value.isEmpty && level < 15) {
         $('.opt-isempty').show();
       } else {
         $('.opt-isempty').hide();
