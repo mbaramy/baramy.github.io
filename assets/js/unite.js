@@ -17,8 +17,6 @@ function parseSelectedItem(data) {
         const option = getOption(optionObj[obj.ic], level);
         obj.option = option.o;
         obj.equip_option = option.e;
-
-        console.log(obj);
         result.push(obj);
     }
     return result;
@@ -28,17 +26,20 @@ function getOption(option, level) {
     var result = {};
     var optionObj = {};
     var equipObj = {};
+    var isEmpty = true;
     for (var key of Object.keys(option)) {
         const value = option[key][level];
         optionObj[key] = value;
+        if (value != option[key][15]) isEmpty = false;
 
         const rate = getRate(key, level);
         var equipValue =  Math.floor(value * rate.value);
-        if (rate.index > 1 && equipValue < 1) equipValue = 1;
+        if (rate.roundup <= rate.index && equipValue < 1) equipValue = 1;
         equipObj[key] = equipValue;
     }
     result.o = optionObj;
     result.e = equipObj;
+    result.isEmpty = isEmpty;
     return result;
 }
 
@@ -57,11 +58,11 @@ function getRate(key, level) {
         if (optionRate[i].name == key) {
             let value = optionRate[i]['rate' + rate];
             if (value == '') value = 0;
-            return {'index': rate, 'value': value};
+            return {'index': rate, 'value': value, 'roundup': optionRate[i].roundup};
         }
     }
 
-    return {'index': rate, 'value': 0};
+    return {'index': rate, 'value': 0, 'roundup': optionRate[i].roundup};
 }
 
 const UNITE_EQUIP_EFFECT = 0;

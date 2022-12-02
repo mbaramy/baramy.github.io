@@ -153,6 +153,7 @@
             <div class="card-header">
                 <img class="opt-img" />
                 <span class="opt-span"></span>
+                <span class="opt-isempty badge bg-warning text-dark" style="display: none;"> ? </span>
                 <button id="btn-close" type="button" class="btn btn-primary" style="float: right;"><i class="bi bi-x-lg"></i></button>
             </div>
 
@@ -303,6 +304,11 @@
       html_e += '</tbody>';
       $('#option-view').html(html_o);
       $('#equip-option-view').html(html_e);
+      if (value.isEmpty) {
+        $('.opt-isempty').show();
+      } else {
+        $('.opt-isempty').hide();
+      }
     }
 
     function addComma(num) {
