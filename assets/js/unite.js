@@ -48,9 +48,9 @@ function getRate(key, level) {
     //9~13: 1
     //14~15: 2
     var rate = 0;
-    if (level > 5) {
+    if (level > 5 & level <= 8) {
         rate = 1;
-    } else if (level > 8 && level < 14) {
+    } else if (level > 8 && level <= 13) {
         rate = 2;
     } else if (level > 13) {
         rate = 3;
