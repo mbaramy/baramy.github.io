@@ -125,7 +125,7 @@ var parse2 = function (data) {
             result[rows_idx][columns[row_idx]] = value;
         }
     }
-    return result.slice(1);
+    return result.slice(0);
 };
 
 var optionQuery = function (sql, callback) {
@@ -133,7 +133,7 @@ var optionQuery = function (sql, callback) {
         params = {
             key: '1YNepNSqpcV4Xeggpl7Nfh0Ty7VWUFtEybAjdqNlYjrc',
             tq: encodeURIComponent(sql),
-            range: 'Sheet2!A1:G37',
+            range: 'Sheet2!A1:H37',
             tqx: 'responseHandler:' + callback
         },
         qs = [];

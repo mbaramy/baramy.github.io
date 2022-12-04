@@ -1,0 +1,133 @@
+.mob-list {
+    list-style-type: none;
+    display: inline-block;
+    padding: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.mob-item {
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 20%);
+    padding: 7px;
+    overflow: hidden;
+    background-color: #fff;
+    margin: 0 5px 5px 0;
+    display: inline-block;
+}
+
+.mob-item:hover {
+    background-color: #e4a00c;
+    transition: background-color 0.1s ease-in-out 100ms;
+}
+
+.mob-img {
+    width: 45px;
+    border-radius: 4px;
+}
+
+.opt-img {
+    width: 38px;
+    border-radius: 4px;
+}
+
+.opt-span {
+    margin-left: 15px;
+    font-weight: 600;
+    font-size: 15px;
+    vertical-align: middle;
+}
+
+.text-align-right {
+    text-align: right;
+}
+
+.mob-level {
+    margin-left: 7px;
+}
+
+.opt-img {
+    width: 38px;
+    border-radius: 4px;
+}
+
+.opt-span {
+    margin-left: 15px;
+    font-weight: 600;
+    font-size: 15px;
+    vertical-align: middle;
+}
+
+.mob-item > .mob-level {
+    display: none;
+}
+
+.mob-item-selected {
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 20%);
+    padding: 7px;
+    overflow: hidden;
+    background-color: #e4a00c;
+    margin: 0 5px 5px 0;
+    display: inline-block;
+}
+
+.mob-item-selected > .mob-level {
+    display: none;
+}
+
+.mob-item-level {
+    display: inline-flex;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 20%);
+    padding: 7px;
+    overflow: hidden;
+    background-color: #e4a00c;
+    margin: 0 5px 5px 0;
+    width: 48%;
+}
+
+@media (max-width: 576px) {
+    .mob-item-level {
+        width: 48%;
+    }
+}
+@media (min-width: 577px) and (max-width: 720px) {
+    .mob-item-level {
+        width: 32%;
+    }
+}
+@media (min-width: 721px) {
+    .mob-item-level {
+        width: 24%;
+    }
+}
+
+.inf-img {
+    width: 20px;
+    border-radius: 10px;
+}
+
+.inf-border-green {
+    border: 2px #22741C solid;
+}
+
+.inf-border-blue {
+    border: 2px #49A2FF solid;
+}
+
+.inf-border-white {
+    border: 2px #F0F0F0 solid;
+}
+
+.inf-border-pink {
+    border: 2px #CFABA5 solid;
+}
+
+.inf-border-sky {
+    border: 2px #7AF1FF solid;
+}
+
+.inf-border-mint {
+    border: 2px #ACE929 solid;
+}
