@@ -166,7 +166,6 @@
 
 .by-card {
     background: white;
-    width: 180px;
     display: inline-block;
     margin: auto;
     margin-bottom: 20px;
@@ -233,5 +232,17 @@
 @media (min-width: 841px) {
     .mob-table-grid {
         grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+}
+
+@media (max-width: 465px) {
+    .by-card {
+        width: 145px;
+    }
+}
+
+@media (min-width: 466px) {
+    .by-card {
+        width: 180px;
     }
 }
