@@ -131,3 +131,24 @@
 .inf-border-mint {
     border: 2px #ACE929 solid;
 }
+
+.under-line-highlight-pink {
+    background: linear-gradient(120deg, #FFD9EC, #FFD9EC);
+    background-repeat: no-repeat;
+    background-size: 29% 10%;
+    background-position: 0px 68%;
+}
+
+.under-line-highlight-sky {
+    background: linear-gradient(120deg, #DAD9FF, #DAD9FF);
+    background-repeat: no-repeat;
+    background-size: 29% 10%;
+    background-position: 0px 68%;
+}
+
+.under-line-highlight-yellow {
+    background: linear-gradient(120deg, #FAECC5, #FAECC5);
+    background-repeat: no-repeat;
+    background-size: 19% 10%;
+    background-position: 0px 68%;
+}

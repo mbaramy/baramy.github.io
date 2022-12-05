@@ -1,3 +1,6 @@
+var optionObj = {};
+var optionRate = [];
+
 /* 선택한 환수를 객체로 변환 */
 function parseSelectedItem(data) {
     var result = [];
@@ -135,8 +138,6 @@ function getRecommendData(t, pa, pb) {
                 recommend['score'] = combine[i];
             }
         }
-
-        console.log(recommend);
         return recommend;
     } else {
         return {};
@@ -159,7 +160,7 @@ function combination(arr, count) {
 }
 
 function getScore(arr, pa, pb) {
-    var result = {'unit': {}, 'grade': {}, 'priority': 0, 'sum': 0, 'score': 0, 'arr': arr};
+    var result = {'unit': {}, 'grade': {}, 'priority': 0, 'sum': 0, 'score': 0, 'count': {'unit': {'결의': 0, '고요': 0, '의지': 0, '침착': 0, '냉정': 0, '활력': 0}, 'grade': {'보물': 0, '전설': 0}}, 'arr': arr};
     var unitObj = {'결의': 0, '고요': 0, '의지': 0, '침착': 0, '냉정': 0, '활력': 0};
     var gradeObj = {'보물': 0, '전설': 0};
     const scoreObj = scoreToDictionary(optionRate, pb);
@@ -167,7 +168,9 @@ function getScore(arr, pa, pb) {
     for (var i=0; i<arr.length; i++) {
         if (type == '') type = arr[i].type;
         unitObj[arr[i].influence] += 1;
+        result['count']['unit'][arr[i].influence] += 1;
         gradeObj[arr[i].grade] += 0.5;
+        result['count']['grade'][arr[i].grade] += 1;
     }
 
     var info = uniteInfo[type];
@@ -225,26 +228,30 @@ function getScore(arr, pa, pb) {
 }
 
 function getResultHTML(obj) {
-    console.log(obj);
     var result = {'priority': '', 'sum': '', 'score': ''};
     for (var key of Object.keys(result)) {
         var gradeObj = {};
         var influenceObj = {};
         var equipObj = {};
+        var totalObj = {};
         var mobTable = '<table class="table"><tbody>';
-        var gTable = '<div class="col-md-4"><table class="table"><tbody>';
-        var iTable = '<div class="col-md-4"><table class="table"><tbody>';
-        var eTable = '<div class="col-md-4"><table class="table"><tbody>';
+        var gTable = '<div class="col-md-4"><h5 class="card-title under-line-highlight-pink">등급 세트 효과</h5><table class="table table-borderless"><tbody>';
+        var iTable = '<div class="col-md-4"><h5 class="card-title under-line-highlight-sky">세력 세트 효과</h5><table class="table table-borderless"><tbody>';
+        var eTable = '<div class="col-md-4"><h5 class="card-title under-line-highlight-yellow">장착 효과</h5><table class="table table-borderless"><tbody>';
+        var tTable = '<div class="col-md-12"><table class="table table-borderless"><tbody>';
 
         if (!obj[key].arr) {
-            // non
+            result[key] = '<div style="min-height: 150px; text-align: center;"><h5 class="card-title">결과 없음</h5></div>';
         } else {
             for (var i=0; i<obj[key].arr.length; i++) {
-                mobTable += '<tr><td><img class="mob-img" src="assets/img/mob/ic_' + obj[key].arr[i].ic + '.jpg"/></td><td class="text-align-left">' + obj[key].arr[i].name + '</td></tr>';
+                mobTable += '<tr class="result-mob-row"><td class="text-center"><img class="mob-img" src="assets/img/mob/ic_' + obj[key].arr[i].ic + '.jpg"/></td><td class="text-align-left result-mob-name">' + obj[key].arr[i].name + '</td></tr>';
     
                 for (var option of Object.keys(obj[key].arr[i].equip_option)) {
                     if (equipObj[option]) equipObj[option] += obj[key].arr[i].equip_option[option];
                     else equipObj[option] = obj[key].arr[i].equip_option[option];
+
+                    if (totalObj[option]) totalObj[option] += obj[key].arr[i].equip_option[option];
+                    else totalObj[option] = obj[key].arr[i].equip_option[option];
                 }
             }
     
@@ -252,6 +259,9 @@ function getResultHTML(obj) {
                 for (var option of Object.keys(obj[key].grade[grade])) {
                     if (gradeObj[option]) gradeObj[option] += obj[key].grade[grade][option];
                     else gradeObj[option] = obj[key].grade[grade][option];
+
+                    if (totalObj[option]) totalObj[option] += obj[key].grade[grade][option];
+                    else totalObj[option] = obj[key].grade[grade][option];
                 }
             }
     
@@ -259,28 +269,118 @@ function getResultHTML(obj) {
                 for (var option of Object.keys(obj[key].unit[unit])) {
                     if (influenceObj[option]) influenceObj[option] += obj[key].unit[unit][option];
                     else influenceObj[option] = obj[key].unit[unit][option];
+
+                    if (totalObj[option]) totalObj[option] += obj[key].unit[unit][option];
+                    else totalObj[option] = obj[key].unit[unit][option];
                 }
             }
     
-            for (var k of Object.keys(gradeObj)) {
-                gTable += '<tr><th>' + k + '</th><td class="text-align-right">' + gradeObj[k] + '</td></tr>';
+            var gradeBadge = '';
+            for (var k of Object.keys(obj[key].count.grade)) {
+                if (obj[key].count.grade[k] > 1) {
+                    var colorSet = getGradeColor(k);
+                    gradeBadge += '<span class="badge me-1" style="background-color: ' + colorSet.background + '; color: ' + colorSet.font + ';">' + k +' X ' + obj[key].count.grade[k] + '</span>';
+                }
             }
+            if (gradeBadge != '') gTable += '<tr><td colspan="2">' + gradeBadge + '</td></tr>';
+            for (var k of Object.keys(gradeObj)) {
+                gTable += '<tr class="tr-left"><th class="' + (['피해저항', '피해저항관통'].indexOf(k) > -1 ? ' table-active">' : '">') + k + '</th><td class="text-align-right' + (['피해저항', '피해저항관통'].indexOf(k) > -1 ? ' table-active' : '') + '">' + addComma(gradeObj[k]) + '</td></tr>';
+            }
+
+            var unitBadge = '';
+            for (var k of Object.keys(obj[key].count.unit)) {
+                if (obj[key].count.unit[k] > 1) {
+                    var colorSet = getUniteColor(k);
+                    unitBadge += '<span class="badge me-1" style="background-color: ' + colorSet.background + '; color: ' + colorSet.font + ';">' + k +' X ' + obj[key].count.unit[k] + '</span>';
+                }
+            }
+            if (unitBadge != '') iTable += '<tr><td colspan="2">' + unitBadge + '</td></tr>';
     
             for (var k of Object.keys(influenceObj)) {
-                iTable += '<tr><th>' + k + '</th><td class="text-align-right">' + influenceObj[k] + '</td></tr>';
+                iTable += '<tr class="tr-left"><th class="' + (['피해저항', '피해저항관통'].indexOf(k) > -1 ? ' table-active">' : '">') + k + '</th><td class="text-align-right' + (['피해저항', '피해저항관통'].indexOf(k) > -1 ? ' table-active' : '') + '">' + addComma(influenceObj[k]) + '</td></tr>';
             }
     
             for (var k of Object.keys(equipObj)) {
-                eTable += '<tr><th>' + k + '</th><td class="text-align-right">' + equipObj[k] + '</td></tr>';
+                if (equipObj[k] > 0) {
+                    eTable += '<tr class="tr-left"><th class="' + (['피해저항', '피해저항관통'].indexOf(k) > -1 ? ' table-active">' : '">') + k + '</th><td class="text-align-right'  + (['피해저항', '피해저항관통'].indexOf(k) > -1 ? ' table-active' : '') +  '">' + addComma(equipObj[k]) + '</td></tr>';
+                }
             }
-    
+
+            for (var k of Object.keys(totalObj)) {
+                if (totalObj[k] > 0) {
+                    tTable += '<tr class="tr-left"><th class="' + (['피해저항', '피해저항관통'].indexOf(k) > -1 ? ' table-active">' : '">') + k + '</th><td class="text-align-right'  + (['피해저항', '피해저항관통'].indexOf(k) > -1 ? ' table-active' : '') +  '">' + addComma(totalObj[k]) + '</td></tr>';
+                }
+            }
+
             mobTable += '</tbody></table>';
+            mobTable += '<div class="mb-3"><div class="btn-group" role="group"><button type="button" class="btn btn-outline-primary active btn-simple">간단히 보기</button><button type="button" class="btn btn-outline-primary btn-detail">자세히 보기</button></div></div>';
             gTable += '</tbody></table></div>';
             iTable += '</tbody></table></div>';
             eTable += '</tbody></table></div>';
-        }
-        result[key] = mobTable + '<div class="row">' + gTable + iTable + eTable + '</div>';
-    }
+            tTable += '</tbody></table></div>';
 
+            result[key] = mobTable;
+            result[key] += '<div class="row result-simple-tables">' + tTable + '</div>';
+            result[key] += '<div class="row result-detail-tables" style="display: none;">' + gTable + iTable + eTable + '</div>';
+        }
+    }
     return result;
+}
+
+function getUniteColor(unite) {
+    var result = {'background': '', 'font': ''};
+    if (unite == '결의') {
+        result['background'] ='#22741C';
+        result['font'] = '#F0F0F0';
+    } else if (unite == '고요') {
+        result['background'] ='#49A2FF';
+        result['font'] = '#F0F0F0';
+    } else if (unite == '의지') {
+        result['background'] ='#CFABA5';
+        result['font'] = '#000';
+    } else if (unite == '침착') {
+        result['background'] ='#7AF1FF';
+        result['font'] = '#000';
+    } else if (unite == '냉정') {
+        result['background'] ='#F0F0F0';
+        result['font'] = '#000';
+    } else if (unite == '활력') {
+        result['background'] ='#ACE929';
+        result['font'] = '#000';
+    }
+    return result;
+}
+
+function getGradeColor(grade) {
+    var result = {'background': '', 'font': ''};
+    switch (grade + '') {
+    case '보물':
+        result['background'] ='#8041D9';
+        result['font'] = '#F0F0F0';
+        break;
+    case '전설':
+        result['background'] ='#DE4F4F';
+        result['font'] = '#F0F0F0';
+        break;
+    }
+    return result;
+}
+
+function getUniteBorder(unite) {
+    switch (unite) {
+        case '결의':
+            return 'inf-border-green';
+        case '고요':
+            return 'inf-border-blue';
+        case '의지':
+            return 'inf-border-pink';
+        case '침착':
+            return 'inf-border-sky';
+        case '냉정':
+            return 'inf-border-white';
+        case '활력':
+            return 'inf-border-mint';
+        default:
+            return 'inf-border-green';
+    }
 }
