@@ -122,6 +122,7 @@ function getRecommendData(t, pa, pb) {
         // });
 
         var max = [0, 0, 0];
+        var score = [0, 0, 0];
         var recommend = {'sum': {}, 'score': {}, 'priority': {}};
         for (var i=0; i<combine.length; i++) {
             if (combine[i].sum > max[0]) {
@@ -134,9 +135,18 @@ function getRecommendData(t, pa, pb) {
                 recommend['score'] = combine[i];
             }
 
-            if (combine[i].priority > max[2]) {
-                max[2] = combine[i].priority;
-                recommend['priority'] = combine[i];
+            if (combine[i].priority >= max[2]) {
+                if (combine[i].priority == max[2]) {
+                    if (combine[i].score > score[2]) {
+                        max[2] = combine[i].priority;
+                        score[2] = combine[i].score;
+                        recommend['priority'] = combine[i];
+                    }
+                } else {
+                    max[2] = combine[i].priority;
+                    score[2] = combine[i].score;
+                    recommend['priority'] = combine[i];
+                }
             }
         }
         return recommend;
