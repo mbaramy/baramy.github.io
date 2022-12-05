@@ -75,7 +75,7 @@ var query = function (sql, callback) {
         params = {
             key: '1YNepNSqpcV4Xeggpl7Nfh0Ty7VWUFtEybAjdqNlYjrc',
             tq: encodeURIComponent(sql),
-            range: 'Sheet1!A1:F191',
+            range: 'Sheet1!A1:F192',
             tqx: 'responseHandler:' + callback
         },
         qs = [];
