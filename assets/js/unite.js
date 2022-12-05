@@ -102,26 +102,27 @@ function getRecommendData(t, pa, pb) {
     if (t.length > 4) {
         var combine = combination(t, 4).map(function(c) {
             return getScore(c, pa, pb);
-        }).sort(function(a, b) {
-            if (a.sum == b.sum) {
-                if (a.priority == b.priority) {
-                    return b.score - a.score;
-                } else {
-                    return b.priority - a.priority;
-                }
-            } else if (a.priority == b.priority) {
-                if (a.sum == b.sum) {
-                    return b.score - a.score;
-                } else {
-                    return b.sum - a.sum;
-                }
-            } else {
-                return b.priority - a.priority;
-            }
         });
+        // .sort(function(a, b) {
+        //     if (a.sum == b.sum) {
+        //         if (a.priority == b.priority) {
+        //             return b.score - a.score;
+        //         } else {
+        //             return b.priority - a.priority;
+        //         }
+        //     } else if (a.priority == b.priority) {
+        //         if (a.sum == b.sum) {
+        //             return b.score - a.score;
+        //         } else {
+        //             return b.sum - a.sum;
+        //         }
+        //     } else {
+        //         return b.priority - a.priority;
+        //     }
+        // });
 
-        var max = [0, 0];
-        var recommend = {'sum': {}, 'score': {}};
+        var max = [0, 0, 0];
+        var recommend = {'sum': {}, 'score': {}, 'priority': {}};
         for (var i=0; i<combine.length; i++) {
             if (combine[i].sum > max[0]) {
                 max[0] = combine[i].sum;
@@ -131,6 +132,11 @@ function getRecommendData(t, pa, pb) {
             if (combine[i].score > max[1]) {
                 max[1] = combine[i].score;
                 recommend['score'] = combine[i];
+            }
+
+            if (combine[i].priority > max[2]) {
+                max[2] = combine[i].priority;
+                recommend['priority'] = combine[i];
             }
         }
         return recommend;
@@ -173,7 +179,7 @@ function getScore(arr, pa, pb) {
         if (unitObj[k] > 1) {
             const val = info[UNITE_OPTION][k][unitObj[k] - 2];
             for (var key of Object.keys(val)) {
-                if (key == priorityInfo[pa]) result['priority'] += val[key];
+                if (key == pa) result['priority'] += val[key];
                 if (key == priorityInfo[0]) result['sum'] += val[key];
                 if (key == priorityInfo[1]) result['sum'] += val[key];
                 if (val[key] > 0 && scoreObj[key] > 0) result['score'] += val[key] / scoreObj[key];
@@ -188,7 +194,7 @@ function getScore(arr, pa, pb) {
         if (gradeObj[k] > 0.5) {
             const val = info[UNITE_EQUIP_EFFECT][k][Math.floor(gradeObj[k])];
             for (var key of Object.keys(val)) {
-                if (key == priorityInfo[pa]) result['priority'] += val[key];
+                if (key == pa) result['priority'] += val[key];
                 if (key == priorityInfo[0]) result['sum'] += val[key];
                 if (key == priorityInfo[1]) result['sum'] += val[key];
                 if (val[key] > 0 && scoreObj[key] > 0) result['score'] += val[key] / scoreObj[key];
@@ -223,7 +229,7 @@ function getScore(arr, pa, pb) {
 }
 
 function getResultHTML(obj) {
-    var result = {'sum': '', 'score': ''};
+    var result = {'sum': '', 'score': '', 'priority': ''};
     for (var key of Object.keys(result)) {
         var gradeObj = {};
         var influenceObj = {};
