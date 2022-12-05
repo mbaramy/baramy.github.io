@@ -111,7 +111,7 @@ function getRecommendData(t, pa, pb) {
                 }
             } else if (a.priority == b.priority) {
                 if (a.sum == b.sum) {
-                    return b.priority - a.priority;
+                    return b.score - a.score;
                 } else {
                     return b.sum - a.sum;
                 }
