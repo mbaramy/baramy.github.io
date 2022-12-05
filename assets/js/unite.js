@@ -120,21 +120,16 @@ function getRecommendData(t, pa, pb) {
             }
         });
 
-        var max = [0, 0, 0];
-        var recommend = {'priority': {}, 'sum': {}, 'score': {}};
+        var max = [0, 0];
+        var recommend = {'sum': {}, 'score': {}};
         for (var i=0; i<combine.length; i++) {
-            if (combine[i].priority > max[0]) {
-                max[0] = combine[i].priority;
-                recommend['priority'] = combine[i];
-            }
-
-            if (combine[i].sum > max[1]) {
-                max[1] = combine[i].sum;
+            if (combine[i].sum > max[0]) {
+                max[0] = combine[i].sum;
                 recommend['sum'] = combine[i];
             }
 
-            if (combine[i].score > max[2]) {
-                max[2] = combine[i].score;
+            if (combine[i].score > max[1]) {
+                max[1] = combine[i].score;
                 recommend['score'] = combine[i];
             }
         }
@@ -228,13 +223,13 @@ function getScore(arr, pa, pb) {
 }
 
 function getResultHTML(obj) {
-    var result = {'priority': '', 'sum': '', 'score': ''};
+    var result = {'sum': '', 'score': ''};
     for (var key of Object.keys(result)) {
         var gradeObj = {};
         var influenceObj = {};
         var equipObj = {};
         var totalObj = {};
-        var mobTable = '<table class="table"><tbody>';
+        var mobTable = '<div class="mob-table-grid">';
         var gTable = '<div class="col-md-4"><h5 class="card-title under-line-highlight-pink">등급 세트 효과</h5><table class="table table-borderless"><tbody>';
         var iTable = '<div class="col-md-4"><h5 class="card-title under-line-highlight-sky">세력 세트 효과</h5><table class="table table-borderless"><tbody>';
         var eTable = '<div class="col-md-4"><h5 class="card-title under-line-highlight-yellow">장착 효과</h5><table class="table table-borderless"><tbody>';
@@ -244,7 +239,11 @@ function getResultHTML(obj) {
             result[key] = '<div style="min-height: 150px; text-align: center;"><h5 class="card-title">결과 없음</h5></div>';
         } else {
             for (var i=0; i<obj[key].arr.length; i++) {
-                mobTable += '<tr class="result-mob-row"><td class="text-center"><img class="mob-img" src="assets/img/mob/ic_' + obj[key].arr[i].ic + '.jpg"/></td><td class="text-align-left result-mob-name">' + obj[key].arr[i].name + '</td></tr>';
+                mobTable += '<div class="by-card"><div class="by-card-level">Level ' + obj[key].arr[i].level + '</div>';
+                mobTable += '<div class="by-card-name">' + obj[key].arr[i].name + '</div>';
+                mobTable += '<img class="by-card-img" src="assets/img/mob/ic_' + obj[key].arr[i].ic + '.jpg"/>';
+                mobTable += '<div class="by-card-influence"><div class="by-card-influence-container"><div class="by-card-influence-name">';
+                mobTable += '<img class="inf-img me-1 ' + getUniteBorder(obj[key].arr[i].influence) + '" src="assets/img/influence/ic_inf_' + getInfluenceImg(obj[key].arr[i].influence) + '.jpg"/>' + obj[key].arr[i].influence + '</div></div></div></div>';
     
                 for (var option of Object.keys(obj[key].arr[i].equip_option)) {
                     if (equipObj[option]) equipObj[option] += obj[key].arr[i].equip_option[option];
@@ -306,14 +305,17 @@ function getResultHTML(obj) {
                 }
             }
 
+            var importantValue = 0;
             for (var k of Object.keys(totalObj)) {
                 if (totalObj[k] > 0) {
                     tTable += '<tr class="tr-left"><th class="' + (['피해저항', '피해저항관통'].indexOf(k) > -1 ? ' table-active">' : '">') + k + '</th><td class="text-align-right'  + (['피해저항', '피해저항관통'].indexOf(k) > -1 ? ' table-active' : '') +  '">' + addComma(totalObj[k]) + '</td></tr>';
                 }
+
+                if (k == '피해저항' || k == '피해저항관통') importantValue += totalObj[k];
             }
 
-            mobTable += '</tbody></table>';
-            mobTable += '<div class="mb-3"><div class="btn-group" role="group"><button type="button" class="btn btn-outline-primary active btn-simple">간단히 보기</button><button type="button" class="btn btn-outline-primary btn-detail">자세히 보기</button></div></div>';
+            mobTable += '</div>';
+            mobTable += '<div class="mt-3 mb-3"><div class="btn-group" role="group"><button type="button" class="btn btn-outline-primary active btn-simple">간단히 보기</button><button type="button" class="btn btn-outline-primary btn-detail">자세히 보기</button></div><button type="button" class="btn btn-outline-danger ms-3" disabled><i class="bx bxs-meteor"></i>' + addComma(importantValue) + '</button></div>';
             gTable += '</tbody></table></div>';
             iTable += '</tbody></table></div>';
             eTable += '</tbody></table></div>';
@@ -382,5 +384,24 @@ function getUniteBorder(unite) {
             return 'inf-border-mint';
         default:
             return 'inf-border-green';
+    }
+}
+
+function getInfluenceImg(influence) {
+    switch (influence) {
+        case '결의':
+            return '001';
+        case '고요':
+            return '002';
+        case '의지':
+            return '004';
+        case '침착':
+            return '005';
+        case '냉정':
+            return '003';
+        case '활력':
+            return '006';
+        default:
+            return '001';
     }
 }
