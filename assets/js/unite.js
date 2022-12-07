@@ -338,9 +338,6 @@ function getResultHTML(obj) {
             tTable += '</tbody></table></div>';
 
             result[key] = mobTable;
-
-            result[key] += '<ins class="kakao_ad_area" data-ad-unit = "DAN-4p3r78hInkl0naVP" data-ad-width = "250"data-ad-height = "250"></ins>';
-
             result[key] += '<div class="row result-simple-tables">' + tTable + '</div>';
             result[key] += '<div class="row result-detail-tables" style="display: none;">' + gTable + iTable + eTable + '</div>';
         }
