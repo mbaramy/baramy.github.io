@@ -21,6 +21,7 @@ var jsonp = function (url) {
 
 //스프레드 시트에서 받아 온 데이터 파싱
 var parse = function (data) {
+    
     if (!data.table) {
         return false;
     }

@@ -173,47 +173,64 @@
   <script src="assets/js/main.js"></script>
   <script src="assets/js/unite.js"></script>
   <script src="assets/js/sheet-api.js"></script>
+  <script src="assets/js/sheet.min.js"></script>
+
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-analytics.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyBi20Vfz4FIEprruKEdWB2c_paicWCl6jI",
+      authDomain: "baramy-9cb08.firebaseapp.com",
+      projectId: "baramy-9cb08",
+      storageBucket: "baramy-9cb08.appspot.com",
+      messagingSenderId: "912929312520",
+      appId: "1:912929312520:web:732acdc9a4f70b8e6866bd",
+      measurementId: "G-RG02W3NYLF"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+  </script>
 
 
   <script>
-    $(document).ready(function() {
-      var datas = [];
-      query("SELECT *", 'my_callback');
-      optionQuery("SELECT *", 'option_callback');
-    });
-
     var optionObj = {};
     var optionRate = [];
-    var my_callback = function (data) {
-      data = parse(data);
+
+    $(document).ready(function() {
+      var datas = [];
+      const mobArray = parse((new GlobalData().getData())());
+      optionRate = parse2((new GlobalData().getRateData())());
 
       var html_s = '';
       var html_b = '';
       var html_t = '';
-      for (var i=0; i<data.length; i++) {
-        var li = '<li class="mob-item" data-id="' + data[i].ic + '" data-type="' + data[i].type + '" data-grade="' + data[i].grade + '" data-influence="' + data[i].influence + '" data-name="' + data[i].name + '">';
-        li += '<img class="mob-img" src="assets/img/mob/ic_' + data[i].ic + '.jpg"/>';
+      for (var i=0; i<mobArray.length; i++) {
+        var li = '<li class="mob-item" data-id="' + mobArray[i].ic + '" data-type="' + mobArray[i].type + '" data-grade="' + mobArray[i].grade + '" data-influence="' + mobArray[i].influence + '" data-name="' + mobArray[i].name + '">';
+        li += '<img class="mob-img" src="assets/img/mob/ic_' + mobArray[i].ic + '.jpg"/>';
         li += '</li>';
 
-        if (data[i].type === '수호') {
+        if (mobArray[i].type === '수호') {
           html_s += li;
-        } else if (data[i].type === '변신') {
+        } else if (mobArray[i].type === '변신') {
           html_b += li;
-        } else if (data[i].type === '탑승') {
+        } else if (mobArray[i].type === '탑승') {
           html_t += li;
         }
 
-        optionObj[data[i].ic] = data[i].option;
+        optionObj[mobArray[i].ic] = mobArray[i].option;
       }
       $('#mob-list-s').html(html_s);
       $('#mob-list-b').html(html_b);
       $('#mob-list-t').html(html_t);
-    }
-
-    var option_callback = function (data) {
-      data = parse2(data);
-      optionRate = data;
-    }
+    });
 
     $(document).on('click', '.mob-item', function() {
       $('#mob-select-card').hide();
