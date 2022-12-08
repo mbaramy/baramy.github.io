@@ -99,27 +99,10 @@ const uniteInfo = {
 const priorityInfo = ['피해저항관통', '피해저항', '경험치 획득증가'];
 
 function getRecommendData(t, pa, pb) {
-    if (t.length > 4) {
+    if (t.length >= 4) {
         var combine = combination(t, 4).map(function(c) {
             return getScore(c, pa, pb);
         });
-        // .sort(function(a, b) {
-        //     if (a.sum == b.sum) {
-        //         if (a.priority == b.priority) {
-        //             return b.score - a.score;
-        //         } else {
-        //             return b.priority - a.priority;
-        //         }
-        //     } else if (a.priority == b.priority) {
-        //         if (a.sum == b.sum) {
-        //             return b.score - a.score;
-        //         } else {
-        //             return b.sum - a.sum;
-        //         }
-        //     } else {
-        //         return b.priority - a.priority;
-        //     }
-        // });
 
         var max = [0, 0, 0];
         var score = [0, 0, 0];
@@ -180,7 +163,7 @@ function getScore(arr, pa, pb) {
         if (type == '') type = arr[i].type;
         unitObj[arr[i].influence] += 1;
         result['count']['unit'][arr[i].influence] += 1;
-        gradeObj[arr[i].grade] += 0.5;
+        gradeObj[arr[i].grade] += 1;
         result['count']['grade'][arr[i].grade] += 1;
     }
 
@@ -201,8 +184,8 @@ function getScore(arr, pa, pb) {
     }
 
     for (var k of Object.keys(gradeObj)) {
-        if (gradeObj[k] > 0.5) {
-            const val = info[UNITE_EQUIP_EFFECT][k][Math.floor(gradeObj[k])];
+        if (gradeObj[k] > 1) {
+            const val = info[UNITE_EQUIP_EFFECT][k][Math.floor(gradeObj[k] - 2)];
             for (var key of Object.keys(val)) {
                 if (key == pa) result['priority'] += val[key];
                 if (key == priorityInfo[0]) result['sum'] += val[key];
