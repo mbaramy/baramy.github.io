@@ -96,52 +96,63 @@ const uniteInfo = {
     "변신": [{"보물": [{"일반몬스터 추가피해": 50}, {"일반몬스터 추가피해": 50, "피해증가": 5}, {"일반몬스터 추가피해": 50, "피해증가": 5, "피해저항관통": 50}], "전설": [{"마력증가%": 3}, {"마력증가%": 3, "체력증가%": 3}, {"마력증가%": 3, "체력증가%": 3, "피해저항관통": 100}]}, 
     {"결의": [{"피해저항관통": 30, "피해흡수": 700, "이동속도": 1},{"피해저항관통": 50, "피해흡수": 1200, "이동속도": 1},{"피해저항관통": 80, "피해흡수": 2000, "이동속도": 3}], "고요": [{"피해저항관통": 30, "대인방어": 1000, "이동속도": 1},{"피해저항관통": 50, "대인방어": 1500, "이동속도": 1},{"피해저항관통": 80, "대인방어": 2500, "이동속도": 3}], "의지": [{"피해저항": 50, "치명피해저항": 120, "이동속도": 1},{"피해저항": 80, "치명피해저항": 200, "이동속도": 1},{"피해저항": 130, "치명피해저항": 300, "이동속도": 3}], "침착": [{"피해저항": 50, "일반몬스터 추가피해": 120, "이동속도": 1},{"피해저항": 80, "일반몬스터 추가피해": 200, "이동속도": 1},{"피해저항": 130, "일반몬스터 추가피해": 300, "이동속도": 3}], "냉정": [{"피해저항관통": 30, "시전향상": 100, "이동속도": 1},{"피해저항관통": 50, "시전향상": 150, "이동속도": 1},{"피해저항관통": 80, "시전향상": 250, "이동속도": 3}], "활력": [{"피해저항": 50, "보스몬스터 추가피해": 120, "이동속도": 1},{"피해저항": 80, "보스몬스터 추가피해": 200, "이동속도": 1},{"피해저항": 130, "보스몬스터 추가피해": 300, "이동속도": 3}]}]
 };
-const priorityInfo = ['피해저항관통', '피해저항', '경험치 획득증가'];
+const priorityInfo = ['피해저항관통', '피해저항'];
 
 function getRecommendData(t, pa, pb) {
     if (t.length >= 4) {
-        var combine = combination(t, 4).map(function(c) {
-            return getScore(c, pa, pb);
-        });
+        return new Promise(function(resolve, reject) {
+            const combinePromise = new Promise(function(res, rej) {
+                var combine = combination(t, 4).map(function(c) {
+                    return getScore(c, pa, pb);
+                });
+                setTimeout(() => {
+                    res(combine);
+                }, 3000);
+            });
 
-        var max = [0, 0, 0];
-        var score = [0, 0, 0];
-        var recommend = {'sum': {}, 'score': {}, 'priority': {}};
-        for (var i=0; i<combine.length; i++) {
-            if (combine[i].sum > max[0]) {
-                max[0] = combine[i].sum;
-                recommend['sum'] = combine[i];
-            }
-
-            if (combine[i].score > max[1]) {
-                max[1] = combine[i].score;
-                recommend['score'] = combine[i];
-            }
-
-            if (combine[i].priority >= max[2]) {
-                if (combine[i].priority == max[2]) {
-                    if (combine[i].score > score[2]) {
-                        max[2] = combine[i].priority;
-                        score[2] = combine[i].score;
-                        recommend['priority'] = combine[i];
+            combinePromise.then((combine) => {
+                var max = [0, 0, 0];
+                var score = [0, 0, 0];
+                var recommend = {'sum': {}, 'score': {}, 'priority': {}};
+                for (var i=0; i<combine.length; i++) {
+                    if (combine[i].sum > max[0]) {
+                        max[0] = combine[i].sum;
+                        recommend['sum'] = combine[i];
                     }
-                } else {
-                    max[2] = combine[i].priority;
-                    score[2] = combine[i].score;
-                    recommend['priority'] = combine[i];
+        
+                    if (combine[i].score > max[1]) {
+                        max[1] = combine[i].score;
+                        recommend['score'] = combine[i];
+                    }
+        
+                    if (combine[i].priority >= max[2]) {
+                        if (combine[i].priority == max[2]) {
+                            if (combine[i].score > score[2]) {
+                                max[2] = combine[i].priority;
+                                score[2] = combine[i].score;
+                                recommend['priority'] = combine[i];
+                            }
+                        } else {
+                            max[2] = combine[i].priority;
+                            score[2] = combine[i].score;
+                            recommend['priority'] = combine[i];
+                        }
+                    }
                 }
-            }
-        }
-        return recommend;
+
+                resolve(recommend);
+            });
+        });
     } else {
-        return {};
+        return new Promise(function(resolve, reject) {
+            resolve({});
+        })
     }
 }
 
 function combination(arr, count) {
     let result = [];
     count = count || 4;
-
     if (count === 1) return arr.map((i) => [i]);
 
     arr.forEach((fixed, index, array) => {

@@ -117,6 +117,7 @@
                 <div class="btn-group w-100 mb-3" role="group">
                   <button type="button" class="btn btn-priority-a btn-warning active" data-id="피해저항관통"><img class="opt-img" style="width: 31px" src="assets/img/opt/ic_opt_001.jpg"/><span class="opt-span">피해저항관통</span></button>
                   <button type="button" class="btn btn-priority-b btn-outline-secondary" data-id="피해저항"><img class="opt-img" style="width: 31px" src="assets/img/opt/ic_opt_002.jpg"/><span class="opt-span">피해저항</span></button>
+                  <button type="button" class="btn btn-priority-e btn-outline-secondary" data-id="경험치 획득증가" style="display: none;"><img class="opt-img" style="width: 31px" src="assets/img/opt/ic_opt_004.jpg"/><span class="opt-span">경험치 획득증가</span></button>
                 </div>
 
                 <div class="btn-group w-100" role="group">
@@ -320,6 +321,10 @@
         $('.btn-priority-b').removeClass('btn-warning');
         $('.btn-priority-b').removeClass('active');
         $('.btn-priority-b').addClass('btn-outline-secondary');
+
+        $('.btn-priority-e').removeClass('btn-warning');
+        $('.btn-priority-e').removeClass('active');
+        $('.btn-priority-e').addClass('btn-outline-secondary');
       }
     });
 
@@ -332,6 +337,26 @@
         $('.btn-priority-a').removeClass('btn-warning');
         $('.btn-priority-a').removeClass('active');
         $('.btn-priority-a').addClass('btn-outline-secondary');
+
+        $('.btn-priority-e').removeClass('btn-warning');
+        $('.btn-priority-e').removeClass('active');
+        $('.btn-priority-e').addClass('btn-outline-secondary');
+      }
+    });
+
+    $('.btn-priority-e').on('click', function() {
+      if (!$(this).hasClass('active')) {
+        $(this).removeClass('btn-outline-secondary');
+        $(this).addClass('btn-warning');
+        $(this).addClass('active');
+
+        $('.btn-priority-a').removeClass('btn-warning');
+        $('.btn-priority-a').removeClass('active');
+        $('.btn-priority-a').addClass('btn-outline-secondary');
+
+        $('.btn-priority-b').removeClass('btn-warning');
+        $('.btn-priority-b').removeClass('active');
+        $('.btn-priority-b').addClass('btn-outline-secondary');
       }
     });
 
@@ -380,6 +405,11 @@
       } else if (currentStep == 1) {
         currentStep = 2;
         $('#mob-select-card').hide();
+
+        let tab = $('#type-tab > .nav-item > .active').eq(0).text();
+        if (tab == '수호') $('.btn-priority-e').eq(0).show();
+        else $('.btn-priority-e').eq(0).hide();
+
         $('#mob-option-card').show();
       } else if (currentStep == 2) {
         currentStep = 3;
@@ -397,13 +427,15 @@
         else if (tab == '수호') mob = parseSelectedItem($('#mob-list-s > .mob-item-level'));
         else if (tab == '변신') mob = parseSelectedItem($('#mob-list-b > .mob-item-level'));
 
-        var priorityA = $('.btn-priority-a').eq(0).hasClass('active') ? '피해저항관통' : '피해저항';
+        var priorityA = $('.btn-priority-a').eq(0).hasClass('active') ? '피해저항관통' : $('.btn-priority-b').eq(0).hasClass('active') ? '피해저항' : '경험치 획득증가';
         var priorityB = $('.btn-priority-c').eq(0).hasClass('active') ? '체력' : '마력';
 
-        const resultHtml = getResultHTML(getRecommendData(mob, priorityA, priorityB));
-        $('#result-justified-s').html(resultHtml.sum);
-        $('#result-justified-t').html(resultHtml.score);
-        $('#result-justified-p').html(resultHtml.priority);
+        getRecommendData(mob, priorityA, priorityB).then(function(resolveData) {
+          const resultHtml = getResultHTML(resolveData);
+          $('#result-justified-s').html(resultHtml.sum);
+          $('#result-justified-t').html(resultHtml.score);
+          $('#result-justified-p').html(resultHtml.priority);
+        });
       }
     });
 
