@@ -250,10 +250,12 @@
 .summon-list, .synthesis-list {
     list-style-type: none;
     display: inline-block;
-    padding: 0;
+    padding: 30px 0 30px 0;
     width: 100%;
     text-align: center;
     min-height: 140px;
+    background-color: #000;
+    border-radius: 10px;
 }
 
 .synthesis-slot-list {
@@ -274,26 +276,67 @@
     padding: 7px;
     overflow: hidden;
     background-color: #fff;
-    margin: 0 5px 5px 0;
+    margin: 0 10px 10px 0;
     display: inline-block;
+    animation: fadein 1s;
+    -moz-animation: fadein 1s; /* Firefox */
+    -webkit-animation: fadein 1s; /* Safari and Chrome */
+    -o-animation: fadein 1s; /* Opera */
+}
+
+.summon-item > .mob-img {
+    width: 66px;
 }
 
 .summon-item.normal {
-    background-color: #8C8C8C;
+    background-color: #784220;
 }
 
 .summon-item.advanced {
-    background-color: #2F9D27;
+    background-color: #2ED03C;
 }
 
 .summon-item.rare {
-    background-color: #5CD1E5;
+    background-color: #33A0E5;
 }
 
 .summon-item.treasure {
-    background-color: #8041D9;
+    background-color: #9C35E8;
 }
 
 .summon-item.legend {
-    background-color: #FF0000;
+    background-color: #9D221A;
+}
+
+@keyframes fadein {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+@-moz-keyframes fadein { /* Firefox */
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+@-webkit-keyframes fadein { /* Safari and Chrome */
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+@-o-keyframes fadein { /* Opera */
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
