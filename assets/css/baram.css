@@ -246,3 +246,54 @@
         width: 180px;
     }
 }
+
+.summon-list, .synthesis-list {
+    list-style-type: none;
+    display: inline-block;
+    padding: 0;
+    width: 100%;
+    text-align: center;
+    min-height: 140px;
+}
+
+.synthesis-slot-list {
+    list-style-type: none;
+    display: inline-block;
+    background-color: #888888;
+    border-radius: 8px;
+    padding: 0;
+    padding-top: 5px;
+    width: 100%;
+    text-align: center;
+    min-height: 70px;
+}
+
+.summon-item {
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 20%);
+    padding: 7px;
+    overflow: hidden;
+    background-color: #fff;
+    margin: 0 5px 5px 0;
+    display: inline-block;
+}
+
+.summon-item.normal {
+    background-color: #8C8C8C;
+}
+
+.summon-item.advanced {
+    background-color: #2F9D27;
+}
+
+.summon-item.rare {
+    background-color: #5CD1E5;
+}
+
+.summon-item.treasure {
+    background-color: #8041D9;
+}
+
+.summon-item.legend {
+    background-color: #FF0000;
+}

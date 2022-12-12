@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+<title>바라미 - 환수 뽑기</title>
+<meta content="" name="description">
+<meta content="" name="keywords">
+
+<!-- Favicons -->
+<link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16x16.png">
+<link rel="manifest" href="assets/img/site.webmanifest">
+
+<!-- Google Fonts -->
+<link href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+<!-- Vendor CSS Files -->
+<link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+<link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+<link href="assets/vendor/quill/quill.snow.css" rel="stylesheet">
+<link href="assets/vendor/quill/quill.bubble.css" rel="stylesheet">
+<link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+<link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
+
+<!-- Template Main CSS File -->
+<link href="assets/css/style.css" rel="stylesheet">
+<link href="assets/css/baram.css" rel="stylesheet">
+
+<style>
+  
+</style>
+
+</head>
+<body>
+  <!-- ======= Header ======= -->
+  <header id="header" class="header fixed-top d-flex align-items-center">
+    <div class="d-flex align-items-center justify-content-between">
+      <a href="index.html" class="logo d-flex align-items-center">
+      <img src="assets/img/android-chrome-192x192.png" alt="">
+      <span class="d-none d-lg-block">바라미</span>
+      </a>
+      <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div><!-- End Logo -->
+  </header>
+  <!-- End Header -->
+
+  <!-- ======= Sidebar ======= -->
+  <aside id="sidebar" class="sidebar" data-include-path="common/sidebar.html">
+    <ul class="sidebar-nav" id="sidebar-nav">
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="index.html">
+          <i class="bi bi-card-list"></i>
+          <span>환수 정보</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="influence.html">
+          <i class="bi bi-trophy-fill"></i>
+          <span>결속 추천</span>
+        </a>
+      </li>
+    </ul>
+  </aside>
+  <!-- End Sidebar-->
+
+  <main id="main" class="main">
+    <div class="pagetitle">
+      <h1>환수 뽑기</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <!-- <li class="breadcrumb-item"><a href="index.html">Home</a></li> -->
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <div class="alert alert-danger alert-dismissible alert-full" role="alert" style="display: none;">
+      환수 가방이 가득 찼습니다.
+      <button type="button" class="btn-close full-alert-close"></button>
+    </div>
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card">
+            <div id="mob-select-card" class="card-body" style="padding: 0 20px 0px 20px;">
+              <h5 class="card-title">환수 뽑기</h5>
+              <ul class="nav nav-tabs nav-tabs-bordered d-flex" id="type-tab" role="tablist">
+                <li class="nav-item flex-fill" role="presentation">
+                  <button class="nav-link w-100 active" id="t-tab" data-bs-toggle="tab" data-bs-target="#type-justified-t" type="button" role="tab" aria-selected="true">소환</button>
+                </li>
+                <li class="nav-item flex-fill" role="presentation">
+                  <button class="nav-link w-100" id="s-tab" data-bs-toggle="tab" data-bs-target="#type-justified-s" type="button" role="tab" aria-selected="false">합성</button>
+                </li>
+                <li class="nav-item flex-fill" role="presentation">
+                  <button class="nav-link w-100" id="b-tab" data-bs-toggle="tab" data-bs-target="#type-justified-b" type="button" role="tab" aria-selected="false">변경</button>
+                </li>
+              </ul>
+              <div class="tab-content pt-4" id="type-tab-contents">
+                <div class="tab-pane fade show active" id="type-justified-t" role="tabpanel">
+                  <ul class="summon-list">
+                  </ul>
+
+                  <button type="button" class="btn btn-info btn-summon">소환</button>
+                </div>
+                <div class="tab-pane fade" id="type-justified-s" role="tabpanel">
+                  <div class="d-flex align-items-start">
+                    <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                      <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" tabindex="-1">탑승/수호 합성</button>
+                      <button class="nav-link" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile" tabindex="-1">변신 합성</button>
+                      <button class="nav-link" id="v-pills-messages-tab" data-bs-toggle="pill" data-bs-target="#v-pills-messages" type="button" role="tab" aria-controls="v-pills-messages">확정 대기</button>
+                    </div>
+                    <div class="tab-content" id="v-pills-tabContent" style="width: 100vw;">
+                      <div class="tab-pane fade active show" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                        <ul class="synthesis-slot-list">
+                        </ul>
+
+                        <div class="btn-group btn-synthesis-grade" role="group" style="width: 100%;">
+                          <button type="button" class="btn btn-outline-secondary active" data-id="0">일반</button>
+                          <button type="button" class="btn btn-outline-success" data-id="1">고급</button>
+                          <button type="button" class="btn btn-outline-info" data-id="2">희귀</button>
+                          <button type="button" class="btn btn-outline-warning" data-id="3">보물</button>
+                          <button type="button" class="btn btn-outline-danger" data-id="4">전설</button>
+                        </div>
+
+                        <ul class="synthesis-list mt-3 synthesisA">
+                        </ul>
+                      </div>
+                      <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                        <ul class="synthesis-list synthesisB">
+                        </ul>
+                      </div>
+                      <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="tab-pane fade" id="type-justified-b" role="tabpanel">
+                  
+                </div>
+              </div>
+            </div>
+
+            <!-- <ins class="kakao_ad_area" style="display:none;"
+              data-ad-unit = "DAN-FeMEXIX0WzWdmINa"
+              data-ad-width = "320"
+              data-ad-height = "100"></ins> -->
+
+            <div class="card-footer">
+              <div class="row mt-3">
+                
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main><!-- End #main -->
+
+  <!-- ======= Footer ======= -->
+  <footer id="footer" class="footer" data-include-path="common/footer.html">
+    <div class="copyright">
+      &copy; Copyright <strong><span>DEV</span></strong>. All Rights Reserved
+    </div>
+    <div class="credits">
+      <!-- All the links in the footer should remain intact. -->
+      <!-- You can delete the links only if you purchased the pro version. -->
+      <!-- Licensing information: https://bootstrapmade.com/license/ -->
+      <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
+      Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+    </div>
+  </footer>
+  <!-- End Footer -->
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/chart.js/chart.min.js"></script>
+  <script src="assets/vendor/echarts/echarts.min.js"></script>
+  <script src="assets/vendor/quill/quill.min.js"></script>
+  <script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
+  <script src="assets/vendor/tinymce/tinymce.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+
+  <!-- <script type="text/javascript" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script> -->
+
+  <!-- Template Main JS File -->
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/sheet-api.js"></script>
+
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-analytics.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyBi20Vfz4FIEprruKEdWB2c_paicWCl6jI",
+      authDomain: "baramy-9cb08.firebaseapp.com",
+      projectId: "baramy-9cb08",
+      storageBucket: "baramy-9cb08.appspot.com",
+      messagingSenderId: "912929312520",
+      appId: "1:912929312520:web:732acdc9a4f70b8e6866bd",
+      measurementId: "G-RG02W3NYLF"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+  </script>
+
+  <script>
+    const summonColor = {'일반': 'normal', '고급': 'advanced', '희귀': 'rare', '보물': 'treasure'};
+    const sortPriority = {'일반': 0, '고급': 1, '희귀': 2, '보물': 3};
+    var totalRate = 0;
+    var mobArray = [];
+    var summonableMobArray = [];
+    var summonCounter = 0;
+    var currentSummonCount = 0;
+    const maxSummonCount = 5000;
+    var running = false;
+    var summonBag = {};
+
+    $(document).ready(function() {
+      summonQuery('SELECT *', 'sommon_callback');
+    });
+
+    var sommon_callback = function(data) {
+      mobArray = parse2(data);
+      for (var m of mobArray) {
+        if (m.grade != '전설') {
+          summonableMobArray.push(m);
+          totalRate = +(totalRate + m.rate).toFixed(5);
+        }
+      }
+    }
+
+    function shuffle(array) {
+      return array.sort(() => Math.random() - 0.5);
+    }
+
+    function rand(min, max) {
+      return (Math.random() * (max + totalRate));
+    }
+
+    $('.btn-summon').on('click', function() {
+      if (running) return;
+
+      summonCounter = 0;
+      running = true;
+      $('.summon-list').empty();
+
+      mobSummon();
+    });
+
+    $('.full-alert-close').on('click', function() {
+      $('.alert-full').hide();
+    });
+
+    function mobSummon() {
+      if (summonableMobArray.length == 0) {
+        running = false;
+        return;
+      }
+
+      if (currentSummonCount >= maxSummonCount) {
+        running = false;
+        $('.alert-full').show();
+        return;
+      }
+
+      const shuffled = shuffle(summonableMobArray);
+      var random = Math.random() * totalRate;
+      var pick = {};
+      var index = 0;
+      while (random > 0) {
+        pick = shuffled[index];
+        random -= pick.rate;
+        index++;
+      }
+      summonCounter++;
+      currentSummonCount++;
+
+      var li = '<li class="summon-item ' + summonColor[pick.grade] + '">';
+      if (pick.ic == 'NULL') {
+        li += '<img class="mob-img" src="assets/img/opt/ic_opt_001.jpg"/>';
+      } else {
+        li += '<img class="mob-img" src="assets/img/mob/ic_' + pick.ic + '.jpg"/>';
+      }
+      li += '</li>';
+      $('.summon-list').append(li);
+
+      if (summonBag[pick.name]) summonBag[pick.name] += 1;
+      else summonBag[pick.name] = 1;
+
+      if (summonCounter < 10) {
+        setTimeout(function() {
+          mobSummon();
+        }, 50);
+      } else {
+        running = false;
+      }
+    }
+
+    $('.btn-synthesis-grade > .btn').on('click', function() {
+      if (!$(this).hasClass('active')) {
+        var grade = $('.btn-synthesis-grade > .active').eq(0).text();
+        for(var i=0; i<$('.btn-synthesis-grade > .btn').length; i++) {
+          if ($('.btn-synthesis-grade > .btn').eq(i).attr('data-id') == $(this).attr('data-id')) {
+            $('.btn-synthesis-grade > .btn').eq(i).addClass('active');
+            grade = $('.btn-synthesis-grade > .btn').eq(i).text();
+          } else {
+            $('.btn-synthesis-grade > .btn').eq(i).removeClass('active');
+          }
+        }
+
+        
+        console.log(grade);
+      }
+    });
+
+    // $('#s-tab').on('click', function() {
+    //   $('.synthesis-list').empty();
+
+    //   var keys = Object.keys(summonBag);
+    //   if (keys.length > 0) {
+    //     for (var mob of keys) {
+    //       var li = '<li class="summon-item ' + summonColor[mob.grade] + '">';
+    //       if (pick.ic == 'NULL') {
+    //         li += '<img class="mob-img" src="assets/img/opt/ic_opt_001.jpg"/>';
+    //       } else {
+    //         li += '<img class="mob-img" src="assets/img/mob/ic_' + pick.ic + '.jpg"/>';
+    //       }
+    //       li += '</li>';
+    //       $('.summon-list').append(li);
+    //     }
+    //   }
+    // });
+
+  </script>
+</body>
+</html>
