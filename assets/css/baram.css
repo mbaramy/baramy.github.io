@@ -387,3 +387,55 @@
     border-radius: 5px;
     margin-top: 3px;
 }
+
+.red-ora {
+	background: linear-gradient(180deg, #fff, red);
+	animation: ora-gradient 5s ease infinite;
+}
+
+@keyframes ora-gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+.wait-item-container {
+    display: inline-flex;
+    font-size: 17px;
+}
+
+.wait-item-grid {
+    display: grid;
+    margin-left: 5px;
+}
+
+.btn-wait-confirm {
+    margin-bottom: 5px;
+    min-width: 50px;
+    cursor: pointer;
+}
+
+.btn-wait-change {
+    min-width: 50px;
+    cursor: pointer;
+}
+
+.wait-item {
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 20%);
+    padding: 7px;
+    overflow: hidden;
+    background-color: #fff;
+    margin: 0 10px 10px 0;
+    display: inline-flex;
+    animation: fadein 1s;
+    -moz-animation: fadein 1s; /* Firefox */
+    -webkit-animation: fadein 1s; /* Safari and Chrome */
+    -o-animation: fadein 1s; /* Opera */
+}

@@ -96,9 +96,6 @@
                 <li class="nav-item flex-fill" role="presentation">
                   <button class="nav-link w-100" id="s-tab" data-bs-toggle="tab" data-bs-target="#type-justified-s" type="button" role="tab" aria-selected="false">합성</button>
                 </li>
-                <li class="nav-item flex-fill" role="presentation">
-                  <button class="nav-link w-100" id="b-tab" data-bs-toggle="tab" data-bs-target="#type-justified-b" type="button" role="tab" aria-selected="false">변경</button>
-                </li>
               </ul>
               <div class="tab-content pt-4" id="type-tab-contents">
                 <div class="tab-pane fade show active" id="type-justified-t" role="tabpanel">
@@ -106,6 +103,11 @@
                   </ul>
 
                   <button type="button" class="btn btn-info btn-summon">소환</button>
+
+                  <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="autoSummon">
+                    <label class="form-check-label" for="autoSummon">자동 소환</label>
+                  </div>
                 </div>
                 <div class="tab-pane fade" id="type-justified-s" role="tabpanel">
                   <div class="d-flex align-items-start">
@@ -181,15 +183,22 @@
                       </div>
   
                       <div class="tab-pane fade" id="synthesis-c" role="tabpanel">
-                        
+                        <ul class="synthesis-slot-list synthesisResultC">
+                        </ul>
+
+                        <div class="row mb-3">
+                          <div class="col-md-6">
+                            <button type="button" class="btn btn-dark form-control btn-wait-confirm-all">전체 확정</button>
+                          </div>
+                        </div>
+
+                        <ul class="synthesis-list synthesisC">
+                        </ul>
                       </div>
                     </div>
 
                     
                   </div>
-                </div>
-                <div class="tab-pane fade" id="type-justified-b" role="tabpanel">
-                  
                 </div>
               </div>
             </div>
@@ -346,7 +355,7 @@
       currentSummonCount++;
       $('#s-tab').text('합성(' + currentSummonCount + ')');
 
-      var li = '<li class="summon-item ' + summonColor[pick.grade] + '">';
+      var li = '<li class="summon-item ' + (['희귀', '보물', '전설'].indexOf(pick.grade) > -1 ? ' red-ora' : '') + '">';
       if (pick.ic == 'NULL') {
         li += '<img class="mob-img" src="assets/img/opt/ic_opt_001.jpg"/>';
       } else {
@@ -368,9 +377,19 @@
           mobSummon();
         }, 50);
       } else {
-        setTimeout(function() {
-          running = false;
-        }, 500);
+        if ($('#autoSummon').prop('checked')) {
+          setTimeout(function() {
+            summonCounter = 0;
+            running = true;
+            $('.summon-list').empty();
+
+            mobSummon();
+          }, 300);
+        } else {
+          setTimeout(function() {
+            running = false;
+          }, 500);
+        }
       }
     }
 
@@ -382,8 +401,10 @@
         const type = parseInt($('#v-pills-tab > .active').eq(0).attr('data-type'));
         if (type == 0) {
           $('.synthesisA').html(getSynthesisArrayHTML());
-        } else {
+        } else if (type == 1) {
           $('.synthesisB').html(getSynthesisArrayHTML());
+        } else {
+          $('.synthesisC').html(getWaitForConfirmBag());
         }
     });
 
@@ -401,6 +422,7 @@
         $('.synthesisResultA').empty();
         $('.synthesisB').empty();
         $('.synthesisResultB').empty();
+        $('.synthesisC').empty();
         const type = parseInt($('#v-pills-tab > .active').eq(0).attr('data-type'));
         if (type == 0) {
           $('.synthesisA').html(getSynthesisArrayHTML());
@@ -438,6 +460,22 @@
       return array.join('');
     }
 
+    function getWaitForConfirmBag() {
+      const html = waitForConfirmBag.map(function(e) {
+        var li = '<li class="wait-item ' + summonColor[e.grade] + '">';
+        li += '<div class="wait-item-container">'
+        if (e.ic == 'NULL') {
+          li += '<img class="mob-img" src="assets/img/opt/ic_opt_001.jpg"/>';
+        } else {
+          li += '<img class="mob-img" src="assets/img/mob/ic_' + e.ic + '.jpg"/>';
+        }
+        li += '<div class="wait-item-grid"><span class="badge bg-success btn-wait-confirm">확정</span><span class="badge bg-warning text-dark btn-wait-change">변경</span></div></div>';
+        li += '</li>';
+        return li;
+      });
+      return html;
+    }
+
     $('#s-tab').on('click', function() {
       $('.synthesis-list').empty();
       $('.synthesis-slot-list').empty();
@@ -452,29 +490,42 @@
 
     $('.btn-synthesis-one').on('click', function() {
       const type = parseInt($('#v-pills-tab > .active').eq(0).attr('data-type'));
-      const count = type == 0 ? parseInt($('#synthesis-count-a :selected').attr('value')) : parseInt($('#synthesis-count-b :selected').attr('value'));
+      const count = [parseInt($('#synthesis-count-a :selected').attr('value')), parseInt($('#synthesis-count-b :selected').attr('value'))][type];
       const grade = parseInt($('.btn-synthesis-grade > .active').eq(0).attr('data-id'));
-      console.log('count: ' + count + ' / length: ' + currentSynthesisBag.length);
       
-      if (currentSynthesisBag.length >= count) {
+      const totalCount = currentSynthesisBag.reduce(function(acc, current) {
+        if (current.info.grade == gradeId[grade] && (type == 1 && current.info.type == '변신') || (type == 0 && (current.info.type == '탑승' || current.info.type == '수호'))) {
+          return acc + current.count;
+        } else {
+          return acc;
+        }
+      }, 0);
+      
+      if (totalCount >= count) {
         synthesisResultBag = {};
-        runSynthesis(count, false);
+        runSynthesis(count, totalCount, false);
       }
     });
 
     $('.btn-synthesis-all').on('click', function() {
       const type = parseInt($('#v-pills-tab > .active').eq(0).attr('data-type'));
-      const count = type == 0 ? parseInt($('#synthesis-count-a :selected').attr('value')) : parseInt($('#synthesis-count-b :selected').attr('value'));
+      const count = [parseInt($('#synthesis-count-a :selected').attr('value')), parseInt($('#synthesis-count-b :selected').attr('value'))][type];
       const grade = parseInt($('.btn-synthesis-grade > .active').eq(0).attr('data-id'));
-      console.log('count: ' + count + ' / length: ' + currentSynthesisBag.length);
-      if (currentSynthesisBag.length >= count) {
+      const totalCount = currentSynthesisBag.reduce(function(acc, current) {
+        if (current.info.grade == gradeId[grade] && (type == 1 && current.info.type == '변신') || (type == 0 && (current.info.type == '탑승' || current.info.type == '수호'))) {
+          return acc + current.count;
+        } else {
+          return acc;
+        }
+      }, 0);
+      if (totalCount >= count) {
         synthesisResultBag = {};
-        runSynthesis(count, true);
+        runSynthesis(count, totalCount, true);
       }
     });
 
-    function runSynthesis(max, isAll) {
-      const runCount = isAll ? parseInt(currentSynthesisBag.length / max) : 1;
+    function runSynthesis(max, length, isAll) {
+      const runCount = isAll ? parseInt(length / max) : 1;
       if (runCount < 1) return;
 
       const grade = parseInt($('.btn-synthesis-grade > .active').eq(0).attr('data-id'));
@@ -489,6 +540,7 @@
         const secondChance = parseFloat((Math.random() * 100).toFixed(3));
         const isSuccess = rate >= chance;
         const upgrade = gradeId[isSuccess ? grade + 1 : grade];
+
         var kind = '변신';
         if (type == 0) {
           if (isSuccess) {
@@ -518,12 +570,20 @@
         }
         if (synthesisResultBag[pick.name]) synthesisResultBag[pick.name].count += 1;
         else synthesisResultBag[pick.name] = {'count': 1, 'info': pick};
+
+        if (pick.grade != '보물') {
+          if (summonBag[pick.name]) summonBag[pick.name].count += 1;
+          else summonBag[pick.name] = {'count': 1, 'info': pick};
+        } else {
+          waitForConfirmBag.push(pick);
+          $('#synthesis-tab-c').text('확정 대기(' + waitForConfirmBag.length + ')');
+        }
       }
 
       if (type == 0) {
         $('.synthesisResultA').html(getSynthesisResultHTML());
         $('.synthesisA').html(getSynthesisArrayHTML());
-      } else {
+      } else if (type == 1) {
         $('.synthesisResultB').html(getSynthesisResultHTML());
         $('.synthesisB').html(getSynthesisArrayHTML());
       }
@@ -539,7 +599,7 @@
       }
 
       array = array.map(function(e) {
-        var li = '<li class="synthesis-item ' + summonColor[e.info.grade] + '">';
+        var li = '<li class="synthesis-item ' + (['희귀', '보물', '전설'].indexOf(e.info.grade) > -1 ? 'red-ora' : '') + '">';
         if (e.info.ic == 'NULL') {
           li += '<img class="mob-img" src="assets/img/opt/ic_opt_001.jpg"/>';
         } else {
@@ -555,16 +615,38 @@
 
     function popSummonBag(mob) {
       for (var i=0; i<mob.length; i++) {
-        summonBag[mob[i].info.name].count -= 1;
+        summonBag[mob[i].info.name].count -= mob[i].count;
 
-        if (summonBag[mob[i].info.name].count == 0) {
+        if (summonBag[mob[i].info.name].count <= 0) {
           delete summonBag[mob[i].info.name];
         }
       }
 
-      currentSummonCount -= mob.length;
+      currentSummonCount = 0;
+      for (var m of Object.keys(summonBag)) {
+        currentSummonCount += summonBag[m].count;
+      }
       $('#s-tab').text('합성(' + currentSummonCount + ')');
     }
+
+    $('.btn-wait-confirm-all').on('click', function() {
+      if (waitForConfirmBag.length == 0) return;
+
+      for (var i=0; i<waitForConfirmBag.length; i++) {
+        if (summonBag[waitForConfirmBag[i].name]) summonBag[waitForConfirmBag[i].name].count += 1;
+        else summonBag[waitForConfirmBag[i].name] = {'count': 1, 'info': waitForConfirmBag[i]};
+      }
+
+      currentSummonCount = 0;
+      for (var m of Object.keys(summonBag)) {
+        currentSummonCount += summonBag[m].count;
+      }
+      $('#s-tab').text('합성(' + currentSummonCount + ')');
+
+      waitForConfirmBag = [];
+      $('#synthesis-tab-c').text('확정 대기(' + waitForConfirmBag.length + ')');
+      $('.synthesisC').empty();
+    });
 
   </script>
 </body>
