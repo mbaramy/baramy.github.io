@@ -110,16 +110,46 @@
                 <div class="tab-pane fade" id="type-justified-s" role="tabpanel">
                   <div class="d-flex align-items-start">
                     <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                      <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" tabindex="-1">탑승/수호 합성</button>
-                      <button class="nav-link" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile" tabindex="-1">변신 합성</button>
-                      <button class="nav-link" id="v-pills-messages-tab" data-bs-toggle="pill" data-bs-target="#v-pills-messages" type="button" role="tab" aria-controls="v-pills-messages">확정 대기</button>
+                      <button class="nav-link active" id="synthesis-tab-a" data-bs-toggle="tab" data-bs-target="#synthesis-a" type="button" role="tab" tabindex="-1" data-type="0">탑승/수호 합성</button>
+                      <button class="nav-link" id="synthesis-tab-b" data-bs-toggle="tab" data-bs-target="#synthesis-b" type="button" role="tab" tabindex="-1" data-type="1">변신 합성</button>
+                      <button class="nav-link" id="synthesis-tab-c" data-bs-toggle="tab" data-bs-target="#synthesis-c" type="button" role="tab" data-type="2">확정 대기</button>
                     </div>
-                    <div class="tab-content" id="v-pills-tabContent" style="width: 100vw;">
-                      <div class="tab-pane fade active show" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
-                        <ul class="synthesis-slot-list">
+
+                    <div class="tab-content" id="synthesis-a-panel" style="width: 100vw;">
+                      <div class="tab-pane fade active show" id="synthesis-a" role="tabpanel">
+                        <div class="btn-group btn-synthesis-grade mb-3" role="group" style="width: 100%;">
+                          <button type="button" class="btn btn-outline-secondary active" data-id="0">일반</button>
+                          <button type="button" class="btn btn-outline-success" data-id="1">고급</button>
+                          <button type="button" class="btn btn-outline-info" data-id="2">희귀</button>
+                          <button type="button" class="btn btn-outline-warning" data-id="3">보물</button>
+                          <button type="button" class="btn btn-outline-danger" data-id="4">전설</button>
+                        </div>
+    
+                        <ul class="synthesis-slot-list synthesisResultA">
                         </ul>
 
-                        <div class="btn-group btn-synthesis-grade" role="group" style="width: 100%;">
+                        <div class="row mb-3">
+                          <div class="col-md-3">
+                            <select class="form-select" id="synthesis-count-a">
+                              <option value="4" selected>4마리</option>
+                              <option value="5">5마리</option>
+                              <option value="6">6마리</option>
+                            </select>
+                          </div>
+                          <div class="col-md-4">
+                            <button type="button" class="btn btn-dark form-control btn-synthesis-one">1회 합성</button>
+                          </div>
+                          <div class="col-md-5">
+                            <button type="button" class="btn btn-primary form-control btn-synthesis-all">전체 합성</button>
+                          </div>
+                        </div>
+
+                        <ul class="synthesis-list synthesisA">
+                        </ul>
+                      </div>
+
+                      <div class="tab-pane fade" id="synthesis-b" role="tabpanel">
+                        <div class="btn-group btn-synthesis-grade mb-3" role="group" style="width: 100%;">
                           <button type="button" class="btn btn-outline-secondary active" data-id="0">일반</button>
                           <button type="button" class="btn btn-outline-success" data-id="1">고급</button>
                           <button type="button" class="btn btn-outline-info" data-id="2">희귀</button>
@@ -127,17 +157,35 @@
                           <button type="button" class="btn btn-outline-danger" data-id="4">전설</button>
                         </div>
 
-                        <ul class="synthesis-list mt-3 synthesisA">
+                        <ul class="synthesis-slot-list synthesisResultB">
                         </ul>
-                      </div>
-                      <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+
+                        <div class="row mb-3">
+                          <div class="col-md-3">
+                            <select class="form-select" id="synthesis-count-b">
+                              <option value="4" selected>4마리</option>
+                              <option value="5">5마리</option>
+                              <option value="6">6마리</option>
+                            </select>
+                          </div>
+                          <div class="col-md-4">
+                            <button type="button" class="btn btn-dark form-control btn-synthesis-one">1회 합성</button>
+                          </div>
+                          <div class="col-md-5">
+                            <button type="button" class="btn btn-primary form-control btn-synthesis-all">전체 합성</button>
+                          </div>
+                        </div>
+
                         <ul class="synthesis-list synthesisB">
                         </ul>
                       </div>
-                      <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
+  
+                      <div class="tab-pane fade" id="synthesis-c" role="tabpanel">
                         
                       </div>
                     </div>
+
+                    
                   </div>
                 </div>
                 <div class="tab-pane fade" id="type-justified-b" role="tabpanel">
@@ -222,7 +270,7 @@
 
   <script>
     const summonColor = {'일반': 'normal', '고급': 'advanced', '희귀': 'rare', '보물': 'treasure'};
-    const sortPriority = {'일반': 0, '고급': 1, '희귀': 2, '보물': 3};
+    const gradeId = {0: '일반', 1: '고급', 2: '희귀', 3: '보물', 4: '전설'};
     var totalRate = 0;
     var mobArray = [];
     var summonableMobArray = [];
@@ -231,6 +279,11 @@
     const maxSummonCount = 5000;
     var running = false;
     var summonBag = {};
+    var currentSynthesisBag = [];
+    var synthesisResultBag = {};
+    var waitForConfirmBag = [];
+    var synthesisType = 0; // 0: 탑승/수호, 1: 변신
+    var allSynthesisBag = [];
 
     $(document).ready(function() {
       summonQuery('SELECT *', 'sommon_callback');
@@ -291,6 +344,7 @@
       }
       summonCounter++;
       currentSummonCount++;
+      $('#s-tab').text('합성(' + currentSummonCount + ')');
 
       var li = '<li class="summon-item ' + summonColor[pick.grade] + '">';
       if (pick.ic == 'NULL') {
@@ -301,52 +355,216 @@
       li += '</li>';
       $('.summon-list').append(li);
 
-      if (summonBag[pick.name]) summonBag[pick.name] += 1;
-      else summonBag[pick.name] = 1;
+      if (pick.grade != '보물') {
+        if (summonBag[pick.name]) summonBag[pick.name].count += 1;
+        else summonBag[pick.name] = {'count': 1, 'info': pick};
+      } else {
+        waitForConfirmBag.push(pick);
+        $('#synthesis-tab-c').text('확정 대기(' + waitForConfirmBag.length + ')');
+      }
 
       if (summonCounter < 10) {
         setTimeout(function() {
           mobSummon();
         }, 50);
       } else {
-        running = false;
+        setTimeout(function() {
+          running = false;
+        }, 500);
       }
     }
 
+    $('#v-pills-tab').on('click', function() {
+        $('.synthesisA').empty();
+        $('.synthesisResultA').empty();
+        $('.synthesisB').empty();
+        $('.synthesisResultB').empty();
+        const type = parseInt($('#v-pills-tab > .active').eq(0).attr('data-type'));
+        if (type == 0) {
+          $('.synthesisA').html(getSynthesisArrayHTML());
+        } else {
+          $('.synthesisB').html(getSynthesisArrayHTML());
+        }
+    });
+
     $('.btn-synthesis-grade > .btn').on('click', function() {
       if (!$(this).hasClass('active')) {
-        var grade = $('.btn-synthesis-grade > .active').eq(0).text();
         for(var i=0; i<$('.btn-synthesis-grade > .btn').length; i++) {
           if ($('.btn-synthesis-grade > .btn').eq(i).attr('data-id') == $(this).attr('data-id')) {
             $('.btn-synthesis-grade > .btn').eq(i).addClass('active');
-            grade = $('.btn-synthesis-grade > .btn').eq(i).text();
           } else {
             $('.btn-synthesis-grade > .btn').eq(i).removeClass('active');
           }
         }
 
-        
-        console.log(grade);
+        $('.synthesisA').empty();
+        $('.synthesisResultA').empty();
+        $('.synthesisB').empty();
+        $('.synthesisResultB').empty();
+        const type = parseInt($('#v-pills-tab > .active').eq(0).attr('data-type'));
+        if (type == 0) {
+          $('.synthesisA').html(getSynthesisArrayHTML());
+        } else {
+          $('.synthesisB').html(getSynthesisArrayHTML());
+        }
       }
     });
 
-    // $('#s-tab').on('click', function() {
-    //   $('.synthesis-list').empty();
+    function getSynthesisArrayHTML() {
+      const type = parseInt($('#v-pills-tab > .active').eq(0).attr('data-type'));
+      const grade = parseInt($('.btn-synthesis-grade > .active').eq(0).attr('data-id'));
 
-    //   var keys = Object.keys(summonBag);
-    //   if (keys.length > 0) {
-    //     for (var mob of keys) {
-    //       var li = '<li class="summon-item ' + summonColor[mob.grade] + '">';
-    //       if (pick.ic == 'NULL') {
-    //         li += '<img class="mob-img" src="assets/img/opt/ic_opt_001.jpg"/>';
-    //       } else {
-    //         li += '<img class="mob-img" src="assets/img/mob/ic_' + pick.ic + '.jpg"/>';
-    //       }
-    //       li += '</li>';
-    //       $('.summon-list').append(li);
-    //     }
-    //   }
-    // });
+      var array = [];
+      currentSynthesisBag = [];
+      for (var s of Object.keys(summonBag)) {
+        if (((type == 0 && (summonBag[s].info.type == '수호' || summonBag[s].info.type == '탑승')) || (type == 1 && summonBag[s].info.type == '변신')) && summonBag[s].info.grade == gradeId[grade]) {
+          array.push(summonBag[s]);
+          currentSynthesisBag.push(summonBag[s]);
+        }
+      }
+
+      array = array.map(function(e) {
+        var li = '<li class="synthesis-item ' + summonColor[e.info.grade] + '">';
+        if (e.info.ic == 'NULL') {
+          li += '<img class="mob-img" src="assets/img/opt/ic_opt_001.jpg"/>';
+        } else {
+          li += '<img class="mob-img" src="assets/img/mob/ic_' + e.info.ic + '.jpg"/>';
+        }
+        li += '<span class="synthesis-item-span">x' + e.count + '</span>';
+        li += '</li>';
+        return li;
+      });
+      
+      return array.join('');
+    }
+
+    $('#s-tab').on('click', function() {
+      $('.synthesis-list').empty();
+      $('.synthesis-slot-list').empty();
+      
+      const type = parseInt($('#v-pills-tab > .active').eq(0).attr('data-type'));
+      if (type == 0) {
+        $('.synthesisA').html(getSynthesisArrayHTML());
+      } else {
+        $('.synthesisB').html(getSynthesisArrayHTML());
+      }
+    });
+
+    $('.btn-synthesis-one').on('click', function() {
+      const type = parseInt($('#v-pills-tab > .active').eq(0).attr('data-type'));
+      const count = type == 0 ? parseInt($('#synthesis-count-a :selected').attr('value')) : parseInt($('#synthesis-count-b :selected').attr('value'));
+      const grade = parseInt($('.btn-synthesis-grade > .active').eq(0).attr('data-id'));
+      console.log('count: ' + count + ' / length: ' + currentSynthesisBag.length);
+      
+      if (currentSynthesisBag.length >= count) {
+        synthesisResultBag = {};
+        runSynthesis(count, false);
+      }
+    });
+
+    $('.btn-synthesis-all').on('click', function() {
+      const type = parseInt($('#v-pills-tab > .active').eq(0).attr('data-type'));
+      const count = type == 0 ? parseInt($('#synthesis-count-a :selected').attr('value')) : parseInt($('#synthesis-count-b :selected').attr('value'));
+      const grade = parseInt($('.btn-synthesis-grade > .active').eq(0).attr('data-id'));
+      console.log('count: ' + count + ' / length: ' + currentSynthesisBag.length);
+      if (currentSynthesisBag.length >= count) {
+        synthesisResultBag = {};
+        runSynthesis(count, true);
+      }
+    });
+
+    function runSynthesis(max, isAll) {
+      const runCount = isAll ? parseInt(currentSynthesisBag.length / max) : 1;
+      if (runCount < 1) return;
+
+      const grade = parseInt($('.btn-synthesis-grade > .active').eq(0).attr('data-id'));
+      const rate = {'일반': [40,45,50], '고급': [20,25,30], '희귀': [10,15,20], '보물': [6,11,16]}[gradeId[grade]][max - 4];
+      const secondRate = {'탑승': [83.333, 75], '수호': [16.667, 15], '변신': [0, 10]};
+      const type = parseInt($('#v-pills-tab > .active').eq(0).attr('data-type'));
+
+      popSummonBag(currentSynthesisBag.slice(0, runCount * max));
+
+      for (var i=0; i<runCount; i++) {
+        const chance = Math.floor(Math.random() * 100);
+        const secondChance = parseFloat((Math.random() * 100).toFixed(3));
+        const isSuccess = rate >= chance;
+        const upgrade = gradeId[isSuccess ? grade + 1 : grade];
+        var kind = '변신';
+        if (type == 0) {
+          if (isSuccess) {
+            if (secondChance <= 16.667) kind = '수호';
+            else kind = '탑승';
+          } else {
+            if (secondChance <= 10) kind = '변신';
+            else if (secondChance <= 25) kind = '수호';
+            else kind = '탑승';
+          }
+        }
+        
+        var upgradeMobArray = [];
+        for (var e of mobArray) {
+          if (e.grade == upgrade && e.type == kind) {
+            upgradeMobArray.push(e);
+          }
+        }
+        upgradeMobArray = shuffle(upgradeMobArray);
+        var random = parseFloat((Math.random()).toFixed(3));
+        var pick = {};
+        var index = 0;
+        while (random > 0) {
+          pick = upgradeMobArray[index];
+          random -= pick.rate2;
+          index++;
+        }
+        if (synthesisResultBag[pick.name]) synthesisResultBag[pick.name].count += 1;
+        else synthesisResultBag[pick.name] = {'count': 1, 'info': pick};
+      }
+
+      if (type == 0) {
+        $('.synthesisResultA').html(getSynthesisResultHTML());
+        $('.synthesisA').html(getSynthesisArrayHTML());
+      } else {
+        $('.synthesisResultB').html(getSynthesisResultHTML());
+        $('.synthesisB').html(getSynthesisArrayHTML());
+      }
+    }
+
+    function getSynthesisResultHTML() {
+      const type = parseInt($('#v-pills-tab > .active').eq(0).attr('data-type'));
+      const grade = parseInt($('.btn-synthesis-grade > .active').eq(0).attr('data-id'));
+
+      var array = [];
+      for (var s of Object.keys(synthesisResultBag)) {
+        array.push(synthesisResultBag[s]);
+      }
+
+      array = array.map(function(e) {
+        var li = '<li class="synthesis-item ' + summonColor[e.info.grade] + '">';
+        if (e.info.ic == 'NULL') {
+          li += '<img class="mob-img" src="assets/img/opt/ic_opt_001.jpg"/>';
+        } else {
+          li += '<img class="mob-img" src="assets/img/mob/ic_' + e.info.ic + '.jpg"/>';
+        }
+        li += '<span class="synthesis-item-span">x' + e.count + '</span>';
+        li += '</li>';
+        return li;
+      });
+      
+      return array.join('');
+    }
+
+    function popSummonBag(mob) {
+      for (var i=0; i<mob.length; i++) {
+        summonBag[mob[i].info.name].count -= 1;
+
+        if (summonBag[mob[i].info.name].count == 0) {
+          delete summonBag[mob[i].info.name];
+        }
+      }
+
+      currentSummonCount -= mob.length;
+      $('#s-tab').text('합성(' + currentSummonCount + ')');
+    }
 
   </script>
 </body>
