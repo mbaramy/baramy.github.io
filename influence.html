@@ -249,7 +249,7 @@
     $(document).ready(function() {
       var datas = [];
 
-      const mobArray = parse((new GlobalData().getData())());
+      const mobArray = (new GlobalData().getData())();
       optionRate = parse2((new GlobalData().getRateData())());
 
       var html_s = '';
