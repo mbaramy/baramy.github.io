@@ -177,7 +177,7 @@
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
-  <script src="assets/js/unite.js"></script>
+  <script src="assets/js/unite.min.js"></script>
   <script src="assets/js/sheet-api.js"></script>
   <script src="assets/js/sheet.min.js"></script>
 
@@ -213,7 +213,7 @@
     $(document).ready(function() {
       var datas = [];
       const mobArray = (new GlobalData().getData())();
-      optionRate = parse2((new GlobalData().getRateData())());
+      optionRate = (new GlobalData().getRateData())();
 
       var html_s = '';
       var html_b = '';
@@ -243,12 +243,14 @@
       $('#mob-option-card').show();
 
       const id = $(this).attr('data-id');
+      const grade = $(this).attr('data-grade');
 
       $('.opt-img').attr('src', 'assets/img/mob/ic_' + id + '.jpg');
       $('.opt-img').attr('data-id', id);
+      $('.opt-img').attr('data-grade', grade);
       $('.opt-span').text($(this).attr('data-name'));
       $('#option-level').val("0");
-      setOption(optionObj[id], 0);
+      setOption(optionObj[id], grade, 0);
     });
 
     $('#btn-close').on('click', function() {
@@ -261,7 +263,7 @@
       if (level > 0) {
         level -= 1;
         $('#option-level').val(level);
-        setOption(optionObj[$('.opt-img').attr('data-id')], level);
+        setOption(optionObj[$('.opt-img').attr('data-id')], $('.opt-img').attr('data-grade'), level);
       }
     });
 
@@ -270,7 +272,7 @@
       if (level < 15) {
         level += 1;
         $('#option-level').val(level);
-        setOption(optionObj[$('.opt-img').attr('data-id')], level);
+        setOption(optionObj[$('.opt-img').attr('data-id')], $('.opt-img').attr('data-grade'), level);
       }
     });
 
@@ -289,11 +291,11 @@
       } else {
         $('#option-level').val('0');
       }
-      setOption(optionObj[$('.opt-img').attr('data-id')], level);
+      setOption(optionObj[$('.opt-img').attr('data-id')], $('.opt-img').attr('data-grade'), level);
     });
 
-    function setOption(option, level) {
-      const value = getOption(option, level);
+    function setOption(option, grade, level) {
+      const value = getOption(grade, option, level);
       var html_o = '<h5 class="card-title">소환 효과</h5><table class="table"><tbody>';
       var html_e = '<h5 class="card-title">결속 장착 효과</h5><table class="table"><tbody>';
       for (var key of Object.keys(value.o)) {

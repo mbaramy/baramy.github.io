@@ -55,15 +55,24 @@
 
   <script>
     $(document).ready(function() {
-      query("SELECT *", 'my_callback');
+      const url = window.location.href;
+      if (url.indexOf('mob') > -1) {
+        query("SELECT *", 'my_callback');
+      } else {
+        optionQuery("SELECT *", 'option_callback');
+      }
     });
 
     var my_callback = function (data) {
       data = parse(data);
 
       $('#json').html(JSON.stringify(data));
+    };
 
-      console.log(JSON.parse(JSON.stringify(data)));
+    var option_callback = function (data) {
+      data = parse2(data);
+
+      $('#json').html(JSON.stringify(data));
     };
   </script>
 </body>

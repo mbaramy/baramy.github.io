@@ -18,7 +18,7 @@ function parseSelectedItem(data) {
         if (level > 15) level = 15;
         obj.level = level;
         
-        const option = getOption(optionObj[obj.ic], level);
+        const option = getOption(obj.grade, optionObj[obj.ic], level);
         obj.option = option.o;
         obj.equip_option = option.e;
         result.push(obj);
@@ -26,7 +26,7 @@ function parseSelectedItem(data) {
     return result;
 }
 
-function getOption(option, level) {
+function getOption(grade, option, level) {
     var result = {};
     var optionObj = {};
     var equipObj = {};
@@ -36,9 +36,9 @@ function getOption(option, level) {
         optionObj[key] = value;
         if (option[key][0] != option[key][15] && isEmpty) isEmpty = false;
 
-        const rate = getRate(key, level);
+        const rate = getRate(key, level, grade);
         var equipValue =  Math.floor(value * rate.value);
-        if (rate.roundup <= rate.index && equipValue < 1) equipValue = 1;
+        if (rate.value > 0 && rate.roundup <= rate.index && equipValue < 1) equipValue = 1;
         equipObj[key] = equipValue;
     }
     result.o = optionObj;
@@ -47,7 +47,7 @@ function getOption(option, level) {
     return result;
 }
 
-function getRate(key, level) {
+function getRate(key, level, grade) {
     //0~8: 0
     //9~13: 1
     //14~15: 2
@@ -62,7 +62,7 @@ function getRate(key, level) {
 
     for (var i=0; i<optionRate.length; i++) {
         if (optionRate[i].name == key) {
-            let value = optionRate[i]['rate' + rate];
+            let value = optionRate[i]['rate' + rate + (grade == '보물' ? '_t' : '_r')];
             var roundup = optionRate[i].roundup;
             if (value == '') value = 0;
             if (roundup == '') roundup = 0;

@@ -134,7 +134,7 @@ var optionQuery = function (sql, callback) {
         params = {
             key: '1YNepNSqpcV4Xeggpl7Nfh0Ty7VWUFtEybAjdqNlYjrc',
             tq: encodeURIComponent(sql),
-            range: 'Sheet2!A1:H37',
+            range: 'Sheet2!A1:L37',
             tqx: 'responseHandler:' + callback
         },
         qs = [];
