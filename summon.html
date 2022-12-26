@@ -803,7 +803,13 @@
       if (summonBag[waitForConfirmBag[i].name]) summonBag[waitForConfirmBag[i].name].count += 1;
       else summonBag[waitForConfirmBag[i].name] = {'count': 1, 'info': waitForConfirmBag[i]};
 
-      waitForConfirmBag.pop(i);
+      var newWaitForConfirmBag = [];
+      for (var j=0; j<waitForConfirmBag.length; j++) {
+        if (j != i) {
+          newWaitForConfirmBag.push(waitForConfirmBag[j]);
+        }
+      }
+      waitForConfirmBag = newWaitForConfirmBag;
 
       currentSummonCount = 0;
       for (var m of Object.keys(summonBag)) {
