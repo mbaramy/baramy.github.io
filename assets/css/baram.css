@@ -249,7 +249,7 @@
 
 @media (max-width: 440px) {
     .summon-list, .synthesis-list {
-        min-height: 444px;
+        min-height: 530px;
     }
 }
 
