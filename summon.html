@@ -110,13 +110,13 @@
                   </div>
                 </div>
                 <div class="tab-pane fade" id="type-justified-s" role="tabpanel">
-                  <div class="d-flex align-items-start">
-                    <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                      <button class="nav-link active" id="synthesis-tab-a" data-bs-toggle="tab" data-bs-target="#synthesis-a" type="button" role="tab" tabindex="-1" data-type="0">탑승/수호 합성</button>
-                      <button class="nav-link" id="synthesis-tab-b" data-bs-toggle="tab" data-bs-target="#synthesis-b" type="button" role="tab" tabindex="-1" data-type="1">변신 합성</button>
-                      <button class="nav-link" id="synthesis-tab-c" data-bs-toggle="tab" data-bs-target="#synthesis-c" type="button" role="tab" data-type="2">확정 대기</button>
-                    </div>
+                  <div class="nav nav-pills mb-3 d-flex" id="v-pills-tab" role="tablist">
+                    <button class="nav-link flex-fill active" id="synthesis-tab-a" data-bs-toggle="tab" data-bs-target="#synthesis-a" type="button" role="tab" tabindex="-1" data-type="0">탑승/수호 합성</button>
+                    <button class="nav-link flex-fill" id="synthesis-tab-b" data-bs-toggle="tab" data-bs-target="#synthesis-b" type="button" role="tab" tabindex="-1" data-type="1">변신 합성</button>
+                    <button class="nav-link flex-fill" id="synthesis-tab-c" data-bs-toggle="tab" data-bs-target="#synthesis-c" type="button" role="tab" data-type="2">확정 대기</button>
+                  </div>
 
+                  <div class="d-flex align-items-start">
                     <div class="tab-content" id="synthesis-a-panel" style="width: 100vw;">
                       <div class="tab-pane fade active show" id="synthesis-a" role="tabpanel">
                         <div class="btn-group btn-synthesis-grade mb-3" role="group" style="width: 100%;">
@@ -131,17 +131,17 @@
                         </ul>
 
                         <div class="row mb-3">
-                          <div class="col-md-3">
+                          <div class="col-3">
                             <select class="form-select" id="synthesis-count-a">
                               <option value="4" selected>4마리</option>
                               <option value="5">5마리</option>
                               <option value="6">6마리</option>
                             </select>
                           </div>
-                          <div class="col-md-4">
+                          <div class="col-4">
                             <button type="button" class="btn btn-dark form-control btn-synthesis-one">1회 합성</button>
                           </div>
-                          <div class="col-md-5">
+                          <div class="col-5">
                             <button type="button" class="btn btn-primary form-control btn-synthesis-all">전체 합성</button>
                           </div>
                         </div>
@@ -163,17 +163,17 @@
                         </ul>
 
                         <div class="row mb-3">
-                          <div class="col-md-3">
+                          <div class="col-3">
                             <select class="form-select" id="synthesis-count-b">
                               <option value="4" selected>4마리</option>
                               <option value="5">5마리</option>
                               <option value="6">6마리</option>
                             </select>
                           </div>
-                          <div class="col-md-4">
+                          <div class="col-4">
                             <button type="button" class="btn btn-dark form-control btn-synthesis-one">1회 합성</button>
                           </div>
-                          <div class="col-md-5">
+                          <div class="col-5">
                             <button type="button" class="btn btn-primary form-control btn-synthesis-all">전체 합성</button>
                           </div>
                         </div>
@@ -187,13 +187,29 @@
                         </ul>
 
                         <div class="row mb-3">
-                          <div class="col-md-6">
-                            <button type="button" class="btn btn-dark form-control btn-wait-confirm-all">전체 확정</button>
+                          <div class="col-12">
+                            <button type="button" class="btn btn-outline-dark form-control btn-wait-confirm-all">전체 확정</button>
                           </div>
                         </div>
 
                         <ul class="synthesis-list synthesisC">
                         </ul>
+
+                        <div class="row mb-3">
+                          <div class="input-group">
+                            <select class="form-select input-mob-grade">
+                              <option value="보물">보물</option>
+                              <option value="전설">전설</option>
+                            </select>
+                            <select class="form-select input-mob-type">
+                              <option value="탑승">탑승</option>
+                              <option value="수호">수호</option>
+                              <option value="변신">변신</option>
+                            </select>
+                            <input type="number" class="form-control input-mob-count" value="0" min="0" max="100" style="text-align: center;">
+                            <button type="button" class="btn btn-primary input-mob-btn" style="float: right;">추가</button>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
@@ -208,9 +224,10 @@
               data-ad-width = "320"
               data-ad-height = "100"></ins> -->
 
-            <div class="card-footer">
-              <div class="row mt-3">
-                
+            <div class="card-footer" style="padding: 15px 20px 15px 20px;">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="autoWait" checked>
+                <label class="form-check-label" for="autoWait">확정 대기</label>
               </div>
             </div>
           </div>
@@ -364,7 +381,7 @@
       li += '</li>';
       $('.summon-list').append(li);
 
-      if (pick.grade != '보물') {
+      if (pick.grade != '보물' || !$('#autoWait').prop('checked')) {
         if (summonBag[pick.name]) summonBag[pick.name].count += 1;
         else summonBag[pick.name] = {'count': 1, 'info': pick};
       } else {
@@ -404,6 +421,7 @@
         } else if (type == 1) {
           $('.synthesisB').html(getSynthesisArrayHTML());
         } else {
+          $('.synthesisResultC').html('');
           $('.synthesisC').html(getWaitForConfirmBag());
         }
     });
@@ -461,7 +479,7 @@
     }
 
     function getWaitForConfirmBag() {
-      const html = waitForConfirmBag.map(function(e) {
+      const html = waitForConfirmBag.map(function(e, i) {
         var li = '<li class="wait-item ' + summonColor[e.grade] + '">';
         li += '<div class="wait-item-container">'
         if (e.ic == 'NULL') {
@@ -469,7 +487,7 @@
         } else {
           li += '<img class="mob-img" src="assets/img/mob/ic_' + e.ic + '.jpg"/>';
         }
-        li += '<div class="wait-item-grid"><span class="badge bg-success btn-wait-confirm">확정</span><span class="badge bg-warning text-dark btn-wait-change">변경</span></div></div>';
+        li += '<div class="wait-item-grid"><span class="badge bg-success btn-wait-confirm" data-id="' + i + '">확정</span><span class="badge bg-warning text-dark btn-wait-change" data-id="' + i + '">변경</span></div></div>';
         li += '</li>';
         return li;
       });
@@ -490,8 +508,9 @@
 
     $('.btn-synthesis-one').on('click', function() {
       const type = parseInt($('#v-pills-tab > .active').eq(0).attr('data-type'));
-      const count = [parseInt($('#synthesis-count-a :selected').attr('value')), parseInt($('#synthesis-count-b :selected').attr('value'))][type];
+      var count = [parseInt($('#synthesis-count-a :selected').attr('value')), parseInt($('#synthesis-count-b :selected').attr('value'))][type];
       const grade = parseInt($('.btn-synthesis-grade > .active').eq(0).attr('data-id'));
+      if (grade == '전설') count = 4;
       
       const totalCount = currentSynthesisBag.reduce(function(acc, current) {
         if (current.info.grade == gradeId[grade] && (type == 1 && current.info.type == '변신') || (type == 0 && (current.info.type == '탑승' || current.info.type == '수호'))) {
@@ -529,54 +548,103 @@
       if (runCount < 1) return;
 
       const grade = parseInt($('.btn-synthesis-grade > .active').eq(0).attr('data-id'));
-      const rate = {'일반': [40,45,50], '고급': [20,25,30], '희귀': [10,15,20], '보물': [6,11,16]}[gradeId[grade]][max - 4];
-      const secondRate = {'탑승': [83.333, 75], '수호': [16.667, 15], '변신': [0, 10]};
       const type = parseInt($('#v-pills-tab > .active').eq(0).attr('data-type'));
 
       popSummonBag(currentSynthesisBag.slice(0, runCount * max));
 
-      for (var i=0; i<runCount; i++) {
-        const chance = Math.floor(Math.random() * 100);
-        const secondChance = parseFloat((Math.random() * 100).toFixed(3));
-        const isSuccess = rate >= chance;
-        const upgrade = gradeId[isSuccess ? grade + 1 : grade];
+      if (gradeId[grade] == '전설') {
+        for (var i=0; i<runCount; i++) {
+          const chance = Math.floor(Math.random() * 100);
+          var kind = '변신';
+          if (type == 0) {
+            if (chance - 5 <= 0) {
+              kind = '변신';
+            } else if (chance - 17 <= 0) {
+              kind = '수호';
+            } else {
+              kind = '탑승';
+            }
+          }
 
-        var kind = '변신';
-        if (type == 0) {
-          if (isSuccess) {
-            if (secondChance <= 16.667) kind = '수호';
-            else kind = '탑승';
+          var upgradeMobArray = [];
+          var upgradeTotalRate = 0;
+          for (var e of mobArray) {
+            if (e.grade == gradeId[grade] && e.type == kind) {
+              upgradeMobArray.push(e);
+              upgradeTotalRate += e.rate2;
+            }
+          }
+          upgradeMobArray = shuffle(upgradeMobArray);
+
+          var random = parseFloat((Math.random() * upgradeTotalRate).toFixed(5));
+          var pick = {};
+          var index = 0;
+          while (random > 0) {
+            pick = upgradeMobArray[index];
+            random -= pick.rate2;
+            index++;
+          }
+          if (synthesisResultBag[pick.name]) synthesisResultBag[pick.name].count += 1;
+          else synthesisResultBag[pick.name] = {'count': 1, 'info': pick};
+
+          if (pick.grade != '보물' || !$('#autoWait').prop('checked')) {
+            if (summonBag[pick.name]) summonBag[pick.name].count += 1;
+            else summonBag[pick.name] = {'count': 1, 'info': pick};
           } else {
-            if (secondChance <= 10) kind = '변신';
-            else if (secondChance <= 25) kind = '수호';
-            else kind = '탑승';
+            waitForConfirmBag.push(pick);
+            $('#synthesis-tab-c').text('확정 대기(' + waitForConfirmBag.length + ')');
           }
-        }
-        
-        var upgradeMobArray = [];
-        for (var e of mobArray) {
-          if (e.grade == upgrade && e.type == kind) {
-            upgradeMobArray.push(e);
-          }
-        }
-        upgradeMobArray = shuffle(upgradeMobArray);
-        var random = parseFloat((Math.random()).toFixed(3));
-        var pick = {};
-        var index = 0;
-        while (random > 0) {
-          pick = upgradeMobArray[index];
-          random -= pick.rate2;
-          index++;
-        }
-        if (synthesisResultBag[pick.name]) synthesisResultBag[pick.name].count += 1;
-        else synthesisResultBag[pick.name] = {'count': 1, 'info': pick};
 
-        if (pick.grade != '보물') {
-          if (summonBag[pick.name]) summonBag[pick.name].count += 1;
-          else summonBag[pick.name] = {'count': 1, 'info': pick};
-        } else {
-          waitForConfirmBag.push(pick);
-          $('#synthesis-tab-c').text('확정 대기(' + waitForConfirmBag.length + ')');
+        }
+      } else {
+        const rate = {'일반': [40,45,50], '고급': [20,25,30], '희귀': [10,15,20], '보물': [6,11,16]}[gradeId[grade]][max - 4];
+        const secondRate = {'탑승': [83.333, 75], '수호': [16.667, 15], '변신': [0, 10]};
+
+        for (var i=0; i<runCount; i++) {
+          const chance = Math.floor(Math.random() * 100);
+          const secondChance = parseFloat((Math.random() * 100).toFixed(3));
+          const isSuccess = rate >= chance;
+          const upgrade = gradeId[isSuccess ? grade + 1 : grade];
+
+          var kind = '변신';
+          if (type == 0) {
+            if (isSuccess) {
+              if (secondChance <= 16.667) kind = '수호';
+              else kind = '탑승';
+            } else {
+              if (secondChance <= 10) kind = '변신';
+              else if (secondChance <= 25) kind = '수호';
+              else kind = '탑승';
+            }
+          }
+          
+          var upgradeMobArray = [];
+          var upgradeTotalRate = 0;
+          for (var e of mobArray) {
+            if (e.grade == upgrade && e.type == kind) {
+              upgradeMobArray.push(e);
+              upgradeTotalRate += e.rate2;
+            }
+          }
+          upgradeMobArray = shuffle(upgradeMobArray);
+          var random = parseFloat((Math.random() * upgradeTotalRate).toFixed(5));
+          var pick = {};
+          var index = 0;
+          while (random > 0) {
+            pick = upgradeMobArray[index];
+            random -= pick.rate2;
+            index++;
+          }
+          if (synthesisResultBag[pick.name]) synthesisResultBag[pick.name].count += 1;
+          else synthesisResultBag[pick.name] = {'count': 1, 'info': pick};
+
+          if (pick.grade != '보물' || !$('#autoWait').prop('checked')) {
+            if (summonBag[pick.name]) summonBag[pick.name].count += 1;
+            else summonBag[pick.name] = {'count': 1, 'info': pick};
+          } else {
+            waitForConfirmBag.push(pick);
+            $('#synthesis-tab-c').text('확정 대기(' + waitForConfirmBag.length + ')');
+          }
         }
       }
 
@@ -646,6 +714,88 @@
       waitForConfirmBag = [];
       $('#synthesis-tab-c').text('확정 대기(' + waitForConfirmBag.length + ')');
       $('.synthesisC').empty();
+    });
+
+    $(document).on("click", ".btn-wait-confirm", function() {
+      const i = parseInt($(this).attr('data-id'));
+
+      if (summonBag[waitForConfirmBag[i].name]) summonBag[waitForConfirmBag[i].name].count += 1;
+      else summonBag[waitForConfirmBag[i].name] = {'count': 1, 'info': waitForConfirmBag[i]};
+
+      waitForConfirmBag.pop(i);
+
+      currentSummonCount = 0;
+      for (var m of Object.keys(summonBag)) {
+        currentSummonCount += summonBag[m].count;
+      }
+      $('#s-tab').text('합성(' + currentSummonCount + ')');
+
+      $('#synthesis-tab-c').text('확정 대기(' + waitForConfirmBag.length + ')');
+      $('.synthesisC').html(getWaitForConfirmBag());
+    });
+
+    $(document).on("click", ".btn-wait-change", function() {
+      const idx = parseInt($(this).attr('data-id'));
+
+      const mob = waitForConfirmBag[idx];
+      waitForConfirmBag.splice(idx, 1);
+
+      var filterd = [];
+      var changeTotalRate = 0;
+      for (var i=0; i<mobArray.length; i++) {
+        if (mobArray[i].grade == mob.grade && mobArray[i].type == mob.type && mobArray[i].ic != mob.ic) {
+          filterd.push(mobArray[i]);
+          changeTotalRate += mobArray[i].rate3;
+        }
+      }
+      filterd = shuffle(filterd);
+
+      var random = parseFloat((Math.random() * changeTotalRate).toFixed(5));
+      var pick = {};
+      var index = 0;
+      while (random > 0) {
+        pick = filterd[index];
+        random -= pick.rate3;
+        index++;
+      }
+
+      var li = '<li class="synthesis-item ' + (['희귀', '보물', '전설'].indexOf(pick.grade) > -1 ? 'red-ora' : '') + '">';
+      if (pick.ic == 'NULL') {
+        li += '<img class="mob-img" src="assets/img/opt/ic_opt_001.jpg"/>';
+      } else {
+        li += '<img class="mob-img" src="assets/img/mob/ic_' + pick.ic + '.jpg"/>';
+      }
+      li += '</li>';
+      $('.synthesisResultC').html(li);
+
+      waitForConfirmBag.push(pick);
+      $('#synthesis-tab-c').text('확정 대기(' + waitForConfirmBag.length + ')');
+      $('.synthesisC').html(getWaitForConfirmBag());
+
+    });
+
+    $('.input-mob-btn').on('click', function() {
+      var count = parseInt($('.input-mob-count').val());
+      if (count > 100) count = 100;
+      if (count > 0) {
+        const grade = $('.input-mob-grade :selected').attr('value');
+        const type = $('.input-mob-type :selected').attr('value');
+
+        var filterd = []
+        for (var i=0; i<mobArray.length; i++) {
+          if (mobArray[i].grade == grade && mobArray[i].type == type) {
+            filterd.push(mobArray[i]);
+          }
+        }
+
+        for (var i=0; i<count; i++) {
+          var random = Math.floor(Math.random() * (filterd.length - 1));
+          waitForConfirmBag.push(filterd[random]);
+        }
+
+        $('#synthesis-tab-c').text('확정 대기(' + waitForConfirmBag.length + ')');
+        $('.synthesisC').html(getWaitForConfirmBag());
+      }
     });
 
   </script>

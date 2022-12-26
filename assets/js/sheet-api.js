@@ -150,7 +150,7 @@ var summonQuery = function (sql, callback) {
         params = {
             key: '1YNepNSqpcV4Xeggpl7Nfh0Ty7VWUFtEybAjdqNlYjrc',
             tq: encodeURIComponent(sql),
-            range: 'Sheet3!A1:F369',
+            range: 'Sheet3!A1:G369',
             tqx: 'responseHandler:' + callback
         },
         qs = [];

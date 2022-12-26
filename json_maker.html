@@ -49,15 +49,15 @@
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
-  <script src="assets/js/unite.js"></script>
   <script src="assets/js/sheet-api.js"></script>
-  <script src="assets/js/sheet.min.js"></script>
 
   <script>
     $(document).ready(function() {
       const url = window.location.href;
       if (url.indexOf('mob') > -1) {
         query("SELECT *", 'my_callback');
+      } else if (url.indexOf('summon') > -1) {
+        summonQuery("SELECT *", 'summon_callback');
       } else {
         optionQuery("SELECT *", 'option_callback');
       }
@@ -70,6 +70,12 @@
     };
 
     var option_callback = function (data) {
+      data = parse2(data);
+
+      $('#json').html(JSON.stringify(data));
+    };
+
+    var summon_callback = function (data) {
       data = parse2(data);
 
       $('#json').html(JSON.stringify(data));
