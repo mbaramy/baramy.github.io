@@ -308,6 +308,7 @@
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
   <script src="assets/js/sheet-api.js"></script>
+  <script src="assets/js/sheet.min.js"></script>
 
   <script type="module">
     // Import the functions you need from the SDKs you need
@@ -352,18 +353,14 @@
     var allSynthesisBag = [];
 
     $(document).ready(function() {
-      summonQuery('SELECT *', 'sommon_callback');
-    });
-
-    var sommon_callback = function(data) {
-      mobArray = parse2(data);
+      mobArray = (new GlobalData().getSummonMobs())();
       for (var m of mobArray) {
         if (m.grade != '전설') {
           summonableMobArray.push(m);
           totalRate = +(totalRate + m.rate).toFixed(5);
         }
       }
-    }
+    });
 
     function shuffle(array) {
       return array.sort(() => Math.random() - 0.5);
@@ -880,7 +877,7 @@
         }
 
         for (var i=0; i<count; i++) {
-          var random = Math.floor(Math.random() * (filterd.length - 1));
+          var random = Math.floor(Math.random() * filterd.length);
           waitForConfirmBag.push(filterd[random]);
         }
 
