@@ -1,0 +1,84 @@
+@font-face {
+    font-family: 'SD Kukde';
+    font-weight: 500;
+    src: url('../font/SDKukdetopokki-aLt.otf') format('woff2');
+}
+
+.weapon-img {
+    width: 70px;
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.bi-chevron-double-right {
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 3px;
+}
+
+.baram-style-text {
+    font-family: SD Kukde;
+    font-size: 20px;
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    align-items: center;
+    color: #b8b9b9;
+}
+
+.enhance-before, .enhance-after {
+    font-size: 20px;
+    color: black;
+}
+
+.upgrade-item-img {
+    margin-left: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 10px;
+    width: 25px;
+    height: 25px;
+}
+
+.upgrade-item-text {
+    margin-right: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.color-white {
+    color: white;
+}
+
+.color-dark-bg {
+    background-color: #080d11;
+}
+
+.color-gray-bg {
+    background-color: #353c42;
+}
+
+.bystyle-btn-red {
+    font-family: SD Kukde;
+    border-image: url('../img/ui/btn_red.png') 30 fill repeat;
+    border-image-width: 19px;
+    background-color: #AB442A !important;
+    color: white;
+}
+
+.bystyle-btn-orange {
+    font-family: SD Kukde;
+    border-image: url('../img/ui/btn_orange.png') 30 fill repeat;
+    border-image-width: 19px;
+    background-color: #C47A28 !important;
+    color: white;
+}
+
+.enhance-value {
+    display: block;
+    text-align: center;
+    font-family: SD Kukde;
+    font-size: 25px;
+    color: #b8b9b9;
+}
