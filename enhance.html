@@ -132,13 +132,13 @@
                 </div>
                 <div class="col-2 color-gray-bg">
                   <div class="d-flex" style="height: 38px;">
-                    <input class="form-check-input" type="checkbox" id="gridCheck2" style="margin: auto;">
+                    <input class="form-check-input" type="checkbox" id="upgrade-item-a" style="margin: auto;">
                   </div>
                   <div class="d-flex" style="height: 38px;">
-                    <input class="form-check-input" type="checkbox" id="gridCheck2" style="margin: auto;">
+                    <input class="form-check-input" type="checkbox" id="upgrade-item-b" style="margin: auto;">
                   </div>
                   <div class="d-flex" style="height: 38px;">
-                    <input class="form-check-input" type="checkbox" id="gridCheck2" style="margin: auto;">
+                    <input class="form-check-input" type="checkbox" id="upgrade-item-c" style="margin: auto;">
                   </div>
                 </div>
               </div>
@@ -162,7 +162,7 @@
               </div>
 
               <div class="row mt-3">
-                <button type="button" class="btn bystyle-btn-red" style="height: 50px;">강화</button>
+                <button id="btn-enhance" type="button" class="btn bystyle-btn-red" style="height: 50px;">강화</button>
               </div>
 
               <div class="row mt-3 mb-3">
@@ -194,12 +194,23 @@
               
             </div>
 
-            <div style="position: absolute; width: 100%; height: 100%;">
-              <img id="hammer-img" width="100%" height="100%" src="assets/img/hammerimg.gif" style="display: none;"/>
+            <div id="animation-bg">
+              <div id="animation-hammer">
+                <img class="gif-placeholder" id="hammer-img-placeholder" width="100%" height="100%" src="assets/img/hammerimg-holder.jpg"/>
+                <img id="hammer-img" width="100%" height="100%" src="assets/img/hammerimg.gif"/>
+              </div>
+  
+              <div id="animation-success">
+                <img class="gif-placeholder" id="success-img-placeholder" width="100%" height="100%" src="assets/img/success-holder.jpg"/>
+                <img id="success-img" width="100%" height="100%" src="assets/img/success.gif"/>
+              </div>
+  
+              <div id="animation-fail">
+                <img class="gif-placeholder"  id="fail-img-placeholder" width="100%" height="100%" src="assets/img/fail-holder.jpg"/>
+                <img id="fail-img" width="100%" height="100%" src="assets/img/fail.gif"/>
+              </div>
             </div>
           </div>
-
-          
         </div>
       </div>
     </section>
@@ -269,34 +280,95 @@
       const rate = [100, 100, 100, 90, 80, 70, 60, 50, 40, 30, 20, 15, 12, 10, 7, 6, 5, 4, 3, 2];
       
       var currentEnhance = 0;
-
-      //hammer: 2.06s
-      //success: 1.16s
-      //fail: 1.03s
-
-
-      /*
-      var opacity = 0;
-        var intervalID = 0;
-        window.onload = fadeIn;
-          
-        function fadeIn() {
-            setInterval(show, 200);
-        }
-          
-        function show() {
-            var body = document.getElementById("body");
-            opacity = Number(window.getComputedStyle(body)
-                            .getPropertyValue("opacity"));
-            if (opacity < 1) {
-                opacity = opacity + 0.1;
-                body.style.opacity = opacity
-            } else {
-                clearInterval(intervalID);
-            }
-        }*/
-
+      
     });
+
+    $('#btn-enhance').on('click', function() {
+      if ($('#upgrade-item-a').prop('checked')) {
+        enhanceAnimation(true, function() {
+          $('#animation-bg').removeClass('fade-in').addClass('fade-out');
+          $('#animation-bg').hide();
+        });
+      } else {
+        enhanceAnimation(false, function() {
+          $('#animation-bg').removeClass('fade-in').addClass('fade-out');
+          $('#animation-bg').hide();
+        });
+      }
+      
+    });
+
+    var isAnimating = false;
+    function enhanceAnimation(isSuccess, completion) {
+      if (isAnimating) {
+        return;
+      }
+      
+      isAnimating = true;
+
+      $('#animation-bg').removeClass('fade-out').removeClass('fade-in');
+      $('#animation-bg').show();
+
+      $('#animation-success').css('visibility', 'hidden');
+      $('#animation-fail').css('visibility', 'hidden');
+      $('#animation-hammer').css('visibility', 'visible');
+
+      $('#hammer-img-placeholder').css('visibility', 'visible');
+      $('#success-img-placeholder').css('visibility', 'hidden');
+      $('#fail-img-placeholder').css('visibility', 'hidden');
+
+      $('#hammer-img').attr('src', 'assets/img/hammerimg.gif');
+      $('#hammer-img').css('visibility', 'visible');
+      $('#animation-hammer').css('visibility', 'visible');
+
+      $('#success-img').removeClass('fade-out');
+      $('#fail-img').removeClass('fade-out');
+
+      setTimeout(function() {
+        $('#hammer-img').css('visibility', 'hidden');
+        setTimeout(function() {
+          $('#hammer-img').removeAttr('src');
+          //$('#hammer-img-placeholder').css('visibility', 'hidden');
+
+          if (isSuccess) {
+            $('#animation-success').css('visibility', 'visible');
+            $('#success-img-placeholder').css('visibility', 'visible');
+
+            $('#success-img').attr('src', 'assets/img/success.gif');
+            $('#success-img').css('visibility', 'visible');
+
+            setTimeout(function() {
+              $('#success-img').addClass('fade-out');
+              $('#success-img').css('visibility', 'hidden');
+              
+              setTimeout(function() {
+                isAnimating = false;
+                $('#success-img').removeAttr('src');
+                completion();
+              }, 500);
+            }, 1160);
+          } else {
+            $('#animation-fail').css('visibility', 'visible');
+            $('#fail-img-placeholder').css('visibility', 'visible');
+
+            $('#fail-img').attr('src', 'assets/img/fail.gif');
+            $('#fail-img').css('visibility', 'visible');
+            
+            setTimeout(function() {
+              $('#fail-img').addClass('fade-out');
+              $('#fail-img').css('visibility', 'hidden');
+
+              setTimeout(function() {
+                isAnimating = false;
+                $('#fail-img').removeAttr('src');
+                completion();
+              }, 500);
+            }, 1030);
+          }
+        }, 300);
+      }, 2060);
+    }
+
   </script>
 </body>
 </html>
