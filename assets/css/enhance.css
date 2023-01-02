@@ -196,3 +196,11 @@
     font-size: 11px;
     background-image: url('../img/ui/bg_summon.png');
 }
+
+#enhance-input {
+    text-align: center;
+    font-family: SD Kukde;
+    font-size: 25px;
+    padding: 0;
+    display: none;
+}

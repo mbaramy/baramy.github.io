@@ -98,6 +98,7 @@
                 <div class="col-sm-4 col-md-4 col-lg-4">
                   <img class="weapon-img" src="assets/img/weapon.jpg"/>
                   <span class="enhance-value">+0</span>
+                  <input type="number" class="form-control" id="enhance-input" value="0" min="0" max="19">
                 </div>
                 <div class="col-sm-8 col-md-4 col-lg-4">
                   <div style="width: 100%; height: 100%;">
@@ -215,7 +216,8 @@
             </div>
           </div>
         
-          <div class="card-footer d-flex" style="background-image: url('assets/img/ui/bg_summon.png');">
+          <div class="card-footer d-flex" style="padding: 10px; background-image: url('assets/img/ui/bg_summon.png');">
+            <button type="button" class="btn bystyle-btn-orange" id="btn-edit"><i class="ri-lock-line"></i></button>
             <span class="baram-style-text" id="enhance-count">강화 횟수: 0</span>
 
             <button type="button" class="btn bystyle-btn-orange" id="btn-stop" style="display: none;">중지</button>
@@ -298,6 +300,7 @@
     var tryCount = 0;
     var isAutoEnhance = false;
     var targetEnhance = 0;
+    var isEdit = false;
 
     $(document).ready(function() {
       $('.logView').html('');
@@ -305,6 +308,10 @@
     });
 
     $('#btn-enhance').on('click', function() {
+      if (isEdit) {
+        return;
+      }
+      
       if (currentEnhance >= 20) {
         return;
       }
@@ -385,6 +392,9 @@
     });
 
     $('#btn-clear').on('click', function() {
+      if (isEdit) {
+        return;
+      }
       currentEnhance = 0;
       tryCount = 0;
       setEnhanceValue(currentEnhance);
@@ -415,6 +425,10 @@
     }
 
     function runEnhanceAuto() {
+      if (isEdit) {
+        return;
+      }
+
       if (currentEnhance >= 20) {
         isAutoEnhance = false;
         $('#btn-stop').hide();
@@ -523,6 +537,26 @@
         }, 3000);
       }
     }
+
+    $('#btn-edit').on('click', function() {
+      if (isEdit) {
+        isEdit = false;
+        const newValue = parseInt($('#enhance-input').val());
+        if (newValue > -1 && newValue < 20) {
+          currentEnhance = newValue;
+          setEnhanceValue(currentEnhance);
+        }
+        $('.enhance-value').show();
+        $('#enhance-input').hide();
+        $('#btn-edit > i').removeClass('ri-lock-unlock-line').addClass('ri-lock-line');
+      } else {
+        isEdit = true;
+        $('#btn-edit > i').removeClass('ri-lock-line').addClass('ri-lock-unlock-line');
+        $('#enhance-input').val(currentEnhance);
+        $('.enhance-value').hide();
+        $('#enhance-input').show();
+      }
+    });
 
   </script>
 </body>
