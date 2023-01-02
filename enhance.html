@@ -49,7 +49,7 @@
   <aside id="sidebar" class="sidebar" data-include-path="common/sidebar.html">
     <ul class="sidebar-nav" id="sidebar-nav">
       <li class="nav-item">
-        <a class="nav-link" href="index.html">
+        <a class="nav-link collapsed" href="index.html">
           <i class="bi bi-card-list"></i>
           <span>환수 정보</span>
         </a>
@@ -64,6 +64,12 @@
         <a class="nav-link collapsed" href="summon.html">
           <i class="ri-heart-3-fill"></i>
           <span>환수 소환</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="enhance.html">
+          <i class="bi bi-hammer"></i>
+          <span>장비 강화</span>
         </a>
       </li>
     </ul>
@@ -83,17 +89,21 @@
 
     <section class="section">
       <div class="row">
-        <div class="col-lg-12">
-          <div class="card">
-            <div class="card-body"  style="padding: 20px 20px 0px 20px; background-image: url('assets/img/ui/bg_summon.png');">
+        <div class="col-sm-12 col-md-8 col-lg-8">
+          <div class="card m-0">
+            <div class="card-body" style="padding: 20px 20px 0px 20px; background-image: url('assets/img/ui/bg_summon.png');">
 
               <div class="row mt-4">
-                <div class="col-4"></div>
-                <div class="col-4">
+                <div class="col-0 col-sm-0 col-md-4 col-lg-4"></div>
+                <div class="col-sm-4 col-md-4 col-lg-4">
                   <img class="weapon-img" src="assets/img/weapon.jpg"/>
                   <span class="enhance-value">+0</span>
                 </div>
-                <div class="col-4"></div>
+                <div class="col-sm-8 col-md-4 col-lg-4">
+                  <div style="width: 100%; height: 100%;">
+                    <textarea class="logView" readonly></textarea>
+                  </div>
+                </div>
               </div>
 
               <div class="row mt-4">
@@ -115,7 +125,7 @@
                 </div>
                 <div class="col-6 color-gray-bg" style="text-align: right;">
                   <div>
-                    <select class="form-select">
+                    <select class="form-select" id="upgrade-add">
                       <option value="3">강화비급</option>
                       <option value="5">상급 강화비급</option>
                       <option value="7">최상급 강화비급</option>
@@ -138,7 +148,7 @@
                     <input class="form-check-input" type="checkbox" id="upgrade-item-b" style="margin: auto;">
                   </div>
                   <div class="d-flex" style="height: 38px;">
-                    <input class="form-check-input" type="checkbox" id="upgrade-item-c" style="margin: auto;">
+                    <input class="form-check-input" type="checkbox" id="upgrade-item-c" style="margin: auto;" disabled>
                   </div>
                 </div>
               </div>
@@ -149,7 +159,7 @@
                 </div>
 
                 <div class="col-2 d-flex color-gray-bg">
-                  <span class="color-white" style="margin: auto;">100%</span>
+                  <span class="color-white" style="margin: auto;" id="upgrade-rate">100%</span>
                 </div>
 
                 <div class="col-4 d-flex color-dark-bg">
@@ -157,7 +167,7 @@
                 </div>
 
                 <div class="col-2 d-flex color-gray-bg">
-                  <span class="color-white" style="margin: auto;">0%</span>
+                  <span class="color-white" style="margin: auto;" id="upgrade-add-rate">0%</span>
                 </div>
               </div>
 
@@ -167,7 +177,7 @@
 
               <div class="row mt-3 mb-3">
                 <div class="col-4 p-0">
-                  <select class="form-select">
+                  <select class="form-select" id="target-enhance">
                     <option value="4">+4</option>
                     <option value="5">+5</option>
                     <option value="6">+6</option>
@@ -188,29 +198,36 @@
                   </select>
                 </div>
                 <div class="col-8 d-flex p-0">
-                  <button type="button" class="btn bystyle-btn-orange w-100 ms-3">목표 강화</button>
+                  <button type="button" class="btn bystyle-btn-orange w-100 ms-3" id="btn-auto">목표 강화</button>
                 </div>
               </div>
               
             </div>
 
             <div id="animation-bg">
-              <div id="animation-hammer">
-                <img class="gif-placeholder" id="hammer-img-placeholder" width="100%" height="100%" src="assets/img/hammerimg-holder.jpg"/>
-                <img id="hammer-img" width="100%" height="100%" src="assets/img/hammerimg.gif"/>
-              </div>
-  
               <div id="animation-success">
-                <img class="gif-placeholder" id="success-img-placeholder" width="100%" height="100%" src="assets/img/success-holder.jpg"/>
                 <img id="success-img" width="100%" height="100%" src="assets/img/success.gif"/>
               </div>
   
               <div id="animation-fail">
-                <img class="gif-placeholder"  id="fail-img-placeholder" width="100%" height="100%" src="assets/img/fail-holder.jpg"/>
                 <img id="fail-img" width="100%" height="100%" src="assets/img/fail.gif"/>
               </div>
             </div>
           </div>
+        
+          <div class="card-footer d-flex" style="background-image: url('assets/img/ui/bg_summon.png');">
+            <span class="baram-style-text" id="enhance-count">강화 횟수: 0</span>
+
+            <button type="button" class="btn bystyle-btn-orange" id="btn-stop" style="display: none;">중지</button>
+            <button type="button" class="btn bystyle-btn-orange" id="btn-clear">초기화</button>
+          </div>
+
+          <ins class="kakao_ad_area" style="display:none;"
+              data-ad-unit = "DAN-FeMEXIX0WzWdmINa"
+              data-ad-width = "320"
+              data-ad-height = "100"></ins>
+          </div>
+          
         </div>
       </div>
     </section>
@@ -276,27 +293,183 @@
 
 
   <script>
+    const rate = [100, 100, 100, 90, 80, 70, 60, 50, 40, 30, 20, 15, 12, 10, 7, 6, 5, 4, 3, 2];
+    const safeEnhance = [0,0,0,0,3,4,5,6,6,7,8,10,10,10,10,10,10,10,10,10];
+    var currentEnhance = 0;
+    var tryCount = 0;
+    var isAutoEnhance = false;
+    var targetEnhance = 0;
+
     $(document).ready(function() {
-      const rate = [100, 100, 100, 90, 80, 70, 60, 50, 40, 30, 20, 15, 12, 10, 7, 6, 5, 4, 3, 2];
-      
-      var currentEnhance = 0;
-      
+      $('.logView').html('');
+      setEnhanceValue(currentEnhance);
     });
 
     $('#btn-enhance').on('click', function() {
-      if ($('#upgrade-item-a').prop('checked')) {
-        enhanceAnimation(true, function() {
-          $('#animation-bg').removeClass('fade-in').addClass('fade-out');
-          $('#animation-bg').hide();
-        });
-      } else {
-        enhanceAnimation(false, function() {
-          $('#animation-bg').removeClass('fade-in').addClass('fade-out');
-          $('#animation-bg').hide();
-        });
+      if (currentEnhance >= 20) {
+        return;
       }
-      
+
+      if (isAutoEnhance) {
+        return;
+      }
+
+      tryCount += 1;
+
+      const chance = Math.floor(Math.random() * 99);
+      const doubleChance = Math.floor(Math.random() * 100);
+      var logValue = '';
+      var addChance = 0;
+      if ($('#upgrade-item-a').prop('checked')) {
+        addChance += parseInt($('#upgrade-add :selected').val());
+      }
+
+      var isSuccess = false;
+      const beforeEnhance = currentEnhance;
+      if ((rate[currentEnhance] + addChance) >= chance) {
+        isSuccess = true;
+        logValue += '\n[성공] ' + currentEnhance + ' >';
+        if (doubleChance <= 30 && $('#upgrade-item-b').prop('checked')) {
+          currentEnhance += 2;
+          if (currentEnhance > 20) currentEnhance = 20;
+          logValue += ' ' + currentEnhance;
+        } else {
+          currentEnhance += 1;
+          logValue += ' ' + currentEnhance;
+        }
+      } else {
+        if (!$('#upgrade-item-c').prop('checked') || safeEnhance[currentEnhance] > currentEnhance) {
+          currentEnhance -= 1;
+        }
+        logValue += '\n[실패] ' + beforeEnhance + ' > ' + currentEnhance;
+      }
+
+      enhanceAnimation(isSuccess, function() {
+        $('#animation-bg').removeClass('fade-in').addClass('fade-out');
+        $('#animation-bg').hide();
+        setEnhanceValue(currentEnhance);
+        $('.logView').html(logValue + $('.logView').val());
+      });
     });
+
+    $('#btn-auto').on('click', function() {
+      targetEnhance = parseInt($('#target-enhance :selected').val());
+      if (currentEnhance < targetEnhance) {
+        isAutoEnhance = true;
+        $('#btn-stop').show();
+        $('#btn-clear').hide();
+
+        runEnhanceAuto();
+      }
+    });
+
+    $('#btn-stop').on('click', function() {
+      isAutoEnhance = false;
+      $('#btn-stop').hide();
+      $('#btn-clear').show();
+    });
+
+    $('#upgrade-item-a').on('change', function() {
+      if ($(this).prop('checked')) {
+        $('#upgrade-add-rate').text($('#upgrade-add :selected').val() + '%');
+      } else {
+        $('#upgrade-add-rate').text('0%');
+      }
+    });
+
+    $('#upgrade-add').on('change', function() {
+      if ($('#upgrade-item-a').prop('checked')) {
+        $('#upgrade-add-rate').text($('#upgrade-add :selected').val() + '%');
+      } else {
+        $('#upgrade-add-rate').text('0%');
+      }
+    });
+
+    $('#btn-clear').on('click', function() {
+      currentEnhance = 0;
+      tryCount = 0;
+      setEnhanceValue(currentEnhance);
+      $('.logView').html('');
+    });
+
+    function setEnhanceValue(currentValue) {
+      $('.enhance-value').text('+' + currentValue);
+      $('.enhance-before').text(currentValue);
+      if (currentValue < 20) {
+        $('.enhance-after').text(currentValue + 1);
+      } else {
+        $('.enhance-after').text('');
+      }
+      if (rate[currentValue]) {
+        $('#upgrade-rate').text(rate[currentValue] + '%');
+      } else {
+        $('#upgrade-rate').text('-');
+      }
+
+      if (currentValue >= 3) {
+        $('#upgrade-item-c').prop('disabled', false);
+      } else {
+        $('#upgrade-item-c').prop('disabled', true);
+      }
+
+      $('#enhance-count').text('강화 횟수: ' + tryCount);
+    }
+
+    function runEnhanceAuto() {
+      if (currentEnhance >= 20) {
+        isAutoEnhance = false;
+        $('#btn-stop').hide();
+        $('#btn-clear').show();
+        return;
+      }
+
+      tryCount += 1;
+
+      const chance = Math.floor(Math.random() * 99);
+      const doubleChance = Math.floor(Math.random() * 100);
+      var logValue = '';
+      var addChance = 0;
+      if ($('#upgrade-item-a').prop('checked')) {
+        addChance += parseInt($('#upgrade-add :selected').val());
+      }
+
+      var isSuccess = false;
+      const beforeEnhance = currentEnhance;
+      if ((rate[currentEnhance] + addChance) >= chance) {
+        isSuccess = true;
+        logValue += '\n[성공] ' + currentEnhance + ' >';
+        if (doubleChance <= 30 && $('#upgrade-item-b').prop('checked')) {
+          currentEnhance += 2;
+          if (currentEnhance > 20) currentEnhance = 20;
+          logValue += ' ' + currentEnhance;
+        } else {
+          currentEnhance += 1;
+          logValue += ' ' + currentEnhance;
+        }
+      } else {
+        if (!$('#upgrade-item-c').prop('checked') || safeEnhance[currentEnhance] > currentEnhance) {
+          currentEnhance -= 1;
+        }
+        logValue += '\n[실패] ' + beforeEnhance + ' > ' + currentEnhance;
+      }
+
+      enhanceAnimation(isSuccess, function() {
+        $('#animation-bg').removeClass('fade-in').addClass('fade-out');
+        $('#animation-bg').hide();
+        setEnhanceValue(currentEnhance);
+        $('.logView').html(logValue + $('.logView').val());
+
+        setTimeout(function() {
+          if (currentEnhance < targetEnhance && isAutoEnhance) {
+            runEnhanceAuto();
+          } else {
+            isAutoEnhance = false;
+            $('#btn-stop').hide();
+            $('#btn-clear').show();
+          }
+        }, 100);
+      });
+    }
 
     var isAnimating = false;
     function enhanceAnimation(isSuccess, completion) {
@@ -309,64 +482,47 @@
       $('#animation-bg').removeClass('fade-out').removeClass('fade-in');
       $('#animation-bg').show();
 
+      $('#animation-success').removeClass('fade-out');
+      $('#animation-fail').removeClass('fade-out');
+
       $('#animation-success').css('visibility', 'hidden');
       $('#animation-fail').css('visibility', 'hidden');
-      $('#animation-hammer').css('visibility', 'visible');
 
-      $('#hammer-img-placeholder').css('visibility', 'visible');
-      $('#success-img-placeholder').css('visibility', 'hidden');
-      $('#fail-img-placeholder').css('visibility', 'hidden');
+      if (isSuccess) {
+        $('#animation-success').css('visibility', 'visible');
+        $('#success-img-placeholder').css('visibility', 'visible');
 
-      $('#hammer-img').attr('src', 'assets/img/hammerimg.gif');
-      $('#hammer-img').css('visibility', 'visible');
-      $('#animation-hammer').css('visibility', 'visible');
+        $('#success-img').attr('src', 'assets/img/success.gif');
+        $('#success-img').css('visibility', 'visible');
 
-      $('#success-img').removeClass('fade-out');
-      $('#fail-img').removeClass('fade-out');
-
-      setTimeout(function() {
-        $('#hammer-img').css('visibility', 'hidden');
         setTimeout(function() {
-          $('#hammer-img').removeAttr('src');
-          //$('#hammer-img-placeholder').css('visibility', 'hidden');
+          $('#animation-success').addClass('fade-out');
+          $('#success-img').removeAttr('src');
+          $('#success-img').css('visibility', 'hidden');
+          
+          setTimeout(function() {
+            isAnimating = false;
+            completion();
+          }, 500);
+        }, 3220);
+      } else {
+        $('#animation-fail').css('visibility', 'visible');
+        $('#fail-img-placeholder').css('visibility', 'visible');
 
-          if (isSuccess) {
-            $('#animation-success').css('visibility', 'visible');
-            $('#success-img-placeholder').css('visibility', 'visible');
+        $('#fail-img').attr('src', 'assets/img/fail.gif');
+        $('#fail-img').css('visibility', 'visible');
+        
+        setTimeout(function() {
+          $('#animation-fail').addClass('fade-out');
+          $('#fail-img').removeAttr('src');
+          $('#fail-img').css('visibility', 'hidden');
 
-            $('#success-img').attr('src', 'assets/img/success.gif');
-            $('#success-img').css('visibility', 'visible');
-
-            setTimeout(function() {
-              $('#success-img').addClass('fade-out');
-              $('#success-img').css('visibility', 'hidden');
-              
-              setTimeout(function() {
-                isAnimating = false;
-                $('#success-img').removeAttr('src');
-                completion();
-              }, 500);
-            }, 1160);
-          } else {
-            $('#animation-fail').css('visibility', 'visible');
-            $('#fail-img-placeholder').css('visibility', 'visible');
-
-            $('#fail-img').attr('src', 'assets/img/fail.gif');
-            $('#fail-img').css('visibility', 'visible');
-            
-            setTimeout(function() {
-              $('#fail-img').addClass('fade-out');
-              $('#fail-img').css('visibility', 'hidden');
-
-              setTimeout(function() {
-                isAnimating = false;
-                $('#fail-img').removeAttr('src');
-                completion();
-              }, 500);
-            }, 1030);
-          }
-        }, 300);
-      }, 2060);
+          setTimeout(function() {
+            isAnimating = false;
+            completion();
+          }, 500);
+        }, 3090);
+      }
     }
 
   </script>
