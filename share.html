@@ -352,14 +352,10 @@
     }
 
     function share() {
-      const value = getOption(shareObj.grade, shareObj.id, parseInt(shareObj.level));
-      var desc_a = '';
-      var desc_b = '';
-
       Kakao.Share.sendDefault({
       objectType: 'feed',
       content: {
-        title: '소환 / 결속 정보',
+        title: '',
         imageUrl: '',
         link: {
           mobileWebUrl: 'https://mbaramy.github.io/index.html?type=' + encodeURIComponent(shareObj.type) + '&id=' + shareObj.id + '&grade=' + encodeURIComponent(shareObj.grade) + '&name=' + encodeURIComponent(shareObj.name) + '&level=' + shareObj.level,
