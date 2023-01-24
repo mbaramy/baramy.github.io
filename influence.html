@@ -162,6 +162,12 @@
                 </li>
               </ul>
               <div class="tab-content pt-4" id="result-tab-contents">
+                <div class="d-flex justify-content-center loadingView" style="height: 250px; display: none;">
+                  <div class="spinner-border" role="status" style="margin: auto;">
+                    <span class="sr-only"></span>
+                  </div>
+                </div>
+
                 <div class="tab-pane fade show active" id="result-justified-t" role="tabpanel">
 
                 </div>
@@ -183,13 +189,13 @@
             <div class="card-footer">
               <div class="row mt-3">
                 <div class="col-md-6 mb-3">
-                  <button type="button" class="btn btn-info btn-type" data-type="보물" style="margin-right: 8px;">보물 전체 선택</button>
-                  <button type="button" class="btn btn-danger btn-type" data-type="전설" style="margin-right: 8px;">전설 전체 선택</button>
+                  <button type="button" class="btn bystyle-btn-orange btn-type" data-type="보물" style="margin-right: 8px;">보물 전체 선택</button>
+                  <button type="button" class="btn bystyle-btn-orange btn-type" data-type="전설" style="margin-right: 8px;">전설 전체 선택</button>
                   <button type="button" class="btn btn-secondary" id="btn-type-remove" style="float: right;"><i class="bi bi-trash"></i></button>
                 </div>
                 <div class="col-md-6 mb-3">
-                  <button id="btn-next" type="button" class="btn btn-primary" style="float: right;"><i class="bi bi-chevron-right"></i></button>
-                  <button id="btn-prev" type="button" class="btn btn-primary" style="margin-right: 8px; float: right; display: none;"><i class="bi bi-chevron-left"></i></button>
+                  <button id="btn-next" type="button" class="btn bystyle-btn-red" style="float: right;"><i class="bi bi-chevron-right"></i></button>
+                  <button id="btn-prev" type="button" class="btn bystyle-btn-red" style="margin-right: 8px; float: right; display: none;"><i class="bi bi-chevron-left"></i></button>
                 </div>
               </div>
             </div>
@@ -447,13 +453,18 @@
 
         var priorityA = $('.btn-priority-a').eq(0).hasClass('active') ? '피해저항관통' : $('.btn-priority-b').eq(0).hasClass('active') ? '피해저항' : '경험치 획득증가';
         var priorityB = $('.btn-priority-c').eq(0).hasClass('active') ? '체력' : '마력';
-
-        getRecommendData(mob, priorityA, priorityB).then(function(resolveData) {
-          const resultHtml = getResultHTML(resolveData);
-          $('#result-justified-s').html(resultHtml.sum);
-          $('#result-justified-t').html(resultHtml.score);
-          $('#result-justified-p').html(resultHtml.priority);
-        });
+        $('.loadingView').addClass('d-flex');
+        $('.loadingView').show();
+        setTimeout(function() {
+          getRecommendData(mob, priorityA, priorityB).then(function(resolveData) {
+            $('.loadingView').removeClass('d-flex');
+            $('.loadingView').hide();
+            const resultHtml = getResultHTML(resolveData);
+            $('#result-justified-s').html(resultHtml.sum);
+            $('#result-justified-t').html(resultHtml.score);
+            $('#result-justified-p').html(resultHtml.priority);
+          });
+        }, 500);
       }
     });
 
@@ -482,6 +493,9 @@
         $('#mob-option-card').hide();
       } else if (currentStep == 3) {
         currentStep = 2;
+        $('#result-justified-s').html('');
+        $('#result-justified-t').html('');
+        $('#result-justified-p').html('');
         $('#mob-option-card').show();
         $('#mob-result-card').hide();
         $('#btn-next').show();

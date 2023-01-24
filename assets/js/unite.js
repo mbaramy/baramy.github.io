@@ -105,9 +105,7 @@ function getRecommendData(t, pa, pb) {
                 var combine = combination(t, 4).map(function(c) {
                     return getScore(c, pa, pb);
                 });
-                setTimeout(() => {
-                    res(combine);
-                }, 3000);
+                res(combine);
             });
 
             combinePromise.then((combine) => {
