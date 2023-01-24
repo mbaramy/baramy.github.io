@@ -100,13 +100,13 @@
             <div class="card-body" style="padding: 20px 20px 0px 20px;">
               <ul class="nav nav-tabs nav-tabs-bordered d-flex" id="type-tab" role="tablist">
                 <li class="nav-item flex-fill" role="presentation">
-                  <button class="nav-link w-100 active" id="t-tab" data-bs-toggle="tab" data-bs-target="#type-justified-t" type="button" role="tab" aria-selected="true">탑승</button>
+                  <button class="nav-link w-100 active type-tab" id="t-tab" data-bs-toggle="tab" data-bs-target="#type-justified-t" type="button" role="tab" aria-selected="true">탑승</button>
                 </li>
                 <li class="nav-item flex-fill" role="presentation">
-                  <button class="nav-link w-100" id="s-tab" data-bs-toggle="tab" data-bs-target="#type-justified-s" type="button" role="tab" aria-selected="false">수호</button>
+                  <button class="nav-link w-100 type-tab" id="s-tab" data-bs-toggle="tab" data-bs-target="#type-justified-s" type="button" role="tab" aria-selected="false">수호</button>
                 </li>
                 <li class="nav-item flex-fill" role="presentation">
-                  <button class="nav-link w-100" id="b-tab" data-bs-toggle="tab" data-bs-target="#type-justified-b" type="button" role="tab" aria-selected="false">변신</button>
+                  <button class="nav-link w-100 type-tab" id="b-tab" data-bs-toggle="tab" data-bs-target="#type-justified-b" type="button" role="tab" aria-selected="false">변신</button>
                 </li>
               </ul>
               <div class="tab-content pt-4" id="type-tab-contents">
@@ -149,12 +149,13 @@
               </div>
             </div>
 
-            <div class="card-footer">
+            <div class="card-footer d-flex">
               <div class="input-group">
                 <button id="btn-minus" type="button" class="btn btn-primary" style="float: right;"><i class="bi bi-dash-lg"></i></button>
                 <input id="option-level" type="number" class="form-control" value="0" min="0" max="15" style="text-align: center;">
                 <button id="btn-plus" type="button" class="btn btn-primary" style="float: right;"><i class="bi bi-plus-lg"></i></button>
               </div>
+              <button id="btn-share" type="button" class="btn btn-warning ms-3" style="color: #39252a; width: 150px;" onclick="share();"><i class="ri-kakao-talk-fill" style="margin-right: 8px;"></i>공유</button>
             </div>
           </div>
         </div>
@@ -192,6 +193,7 @@
   <script src="assets/vendor/php-email-form/validate.js"></script>
 
   <script type="text/javascript" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script>
+  <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.1.0/kakao.min.js" integrity="sha384-dpu02ieKC6NUeKFoGMOKz6102CLEWi9+5RQjWSV0ikYSFFd8M3Wp2reIcquJOemx" crossorigin="anonymous"></script>
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
@@ -227,8 +229,11 @@
   <script>
     var optionObj = {};
     var optionRate = [];
+    var shareObj = {'type': '탑승', 'id': '0', 'grade': '보물', 'name': '', 'level': '0'};
 
     $(document).ready(function() {
+      Kakao.init('5472dfb0e36ff14873f3613a0e9b9d50');
+
       var datas = [];
       const mobArray = (new GlobalData().getData())();
       optionRate = (new GlobalData().getRateData())();
@@ -254,6 +259,33 @@
       $('#mob-list-s').html(html_s);
       $('#mob-list-b').html(html_b);
       $('#mob-list-t').html(html_t);
+
+      const params = getQueryParams(document.location.search);
+      if (params.grade != undefined && params.id != undefined && params.level != undefined && params.name != undefined && params.type != undefined) {
+        if (params.level > 15) params.level = 15;
+        else if (params.length < 0) params.length = 0;
+
+        var request = getOption(params.grade, params.id, params.level);
+        if (request.o != {}) {
+          shareObj = params;
+          $('#mob-select-card').hide();
+          $('#mob-option-card').show();
+
+          const id = params.id;
+          const grade = params.grade;
+
+          $('.opt-img').attr('src', 'assets/img/mob/ic_' + id + '.jpg');
+          $('.opt-img').attr('data-id', id);
+          $('.opt-img').attr('data-grade', grade);
+          $('.opt-span').text(params.name);
+          $('#option-level').val(params.level);
+          setOption(optionObj[id], grade, parseInt(params.level));
+        }
+      }
+    });
+
+    $(document).on('click', '.type-tab', function() {
+      shareObj.type = $(this).text();
     });
 
     $(document).on('click', '.mob-item', function() {
@@ -269,6 +301,11 @@
       $('.opt-span').text($(this).attr('data-name'));
       $('#option-level').val("0");
       setOption(optionObj[id], grade, 0);
+
+      shareObj.id = id;
+      shareObj.grade = grade;
+      shareObj.name = $(this).attr('data-name');
+      shareObj.level = 0;
     });
 
     $('#btn-close').on('click', function() {
@@ -281,6 +318,7 @@
       if (level > 0) {
         level -= 1;
         $('#option-level').val(level);
+        shareObj.level = level;
         setOption(optionObj[$('.opt-img').attr('data-id')], $('.opt-img').attr('data-grade'), level);
       }
     });
@@ -290,6 +328,7 @@
       if (level < 15) {
         level += 1;
         $('#option-level').val(level);
+        shareObj.level = level;
         setOption(optionObj[$('.opt-img').attr('data-id')], $('.opt-img').attr('data-grade'), level);
       }
     });
@@ -306,8 +345,10 @@
           level = 0;
           $('#option-level').val(level);
         }
+        shareObj.level = level;
       } else {
         $('#option-level').val('0');
+        shareObj.level = 0;
       }
       setOption(optionObj[$('.opt-img').attr('data-id')], $('.opt-img').attr('data-grade'), level);
     });
@@ -331,6 +372,44 @@
       } else {
         $('.opt-isempty').hide();
       }
+    }
+
+    function share() {
+        Kakao.Share.sendDefault({
+        objectType: 'feed',
+        content: {
+          title: '소환 효과, 결속 장착 효과 정보 보기',
+          imageUrl: '',
+          link: {
+            mobileWebUrl: 'https://mbaramy.github.io/index.html?type=' + encodeURIComponent(shareObj.type) + '&id=' + shareObj.id + '&grade=' + encodeURIComponent(shareObj.grade) + '&name=' + encodeURIComponent(shareObj.name) + '&level=' + shareObj.level,
+            webUrl: 'https://mbaramy.github.io/index.html?type=' + encodeURIComponent(shareObj.type) + '&id=' + shareObj.id + '&grade=' + encodeURIComponent(shareObj.grade) + '&name=' + encodeURIComponent(shareObj.name) + '&level=' + shareObj.level,
+          },
+        },
+        itemContent: {
+          profileText: 'Lv.' + shareObj.level + ' ' + shareObj.name,
+          profileImageUrl: 'https://mbaramy.github.io/assets/img/mob/ic_' + shareObj.id + '.jpg',
+        },
+        buttons: [
+          {
+            title: '자세히 보기',
+            link: {
+              mobileWebUrl: 'https://mbaramy.github.io/index.html?type=' + encodeURIComponent(shareObj.type) + '&id=' + shareObj.id + '&grade=' + encodeURIComponent(shareObj.grade) + '&name=' + encodeURIComponent(shareObj.name) + '&level=' + shareObj.level,
+              webUrl: 'https://mbaramy.github.io/index.html?type=' + encodeURIComponent(shareObj.type) + '&id=' + shareObj.id + '&grade=' + encodeURIComponent(shareObj.grade) + '&name=' + encodeURIComponent(shareObj.name) + '&level=' + shareObj.level,
+            },
+          },
+        ],
+      });
+    }
+
+    function getQueryParams(qs) {
+      qs = qs.split('+').join(' ');
+      var params = {},
+          tokens,
+          re = /[?&]?([^=]+)=([^&]*)/g;
+      while (tokens = re.exec(qs)) {
+        params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
+      }
+      return params;
     }
   </script>
 </body>
