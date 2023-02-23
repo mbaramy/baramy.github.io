@@ -237,7 +237,7 @@
 
 @media (min-width: 841px) {
     .mob-table-grid {
-        grid-template-columns: 1fr 1fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr;
     }
 }
 

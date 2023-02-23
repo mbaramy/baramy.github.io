@@ -162,6 +162,7 @@
                 </li>
               </ul>
               <div class="tab-content pt-4" id="result-tab-contents">
+                <span class="justify-content-center p-3 loadingMessage" style="font-size: x-large; font-family: SD Kukde;"></span>
                 <div class="d-flex justify-content-center loadingView" style="height: 250px; display: none;">
                   <div class="spinner-border" role="status" style="margin: auto;">
                     <span class="sr-only"></span>
@@ -238,9 +239,9 @@
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
-  <script src="assets/js/unite.min.js"></script>
+  <script src="assets/js/unite.min.js?ver=20230223"></script>
   <script src="assets/js/sheet-api.js"></script>
-  <script src="assets/js/sheet.min.js?ver=20230211"></script>
+  <script src="assets/js/sheet.min.js?ver=20230223"></script>
 
   <script type="module">
     // Import the functions you need from the SDKs you need
@@ -304,13 +305,43 @@
       currentType = $(this).text();
     });
 
+    $('#t-tab').on('click', function() {
+      const selectedItem = $('.mob-item-selected');
+      for (var i=0; i<selectedItem.length; i++) {
+        selectedItem.eq(i).removeClass('mob-item-selected');
+        selectedItem.eq(i).addClass('mob-item');
+      }
+    });
+
+    $('#s-tab').on('click', function() {
+      const selectedItem = $('.mob-item-selected');
+      for (var i=0; i<selectedItem.length; i++) {
+        selectedItem.eq(i).removeClass('mob-item-selected');
+        selectedItem.eq(i).addClass('mob-item');
+      }
+    });
+
+    $('#b-tab').on('click', function() {
+      const selectedItem = $('.mob-item-selected');
+      for (var i=0; i<selectedItem.length; i++) {
+        selectedItem.eq(i).removeClass('mob-item-selected');
+        selectedItem.eq(i).addClass('mob-item');
+      }
+    });
+
     $('.btn-type').on('click', function() {
       const list = currentType === '탑승' ? 'mob-list-t' : currentType === '수호' ? 'mob-list-s' : 'mob-list-b';
       var li = $('#' + list + ' > li');
       for (var i = 0; i< li.length; i++) {
+        const selectedItem = $('.mob-item-selected');
         if (li.eq(i).attr('data-grade') == $(this).attr('data-type')) {
-          li.eq(i).removeClass('mob-item');
-          li.eq(i).addClass('mob-item-selected');
+          if (selectedItem.length < 35) {
+            li.eq(i).removeClass('mob-item');
+            li.eq(i).addClass('mob-item-selected');
+          } else {
+            alert("경우의 수가 너무 많습니다. 최대 35개 까지 선택 가능합니다.");
+            break;
+          }
         }
       }
     });
@@ -325,8 +356,13 @@
     });
 
     $(document).on('click', '.mob-item', function() {
-      $(this).removeClass('mob-item');
-      $(this).addClass('mob-item-selected');
+      const selectedItem = $('.mob-item-selected');
+      if (selectedItem.length < 35) {
+        $(this).removeClass('mob-item');
+        $(this).addClass('mob-item-selected');
+      } else {
+        alert("경우의 수가 너무 많습니다. 최대 35개 까지 선택 가능합니다.");
+      }
       $(this).focusout();
     });
 
@@ -441,10 +477,6 @@
         $('#mob-option-card').hide();
         $('#mob-result-card').show();
 
-        var mobT = parseSelectedItem($('#mob-list-t > .mob-item-level'));
-        var mobS = parseSelectedItem($('#mob-list-s > .mob-item-level'));
-        var mobB = parseSelectedItem($('#mob-list-b > .mob-item-level'));
-
         var mob = [];
         let tab = $('#type-tab > .nav-item > .active').eq(0).text();
         if (tab == '탑승') mob = parseSelectedItem($('#mob-list-t > .mob-item-level'));
@@ -453,10 +485,15 @@
 
         var priorityA = $('.btn-priority-a').eq(0).hasClass('active') ? '피해저항관통' : $('.btn-priority-b').eq(0).hasClass('active') ? '피해저항' : '경험치 획득증가';
         var priorityB = $('.btn-priority-c').eq(0).hasClass('active') ? '체력' : '마력';
+
+        $('.loadingMessage').addClass('d-flex');
+        $('.loadingMessage').text(addComma(getCombinationCount(mob.length, 6)) + '가지의 경우의 수 계산중...');
         $('.loadingView').addClass('d-flex');
         $('.loadingView').show();
         setTimeout(function() {
           getRecommendData(mob, priorityA, priorityB).then(function(resolveData) {
+            $('.loadingMessage').removeClass('d-flex');
+            $('.loadingMessage').hide();
             $('.loadingView').removeClass('d-flex');
             $('.loadingView').hide();
             const resultHtml = getResultHTML(resolveData);
@@ -464,7 +501,7 @@
             $('#result-justified-t').html(resultHtml.score);
             $('#result-justified-p').html(resultHtml.priority);
           });
-        }, 500);
+        }, 100);
       }
     });
 
