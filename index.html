@@ -129,6 +129,9 @@
                   data-ad-height = "100"></ins>
               </div>
             </div>
+            <div class="card-footer">
+              <button id="btn-report" type="button" class="btn btn-success ms-3" style="width: 150px;" onclick="report();"><i class="ri-mail-line" style="margin-right: 8px;"></i>제보하기</button>
+            </div>
           </div>
 
           <div class="card" id="mob-option-card" style="display: none;">
@@ -399,6 +402,10 @@
           },
         ],
       });
+    }
+
+    function report() {
+      window.open('https://forms.gle/fFxUAgXnpVq2Loki6');
     }
 
     function getQueryParams(qs) {
