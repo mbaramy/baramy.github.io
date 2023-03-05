@@ -155,10 +155,48 @@
             <div class="card-footer d-flex">
               <div class="input-group">
                 <button id="btn-minus" type="button" class="btn btn-primary" style="float: right;"><i class="bi bi-dash-lg"></i></button>
-                <input id="option-level" type="number" class="form-control" value="0" min="0" max="15" style="text-align: center;">
+                <input id="option-level" type="number" class="form-control" value="0" min="0" max="20" style="text-align: center;">
                 <button id="btn-plus" type="button" class="btn btn-primary" style="float: right;"><i class="bi bi-plus-lg"></i></button>
               </div>
               <button id="btn-share" type="button" class="btn btn-warning ms-3" style="color: #39252a; width: 150px;" onclick="share();"><i class="ri-kakao-talk-fill" style="margin-right: 8px;"></i>공유</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+                <span style="font-weight: 600; font-size: 15px; vertical-align: middle;">성장 경험치 표</span>
+            </div>
+
+            <div class="card-body" style="padding: 0 20px 0px 20px;">
+              <div class="row">
+                <div class="col-lg-6 col-md-12">
+                  <table class="table table-hover" style="text-align: center;">
+                    <thead>
+                      <tr>
+                        <th scope="col">Lv</th>
+                        <th scope="col">Exp</th>
+                      </tr>
+                    </thead>
+                    <tbody id="exp-table-a">
+
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="col-lg-6 col-md-12">
+                  <table class="table table-hover" style="text-align: center;">
+                    <thead>
+                      <tr>
+                        <th scope="col">Lv</th>
+                        <th scope="col">Exp</th>
+                      </tr>
+                    </thead>
+                    <tbody id="exp-table-b">
+                      
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -202,7 +240,7 @@
   <script src="assets/js/main.js"></script>
   <script src="assets/js/unite.min.js?ver=20230223"></script>
   <script src="assets/js/sheet-api.js"></script>
-  <script src="assets/js/sheet.min.js?ver=20230223.1"></script>
+  <script src="assets/js/sheet.min.js?ver=20230305"></script>
 
   <script type="module">
     // Import the functions you need from the SDKs you need
@@ -233,6 +271,7 @@
     var optionObj = {};
     var optionRate = [];
     var shareObj = {'type': '탑승', 'id': '0', 'grade': '보물', 'name': '', 'level': '0'};
+    const exp = [717,789,867,1302,1431,1575,1732,1905,3239,3563,3919,4312,4742,9484,10433,11476,17214,18935,28403,31243];
 
     $(document).ready(function() {
       Kakao.init('5472dfb0e36ff14873f3613a0e9b9d50');
@@ -285,6 +324,16 @@
           setOption(optionObj[id], grade, parseInt(params.level));
         }
       }
+
+      var expHtml = '';
+      for (var i=0; i<exp.length; i++) {
+        expHtml += '<tr><td>' + (i + 1) + '</td><td>' + addComma(exp[i]) + '</td></tr>';
+        if (i == 9 || i == exp.length - 1) {
+          var table = i < 10 ? $('#exp-table-a') : $('#exp-table-b');
+          table.html(expHtml);
+          expHtml = '';
+        }
+      }
     });
 
     $(document).on('click', '.type-tab', function() {
@@ -328,7 +377,7 @@
 
     $('#btn-plus').on('click', function() {
       var level = parseInt($('#option-level').val());
-      if (level < 15) {
+      if (($('.opt-img').attr('data-grade') == '전설' && level < 20) || ($('.opt-img').attr('data-grade') == '보물' && level < 15)) {
         level += 1;
         $('#option-level').val(level);
         shareObj.level = level;
@@ -341,7 +390,10 @@
       var level = 0;
       if (value != undefined && value.length > 0) {
         level = parseInt(value);
-        if (level > 15) {
+        if ($('.opt-img').attr('data-grade') == '전설' && level > 20) {
+          level = 20;
+          $('#option-level').val(level);
+        } else if ($('.opt-img').attr('data-grade') == '보물' && level > 15) {
           level = 15;
           $('#option-level').val(level);
         } else if (level < 0) {

@@ -15,7 +15,8 @@ function parseSelectedItem(data) {
         var level = 0;
         var input = parseInt(data.eq(i).find('.mob-level').val());
         if (input > level) { level = input; }
-        if (level > 15) level = 15;
+        if (obj.grade == '보물' && level > 15) level = 15;
+        if (obj.grade == '전설' && level > 20) level = 20;
         obj.level = level;
         
         const option = getOption(obj.grade, optionObj[obj.ic], level);
@@ -106,6 +107,7 @@ function combination(arr, n, bucket) {
   return combinationArray;
 }
 function getRecommendData(t, pa, pb) {
+    combinationArray = [];
     if (t.length >= 6) {
         return new Promise(function(resolve, reject) {
             const combinePromise = new Promise(function(res, rej) {

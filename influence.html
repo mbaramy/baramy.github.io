@@ -239,9 +239,9 @@
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
-  <script src="assets/js/unite.min.js?ver=20230223"></script>
+  <script src="assets/js/unite.min.js?ver=20230305"></script>
   <script src="assets/js/sheet-api.js"></script>
-  <script src="assets/js/sheet.min.js?ver=20230223.1"></script>
+  <script src="assets/js/sheet.min.js?ver=20230305"></script>
 
   <script type="module">
     // Import the functions you need from the SDKs you need
@@ -283,7 +283,7 @@
       for (var i=0; i<mobArray.length; i++) {
         var li = '<li class="mob-item" data-id="' + mobArray[i].ic + '" data-type="' + mobArray[i].type + '" data-grade="' + mobArray[i].grade + '" data-influence="' + mobArray[i].influence + '" data-name="' + mobArray[i].name + '">';
         li += '<img class="mob-img" src="assets/img/mob/ic_' + mobArray[i].ic + '.jpg"/>';
-        li += '<input type="number" class="form-control mob-level" placeholder="0레벨" max="15" min="0">';
+        li += '<input type="number" class="form-control mob-level" placeholder="0레벨" max="20" min="0">';
         li += '</li>';
 
         if (mobArray[i].type === '수호') {
