@@ -239,7 +239,7 @@
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
-  <script src="assets/js/unite.min.js?ver=20230305"></script>
+  <script src="assets/js/unite.min.js?ver=20230317"></script>
   <script src="assets/js/sheet-api.js"></script>
   <script src="assets/js/sheet.min.js?ver=20230305"></script>
 
@@ -491,16 +491,17 @@
         $('.loadingView').addClass('d-flex');
         $('.loadingView').show();
         setTimeout(function() {
-          getRecommendData(mob, priorityA, priorityB).then(function(resolveData) {
-            $('.loadingMessage').removeClass('d-flex');
-            $('.loadingMessage').hide();
-            $('.loadingView').removeClass('d-flex');
-            $('.loadingView').hide();
-            const resultHtml = getResultHTML(resolveData);
-            $('#result-justified-s').html(resultHtml.sum);
-            $('#result-justified-t').html(resultHtml.score);
-            $('#result-justified-p').html(resultHtml.priority);
-          });
+          const resolveData = getRecommendData(mob, priorityA, priorityB);
+          
+          $('.loadingMessage').removeClass('d-flex');
+          $('.loadingMessage').hide();
+          $('.loadingView').removeClass('d-flex');
+          $('.loadingView').hide();
+
+          const resultHtml = getResultHTML(resolveData);
+          $('#result-justified-s').html(resultHtml.sum);
+          $('#result-justified-t').html(resultHtml.score);
+          $('#result-justified-p').html(resultHtml.priority);
         }, 100);
       }
     });

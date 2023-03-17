@@ -49,9 +49,6 @@ function getOption(grade, option, level) {
 }
 
 function getRate(key, level, grade) {
-    //0~8: 0
-    //9~13: 1
-    //14~15: 2
     var rate = 0;
     if (level > 5 & level <= 8) {
         rate = 1;
@@ -77,9 +74,9 @@ function getRate(key, level, grade) {
 function scoreToDictionary(array, stat) {
     var result = {};
     for (var i=0; i<array.length; i++) {
-        result[array[i]['name']] = parseFloat(array[i]['score']);
-        if (stat == '체력' && array[i]['name'].indexOf('마력') > -1) result[array[i]['name']] = 0;
-        else if (stat == '마력' && array[i]['name'].indexOf('체력') > -1) result[array[i]['name']] = 0;
+        result[array[i].name] = array[i].score;
+        if (stat == '체력' && array[i].name.includes('체력')) result[array[i].name] = 0;
+        else if (stat == '마력' && array[i].name.includes('마력')) result[array[i].name] = 0;
     }
     return result;
 }
@@ -92,65 +89,58 @@ const uniteInfo = {
 };
 const priorityInfo = ['피해저항관통', '피해저항'];
 
-let combinationArray = [];
-function combination(arr, n, bucket) {
-  if(n === 0){
-    combinationArray.push(bucket);
-    return;
-  }
-  
-  for(let i = 0; i < arr.length; i++){
-    let pick = arr[i];
-    let rest = arr.slice(i + 1);
-    combination(rest, n - 1, bucket.concat(pick));
-  }
-  return combinationArray;
-}
-function getRecommendData(t, pa, pb) {
-    combinationArray = [];
-    if (t.length >= 6) {
-        return new Promise(function(resolve, reject) {
-            const combinePromise = new Promise(function(res, rej) {
-                res(combination(t, 6, []));
-            });
-            combinePromise.then((combine) => {
-                var max = [0, 0, 0];
-                var score = [0, 0, 0];
-                var recommend = {'sum': {}, 'score': {}, 'priority': {}};
-                for (var i=0; i<combine.length; i++) {
-                    const scoreObj = getScore(combine[i], pa, pb);
-                    if (scoreObj.sum > max[0]) {
-                        max[0] = scoreObj.sum;
-                        recommend['sum'] = scoreObj;
-                    }
-
-                    if (scoreObj.score > max[1]) {
-                        max[1] = scoreObj.score;
-                        recommend['score'] = scoreObj;
-                    }
-
-                    if (scoreObj.priority >= max[2]) {
-                        if (scoreObj.priority == max[2]) {
-                            if (scoreObj.score > score[2]) {
-                                max[2] = scoreObj.priority;
-                                score[2] = scoreObj.score;
-                                recommend['priority'] = scoreObj;
-                            }
-                        } else {
-                            max[2] = scoreObj.priority;
-                            score[2] = scoreObj.score;
-                            recommend['priority'] = scoreObj;
-                        }
-                    }
-                }
-                resolve(recommend);
-            });
-        });
-    } else {
-        return new Promise(function(resolve, reject) {
-            resolve({});
-        })
+function combination(arr, n, bucket = [], results = []) {
+    if (n === 0) {
+        results.push(bucket);
+        return results;
     }
+  
+    for (let i = 0; i < arr.length; i++) {
+        let rest = arr.slice(i + 1).filter((elem) => !bucket.includes(elem));
+        combination(rest, n - 1, bucket.concat(arr[i]), results);
+    }
+    return results;
+}
+
+function getRecommendData(t, pa, pb) {
+    if (t.length < 6) {
+      return {};
+    }
+  
+    const combine = combination(t, 6);
+    var maxSum = 0, maxScore = 0, maxPriority = 0, maxScoreWithPriority = 0;
+    var recommendSum, recommendScore, recommendPriority, recommendScoreWithPriority;
+  
+    for (var i = 0; i < combine.length; i++) {
+      const scoreObj = getScore(combine[i], pa, pb);
+  
+      if (scoreObj.sum > maxSum) {
+        maxSum = scoreObj.sum;
+        recommendSum = scoreObj;
+      }
+  
+      if (scoreObj.score > maxScore) {
+        maxScore = scoreObj.score;
+        recommendScore = scoreObj;
+      }
+  
+      if (scoreObj.priority > maxPriority) {
+        maxPriority = scoreObj.priority;
+        recommendPriority = scoreObj;
+      }
+  
+      if (scoreObj.score + scoreObj.priority > maxScoreWithPriority) {
+        maxScoreWithPriority = scoreObj.score + scoreObj.priority;
+        recommendScoreWithPriority = scoreObj;
+      }
+    }
+  
+    return {
+      sum: recommendSum,
+      score: recommendScore,
+      priority: recommendPriority,
+      scoreWithPriority: recommendScoreWithPriority
+    };
 }
 
 function getCombinationCount(n, r) {
