@@ -134,6 +134,10 @@
                 </li>
               </ul>
               <div class="tab-content pt-4" id="type-tab-contents">
+                <div class="input-group mb-3">
+                  <input id="mobSearch" type="text" class="form-control" placeholder="환수명">
+                </div>
+
                 <div class="tab-pane fade show active" id="type-justified-t" role="tabpanel">
                   <ul class="mob-list" id="mob-list-t">
                   </ul>
@@ -265,7 +269,7 @@
   <script src="assets/js/main.js"></script>
   <script src="assets/js/unite.min.js?ver=20230317"></script>
   <script src="assets/js/sheet-api.js"></script>
-  <script src="assets/js/sheet.min.js?ver=20230427"></script>
+  <script src="assets/js/sheet.min.js?ver=20230518"></script>
 
   <script type="module">
     // Import the functions you need from the SDKs you need
@@ -304,8 +308,18 @@
       var html_s = '';
       var html_b = '';
       var html_t = '';
+      var history = window.localStorage.getItem('mobHistory');
+      if (history != null && history.length > 0) {
+        history = history.split(',');
+      } else {
+        history = [];
+      }
       for (var i=0; i<mobArray.length; i++) {
-        var li = '<li class="mob-item" data-id="' + mobArray[i].ic + '" data-type="' + mobArray[i].type + '" data-grade="' + mobArray[i].grade + '" data-influence="' + mobArray[i].influence + '" data-name="' + mobArray[i].name + '">';
+        var className = 'mob-item';
+        if (mobArray[i].type === '탑승' && history.includes(mobArray[i].name)) {
+          className = 'mob-item-selected';
+        }
+        var li = '<li class="' + className + '" data-id="' + mobArray[i].ic + '" data-type="' + mobArray[i].type + '" data-grade="' + mobArray[i].grade + '" data-influence="' + mobArray[i].influence + '" data-name="' + mobArray[i].name + '">';
         li += '<img class="mob-img" src="assets/img/mob/ic_' + mobArray[i].ic + '.jpg"/>';
         li += '<input type="number" class="form-control mob-level" placeholder="0레벨" max="20" min="0">';
         li += '</li>';
@@ -335,6 +349,21 @@
         selectedItem.eq(i).removeClass('mob-item-selected');
         selectedItem.eq(i).addClass('mob-item');
       }
+
+      const mobItem = $('.mob-item');
+      var history = window.localStorage.getItem('mobHistory');
+      if (history != null && history.length > 0) {
+        history = history.split(',');
+      } else {
+        history = [];
+      }
+
+      for (var i=0; i<mobItem.length; i++) {
+        if (mobItem.eq(i).attr('data-type') === '탑승' && history.includes(mobItem.eq(i).attr('data-name'))) {
+          mobItem.eq(i).addClass('mob-item-selected');
+          mobItem.eq(i).removeClass('mob-item');
+        }
+      }
     });
 
     $('#s-tab').on('click', function() {
@@ -343,6 +372,24 @@
         selectedItem.eq(i).removeClass('mob-item-selected');
         selectedItem.eq(i).addClass('mob-item');
       }
+
+      const mobItem = $('.mob-item');
+      var history = window.localStorage.getItem('mobHistory');
+      if (history != null && history.length > 0) {
+        history = history.split(',');
+      } else {
+        history = [];
+      }
+
+      for (var i=0; i<mobItem.length; i++) {
+        if (mobItem.eq(i).attr('data-type') === '수호' && history.includes(mobItem.eq(i).attr('data-name'))) {
+          mobItem.eq(i).addClass('mob-item-selected');
+          mobItem.eq(i).removeClass('mob-item');
+        } else {
+          mobItem.eq(i).removeClass('mob-item-selected');
+          mobItem.eq(i).addClass('mob-item');
+        }
+      }
     });
 
     $('#b-tab').on('click', function() {
@@ -350,6 +397,24 @@
       for (var i=0; i<selectedItem.length; i++) {
         selectedItem.eq(i).removeClass('mob-item-selected');
         selectedItem.eq(i).addClass('mob-item');
+      }
+
+      const mobItem = $('.mob-item');
+      var history = window.localStorage.getItem('mobHistory');
+      if (history != null && history.length > 0) {
+        history = history.split(',');
+      } else {
+        history = [];
+      }
+
+      for (var i=0; i<mobItem.length; i++) {
+        if (mobItem.eq(i).attr('data-type') === '변신' && history.includes(mobItem.eq(i).attr('data-name'))) {
+          mobItem.eq(i).addClass('mob-item-selected');
+          mobItem.eq(i).removeClass('mob-item');
+        } else {
+          mobItem.eq(i).removeClass('mob-item-selected');
+          mobItem.eq(i).addClass('mob-item');
+        }
       }
     });
 
@@ -362,6 +427,7 @@
           if (selectedItem.length < 35) {
             li.eq(i).removeClass('mob-item');
             li.eq(i).addClass('mob-item-selected');
+            addHistory(li.eq(i).attr('data-name'));
           } else {
             alert("경우의 수가 너무 많습니다. 최대 35개 까지 선택 가능합니다.");
             break;
@@ -377,6 +443,7 @@
         li.eq(i).removeClass('mob-item-selected');
         li.eq(i).addClass('mob-item');
       }
+      window.localStorage.setItem('mobHistory', null);
     });
 
     $(document).on('click', '.mob-item', function() {
@@ -384,6 +451,7 @@
       if (selectedItem.length < 35) {
         $(this).removeClass('mob-item');
         $(this).addClass('mob-item-selected');
+        addHistory($(this).attr('data-name'));
       } else {
         alert("경우의 수가 너무 많습니다. 최대 35개 까지 선택 가능합니다.");
       }
@@ -391,10 +459,37 @@
     });
 
     $(document).on('click', '.mob-item-selected', function() {
+      removeHistory($(this).attr('data-name'));
       $(this).removeClass('mob-item-selected');
       $(this).addClass('mob-item');
       $(this).focusout();
     });
+
+    function addHistory(name) {
+      var history = window.localStorage.getItem('mobHistory');
+      if (history != null) {
+        history = history.split(',');
+      } else {
+        history = [];
+      }
+      if (history.indexOf(name) == -1) {
+        history.push(name);
+        window.localStorage.setItem('mobHistory', history.join(','));
+      }
+    }
+
+    function removeHistory(name) {
+      var history = window.localStorage.getItem('mobHistory');
+      if (history != null) {
+        history = history.split(',');
+
+        let index = history.indexOf(name);
+        if (index > -1) {
+          history.splice(index, 1);
+          window.localStorage.setItem('mobHistory', history.join(','));
+        }
+      }
+    }
     
     $('.btn-priority-a').on('click', function() {
       if (!$(this).hasClass('active')) {
@@ -576,6 +671,17 @@
       $('.result-simple-tables').hide();
       $('.btn-simple').removeClass('active');
       $('.result-detail-tables').show();
+    });
+
+    $('#mobSearch').keyup(function(event) {
+      const text = $(this).val();
+      $('.mob-item').hide().filter(function() {
+        return $(this).attr('data-name').includes(text);
+      }).show();
+
+      $('.mob-item-selected').hide().filter(function() {
+        return $(this).attr('data-name').includes(text);
+      }).show();
     });
   </script>
 </body>
