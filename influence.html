@@ -127,6 +127,35 @@
                   </ul>
                 </div>
               </div>
+
+              <div class="row mt-3 mb-3 alert alert-dark alert-dismissible level-container" style="display: none;">
+                <label class="col-sm-2 col-form-label" style="white-space: nowrap;">레벨 일괄 적용</label>
+                <div class="col-sm-10">
+                  <select class="form-select mob-level-select">
+                    <option selected="">0 레벨</option>
+                    <option value="1">1 레벨</option>
+                    <option value="2">2 레벨</option>
+                    <option value="3">3 레벨</option>
+                    <option value="4">4 레벨</option>
+                    <option value="5">5 레벨</option>
+                    <option value="6">6 레벨</option>
+                    <option value="7">7 레벨</option>
+                    <option value="8">8 레벨</option>
+                    <option value="9">9 레벨</option>
+                    <option value="10">10 레벨</option>
+                    <option value="11">11 레벨</option>
+                    <option value="12">12 레벨</option>
+                    <option value="13">13 레벨</option>
+                    <option value="14">14 레벨</option>
+                    <option value="15">15 레벨</option>
+                    <option value="16">16 레벨</option>
+                    <option value="17">17 레벨</option>
+                    <option value="18">18 레벨</option>
+                    <option value="19">19 레벨</option>
+                    <option value="20">20 레벨</option>
+                  </select>
+                </div>
+              </div>
             </div>
 
             <div id="mob-option-card" class="card-body" style="padding: 0 20px 0px 20px; display: none;">
@@ -576,6 +605,7 @@
         $('#type-tab > .nav-item > .nav-link').attr('disabled', true);
         $('.btn-type').hide();
         $('#btn-type-remove').hide();
+        $('.level-container').show();
 
         var mobItem = $('.mob-item');
         for (var i=0; i<mobItem.length; i++) {
@@ -590,6 +620,7 @@
       } else if (currentStep == 1) {
         currentStep = 2;
         $('#mob-select-card').hide();
+        $('.level-container').hide();
 
         let tab = $('#type-tab > .nav-item > .active').eq(0).text();
         if (tab == '수호') $('.btn-priority-e').eq(0).show();
@@ -601,6 +632,7 @@
         $('#btn-next').hide();
         $('#mob-option-card').hide();
         $('#mob-result-card').show();
+        $('.level-container').hide();
 
         var mob = [];
         let tab = $('#type-tab > .nav-item > .active').eq(0).text();
@@ -638,6 +670,7 @@
         $('#type-tab > .nav-item > .nav-link').attr('disabled', false);
         $('.btn-type').show();
         $('#btn-type-remove').show();
+        $('.level-container').hide();
 
         var mobItem = $('.mob-item');
         for (var i=0; i<mobItem.length; i++) {
@@ -654,6 +687,7 @@
         currentStep = 1;
         $('#mob-select-card').show();
         $('#mob-option-card').hide();
+        $('.level-container').show();
       } else if (currentStep == 3) {
         currentStep = 2;
         $('#result-justified-s').html('');
@@ -661,6 +695,7 @@
         $('#result-justified-p').html('');
         $('#mob-option-card').show();
         $('#mob-result-card').hide();
+        $('.level-container').hide();
         $('#btn-next').show();
       }
     });
@@ -688,6 +723,10 @@
       $('.mob-item-selected').hide().filter(function() {
         return $(this).attr('data-name').includes(text);
       }).show();
+    });
+
+    $('.mob-level-select').on('change', function() {
+      $('.mob-level').val($(this).val());
     });
   </script>
 </body>
