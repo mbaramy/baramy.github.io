@@ -58,8 +58,10 @@
         query("SELECT *", 'my_callback');
       } else if (url.indexOf('summon') > -1) {
         summonQuery("SELECT *", 'summon_callback');
-      } else {
+      } else if (url.indexOf('option') > -1) {
         optionQuery("SELECT *", 'option_callback');
+      } else if (url.indexOf('skill') > -1) {
+        skillQuery("SELECT *", 'skill_callback');
       }
     });
 
@@ -76,6 +78,12 @@
     };
 
     var summon_callback = function (data) {
+      data = parse2(data);
+
+      $('#json').html(JSON.stringify(data));
+    };
+
+    var skill_callback = function (data) {
       data = parse2(data);
 
       $('#json').html(JSON.stringify(data));

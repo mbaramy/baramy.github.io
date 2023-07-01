@@ -160,3 +160,19 @@ var summonQuery = function (sql, callback) {
     url += qs.join('&');
     return jsonp(url); // JSONP 도우미 호출
 }
+
+var skillQuery = function (sql, callback) {
+    var url = 'https://spreadsheets.google.com/a/google.com/tq?',
+        params = {
+            key: '1YNepNSqpcV4Xeggpl7Nfh0Ty7VWUFtEybAjdqNlYjrc',
+            tq: encodeURIComponent(sql),
+            range: 'Sheet4!A1:N305',
+            tqx: 'responseHandler:' + callback
+        },
+        qs = [];
+    for (var key in params) {
+        qs.push(key + '=' + params[key]);
+    }
+    url += qs.join('&');
+    return jsonp(url);
+}
