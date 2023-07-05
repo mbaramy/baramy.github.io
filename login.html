@@ -110,13 +110,14 @@
     const checkAuth = getAuth();
     if (checkAuth.currentUser) {
       $('#result').text('currentUser: ' + checkAuth.currentUser);
+    } else {
+      $('#result').text('currentUser: Empty');
     }
 
     handleGoogleLogin = function() {
-      const auth = getAuth();
-      signInWithPopup(auth, provider)
+      signInWithPopup(getAuth(), provider)
         .then((result) => {
-          const user = auth.currentUser;
+          const user = result.user;
           if (user) {
             $('#result').text('Login User: ' + user.uid);
           }
@@ -134,9 +135,11 @@
         });
     }
 
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(getAuth(), (user) => {
       if (user) {
         $('#result').text('onAuthStateChanged User: ' + user.uid);
+
+        console.log(getAuth().currentUser.uid);
       }
     });
   </script>
