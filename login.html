@@ -107,13 +107,18 @@
 
     const provider = new GoogleAuthProvider();
 
+    const checkAuth = getAuth();
+    if (checkAuth.currentUser) {
+      $('#result').text('currentUser: ' + checkAuth.currentUser);
+    }
+
     handleGoogleLogin = function() {
       const auth = getAuth();
       signInWithPopup(auth, provider)
         .then((result) => {
           const user = auth.currentUser;
           if (user) {
-            $('#result').text('user: ' + user.uid);
+            $('#result').text('Login User: ' + user.uid);
           }
         }).catch((error) => {
           // Handle Errors here.
