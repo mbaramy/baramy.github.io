@@ -296,12 +296,12 @@
         html += '<li class="list-li">';
         html += '<a href="skill.html?job=' + job + '&id=' + data[i].id + '">';
         html += '<h3><span>' + data[i].title + '</span>';
-        if (moment.duration(now.diff(moment.unix(data[i].date).utc().subtract(1969, 'years'))).asDays() < 3) {
+        if (moment.duration(now.diff(moment.unix(data[i].date).utc().subtract(1969, 'years').add(1, 'days'))).asDays() < 3) {
           html += '<span class="icon-new"></span>';
         }
         html += '</h3></a>';
         html += '<div class="list-info">';
-        html += '<span class="list-date">' + moment.unix(data[i].date).utc().subtract(1969, 'years').fromNow() + '</span>';
+        html += '<span class="list-date">' + moment.unix(data[i].date).utc().subtract(1969, 'years').add(1, 'days').fromNow() + '</span>';
         html += '<span class="list-like ri-heart-3-fill">' + data[i].like + '</span>';
         html += '</div></li>';
       }

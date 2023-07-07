@@ -42,6 +42,29 @@
       </a>
       <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
+
+    <nav class="header-nav ms-auto">
+      <ul class="d-flex align-items-center">
+
+        <li class="nav-item dropdown pe-3">
+          <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+            <img src="assets/img/android-chrome-192x192.png" alt="Profile" class="rounded-circle">
+            <span class="d-none d-md-block dropdown-toggle ps-2 auth-name"></span>
+          </a><!-- End Profile Iamge Icon -->
+
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile p-0">
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="#">
+                <i class="bi bi-box-arrow-right"></i>
+                <span class="sign-btn"></span>
+              </a>
+            </li>
+
+          </ul><!-- End Profile Dropdown Items -->
+        </li><!-- End Profile Nav -->
+
+      </ul>
+    </nav><!-- End Icons Navigation -->
   </header>
   <!-- End Header -->
 
@@ -89,7 +112,8 @@
         <div class="job-btn active">
         </div>
         <div class="title-container">
-          <input type="text" class="title-input" placeholder="제목" maxlength="50" autofocus="autofocus"/>
+          <input type="text" class="title-input" placeholder="제목" maxlength="50"/>
+          <span class="skill-like ri-heart-3-fill" style="display: none;">즐겨찾기</span>
         </div>
       </div>
 
@@ -375,7 +399,7 @@
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-analytics.js";
-    import { getFirestore, collection, doc, addDoc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-firestore.js";
+    import { getFirestore, collection, doc, addDoc, getDoc, getDocs, setDoc, deleteDoc, serverTimestamp, increment, query, where, updateDoc } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-firestore.js";
     import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-auth.js";
     // TODO: Add SDKs for Firebase products that you want to use
     // https://firebase.google.com/docs/web/setup#available-libraries
@@ -398,10 +422,16 @@
     const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
     const checkAuth = getAuth();
+
     if (checkAuth.currentUser) {
-      console.log('currentUser: ' + checkAuth.currentUser);
+      var profile = checkAuth.currentUser.get().getBasicProfile();
+      $('.auth-name').text(profile.getName());
+      $('.rounded-circle').attr('src', profile.getImageUrl());
+      $('.sign-btn').text('로그아웃');
     } else {
-      console.log('currentUser: Empty');
+      $('.auth-name').text('계정');
+      $('.rounded-circle').attr('src', 'assets/img/android-chrome-192x192.png');
+      $('.sign-btn').text('로그인');
     }
 
     function handleGoogleLogin() {
@@ -427,12 +457,23 @@
 
     onAuthStateChanged(getAuth(), (user) => {
       if (user) {
-        console.log('currentUser: ' + getAuth().currentUser.uid);
+        var profile = user.get().getBasicProfile();
+        $('.auth-name').text(profile.getName());
+        $('.rounded-circle').attr('src', profile.getImageUrl());
+        $('.sign-btn').text('로그아웃');
+      } else {
+        $('.auth-name').text('계정');
+        $('.rounded-circle').attr('src', 'assets/img/android-chrome-192x192.png');
+        $('.sign-btn').text('로그인');
       }
     });
 
-    $('.btn-login').on('click', function() {
-      handleGoogleLogin();
+    $('.sign-btn').on('click', function() {
+      if (checkAuth.currentUser) {
+        getAuth().signOut();
+      } else {
+        handleGoogleLogin();
+      }
     });
 
     // $(function() {
@@ -494,7 +535,6 @@
       } else {
         alert('로그인이 필요합니다.');
       }
-      
     };
 
     const parameter = new URLSearchParams(window.location.search);
@@ -508,6 +548,7 @@
 
     var job = '1';
     var docId = '';
+    var docUid = '';
     var upgrade = [0, 0, 0];
 
     if (parameter.get('job') && ['0', '1', '2', '3', '4', '5', '6', '7', '8'].includes(parameter.get('job'))) job = parameter.get('job');
@@ -565,66 +606,71 @@
       upgrade: 'NULL',
       skills: []
     });
-
     
     function getSkill(id) {
       const docRef = doc(db, "skill", id);
       getDoc(docRef).then((item) => {
         const data = item.data();
-
-        $('.title-input').prop('disabled', true);
-        $('.title-input').val(data.title);
-        
-        const hunt = JSON.parse(decodeURIComponent(data.hunt));
-        const boss = JSON.parse(decodeURIComponent(data.boss));
-        const pvp = JSON.parse(decodeURIComponent(data.pvp));
-        const coast = JSON.parse(decodeURIComponent(data.coast));
-        const awake = data.awake;
-        for (var i=0; i<jobSkill.length; i++) {
-          for (var j=0; j<13; j++) {
-            // hunt
-            if (jobSkill[i].no == hunt.skill[0][j]) {
-              if (hunt.priority[0][j] != '') jobSkill[i].priority[0] = hunt.priority[0][j];
-              if (coast[0][j] != null) jobSkill[i].use = coast[0][j];
-              if (jobSkill[i].no == 'C0') jobSkill[i].skills = hunt.C0;
-              if (jobSkill[i].no == 'C1') jobSkill[i].skills = hunt.C1;
-              docSkill[0][0][j] = jobSkill[i].no;
-            } else if (jobSkill[i].no == hunt.skill[1][j]) {
-              if (hunt.priority[1][j] != '') jobSkill[i].priority[0] = hunt.priority[1][j];
-              if (coast[0][j] != null) jobSkill[i].use = coast[0][j];
-              if (jobSkill[i].no == 'C0') jobSkill[i].skills = hunt.C0;
-              if (jobSkill[i].no == 'C1') jobSkill[i].skills = hunt.C1;
-              docSkill[0][1][j] = jobSkill[i].no;
+        if (data) {
+          docUid = data.uid;
+          $('.title-input').prop('disabled', true);
+          $('.skill-like').show();
+          $('.title-input').val(data.title);
+          
+          const hunt = JSON.parse(decodeURIComponent(data.hunt));
+          const boss = JSON.parse(decodeURIComponent(data.boss));
+          const pvp = JSON.parse(decodeURIComponent(data.pvp));
+          const coast = JSON.parse(decodeURIComponent(data.coast));
+          const awake = data.awake;
+          for (var i=0; i<jobSkill.length; i++) {
+            if (jobSkill[i].no == awake) {
+              jobSkill[i].isAwake = true;
             }
+            for (var j=0; j<13; j++) {
+              // hunt
+              if (jobSkill[i].no == hunt.skill[0][j]) {
+                if (hunt.priority[0][j] != '') jobSkill[i].priority[0] = hunt.priority[0][j];
+                if (coast[0][j] != null) jobSkill[i].use = coast[0][j];
+                if (jobSkill[i].no == 'C0') jobSkill[i].skills = hunt.C0;
+                if (jobSkill[i].no == 'C1') jobSkill[i].skills = hunt.C1;
+                docSkill[0][0][j] = jobSkill[i].no;
+              } else if (jobSkill[i].no == hunt.skill[1][j]) {
+                if (hunt.priority[1][j] != '') jobSkill[i].priority[0] = hunt.priority[1][j];
+                if (coast[0][j] != null) jobSkill[i].use = coast[0][j];
+                if (jobSkill[i].no == 'C0') jobSkill[i].skills = hunt.C0;
+                if (jobSkill[i].no == 'C1') jobSkill[i].skills = hunt.C1;
+                docSkill[0][1][j] = jobSkill[i].no;
+              }
 
-            //boss
-            if (jobSkill[i].no == boss.skill[0][j]) {
-              if (boss.priority[0][j] != '') jobSkill[i].priority[0] = boss.priority[0][j];
-              if (coast[0][j] != null) jobSkill[i].use = coast[0][j];
-              if (jobSkill[i].no == 'C0') jobSkill[i].skills = hunt.C0;
-              if (jobSkill[i].no == 'C1') jobSkill[i].skills = hunt.C1;
-              docSkill[1][0][j] = jobSkill[i].no;
-            } else if (jobSkill[i].no == boss.skill[1][j]) {
-              if (boss.priority[1][j] != '') jobSkill[i].priority[0] = boss.priority[1][j];
-              if (coast[0][j] != null) jobSkill[i].use = coast[0][j];
-              if (jobSkill[i].no == 'C0') jobSkill[i].skills = hunt.C0;
-              if (jobSkill[i].no == 'C1') jobSkill[i].skills = hunt.C1;
-              docSkill[1][1][j] = jobSkill[i].no;
-            }
+              //boss
+              if (jobSkill[i].no == boss.skill[0][j]) {
+                if (boss.priority[0][j] != '') jobSkill[i].priority[0] = boss.priority[0][j];
+                if (coast[0][j] != null) jobSkill[i].use = coast[0][j];
+                if (jobSkill[i].no == 'C0') jobSkill[i].skills = hunt.C0;
+                if (jobSkill[i].no == 'C1') jobSkill[i].skills = hunt.C1;
+                docSkill[1][0][j] = jobSkill[i].no;
+              } else if (jobSkill[i].no == boss.skill[1][j]) {
+                if (boss.priority[1][j] != '') jobSkill[i].priority[0] = boss.priority[1][j];
+                if (coast[0][j] != null) jobSkill[i].use = coast[0][j];
+                if (jobSkill[i].no == 'C0') jobSkill[i].skills = hunt.C0;
+                if (jobSkill[i].no == 'C1') jobSkill[i].skills = hunt.C1;
+                docSkill[1][1][j] = jobSkill[i].no;
+              }
 
-            //pvp
-            if (jobSkill[i].no == pvp.skill[0][j]) {
-              if (pvp.priority[0][j] != '') jobSkill[i].priority[0] = pvp.priority[0][j];
-              if (coast[0][j] != null) jobSkill[i].use = coast[0][j];
-              if (jobSkill[i].no == 'C0') jobSkill[i].skills = hunt.C0;
-              if (jobSkill[i].no == 'C1') jobSkill[i].skills = hunt.C1;
-              docSkill[2][0][j] = jobSkill[i].no;
-            } else if (jobSkill[i].no == pvp.skill[1][j]) {
-              if (pvp.priority[1][j] != '') jobSkill[i].priority[0] = pvp.priority[1][j];
-              if (coast[0][j] != null) jobSkill[i].use = coast[0][j];
-              if (jobSkill[i].no == 'C0') jobSkill[i].skills = hunt.C0;
-              if (jobSkill[i].no == 'C1') jobSkill[i].skills = hunt.C1;
-              docSkill[2][1][j] = jobSkill[i].no;
+              //pvp
+              if (jobSkill[i].no == pvp.skill[0][j]) {
+                if (pvp.priority[0][j] != '') jobSkill[i].priority[0] = pvp.priority[0][j];
+                if (coast[0][j] != null) jobSkill[i].use = coast[0][j];
+                if (jobSkill[i].no == 'C0') jobSkill[i].skills = hunt.C0;
+                if (jobSkill[i].no == 'C1') jobSkill[i].skills = hunt.C1;
+                docSkill[2][0][j] = jobSkill[i].no;
+              } else if (jobSkill[i].no == pvp.skill[1][j]) {
+                if (pvp.priority[1][j] != '') jobSkill[i].priority[0] = pvp.priority[1][j];
+                if (coast[0][j] != null) jobSkill[i].use = coast[0][j];
+                if (jobSkill[i].no == 'C0') jobSkill[i].skills = hunt.C0;
+                if (jobSkill[i].no == 'C1') jobSkill[i].skills = hunt.C1;
+                docSkill[2][1][j] = jobSkill[i].no;
+              }
             }
           }
         }
@@ -728,12 +774,20 @@
               } else {
                 $('.skill-slot').eq(i).find('.skill-item').find('.skill-bg').html('<img src="assets/img/skill/ic_' + skillId + '.png">');
               }
+
+              if (jobSkill[j].awake == 1) {
+                if (jobSkill[j].isAwake) {
+                  $('.skill-slot').eq(i).find('.skill-item').append('<div class="skill-special-slot active" data-id="' + jobSkill[j].no + '"></div>');
+                } else {
+                  $('.skill-slot').eq(i).find('.skill-item').append('<div class="skill-special-slot" data-id="' + jobSkill[j].no + '"></div>');
+                }
+              }
               break;
             }
           }
         }
       }
-    }, 500);
+    }, 1000);
 
     $(document).on('click', '.skill-list > .skill-item', function() {
       if (comboSelectSkill == null) {
@@ -1229,8 +1283,55 @@
         }
       }
 
-      addSkill(job, JSON.stringify(list[0]), JSON.stringify(list[1]), JSON.stringify(list[2]), JSON.stringify(coast), awake, '테스트');
+      addSkill(job, JSON.stringify(list[0]), JSON.stringify(list[1]), JSON.stringify(list[2]), JSON.stringify(coast), awake, $('.title-input').val().trim());
 
+    });
+
+    $('.job-btn').on('click', function() {
+      location.href = 'skilltree.html?job=' + job;
+    });
+
+    var isRunLike = false;
+    $('.skill-like').on('click', function() {
+      if (getAuth().currentUser && getAuth().currentUser.uid && !isRunLike && docUid != '' && docUid != getAuth().currentUser.uid) {
+        isRunLike = true;
+        const likeRef = collection(db, 'likes');
+        const skillRef = collection(db, 'skill');
+        const likeQuery = query(likeRef, where('uid', '==', getAuth().currentUser.uid), where('id', '==', docId));
+        const skillQuery = query(doc(skillRef, docId));
+
+        getDocs(likeQuery).then((result) => {
+          if (result.docs.length == 0) {
+            addDoc(likeRef, {
+              uid: getAuth().currentUser.uid,
+              id: docId
+            }).then((docRef) => {
+              $('.skill-like').addClass('active');
+              isRunLike = false;
+            }).catch((error) => {
+              alert('일시적인 오류로 즐겨찾기에 추가히자 못했습니다.');
+            });
+
+            updateDoc(skillQuery, {
+              like: increment(1)
+            });
+          } else {
+            // delete
+            result.docs.forEach((doc) => {
+              deleteDoc(doc.ref);
+            });
+
+            updateDoc(skillQuery, {
+              like: increment(-1)
+            }).then((docRef) => {
+              $('.skill-like').removeClass('active');
+              isRunLike = false;
+            });
+          }
+        });
+      } else {
+        alert('로그인이 필요합니다.');
+      }
     });
   </script>
 
