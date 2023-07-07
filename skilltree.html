@@ -29,7 +29,7 @@
 
 <!-- Template Main CSS File -->
 <link href="assets/css/style.css" rel="stylesheet">
-<link href="assets/css/baram.css" rel="stylesheet">
+<link href="assets/css/skill.css" rel="stylesheet">
 
 </head>
 <body>
@@ -90,15 +90,57 @@
         <ol class="breadcrumb">
         </ol>
       </nav>
-    </div><!-- End Page Title -->
-
+    </div>
     <section class="section">
-      <div class="row">
-        <div class="col-lg-12">
+      <div class="job-container m-0 bg-white">
+        <div class="job-btn" data-id="1">
+          <img src="assets/img/icon_job_1_5.png">
+          <span>전사</span>
+        </div>
+
+        <div class="job-btn" data-id="2">
+          <img src="assets/img/icon_job_2_5.png">
+          <span>도적</span>
+        </div>
+
+        <div class="job-btn" data-id="3">
+          <img src="assets/img/icon_job_4_5.png">
+          <span>도사</span>
+        </div>
+        
+        <div class="job-btn" data-id="4">
+          <img src="assets/img/icon_job_3_5.png">
+          <span>주술사</span>
+        </div>
+
+        <div class="job-btn" data-id="5">
+          <img src="assets/img/icon_job_5_5.png">
+          <span>격투가</span>
+        </div>
+
+        <div class="job-btn" data-id="6">
+          <img src="assets/img/icon_job_6_5.png">
+          <span>궁사</span>
+        </div>
+
+        <div class="job-btn" data-id="7">
+          <img src="assets/img/icon_job_7_5.png">
+          <span>무사</span>
+        </div>
+
+        <div class="job-btn" data-id="8">
+          <img src="assets/img/icon_job_8_5.png">
+          <span>천인</span>
         </div>
       </div>
     </section>
 
+    <section class="section">
+      <div class="list-container bg-white">
+        <ul class="list-ul p-0">
+        </ul>
+      </div>
+    </section>
   </main><!-- End #main -->
 
   <!-- ======= Footer ======= -->
@@ -133,13 +175,14 @@
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
+  <script src="assets/js/moment.js"></script>
   <script src="assets/js/jquery.iframetracker.js"></script>
 
   <script type="module">
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-analytics.js";
-    import { getFirestore, collection, getDoc, query, where, limit, orderBy, startAfter, getCountFromServer } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-firestore.js";
+    import { getFirestore, collection, doc, getDocs, query, where, limit, orderBy, startAfter, getCountFromServer, Timestamp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-firestore.js";
     // TODO: Add SDKs for Firebase products that you want to use
     // https://firebase.google.com/docs/web/setup#available-libraries
   
@@ -156,15 +199,35 @@
     };
   
     // Initialize Firebase
+    var page = 1;
+    const parameter = new URLSearchParams(window.location.search);
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
     const db = getFirestore(app);
-    const coll = collection(db, 'skill');
-    const q = query(coll, where('job', '==', '0'));
-    const snapshot = await getCountFromServer(q);
 
-    console.log('count: ' + snapshot.data().count);
-    totalCount = snapshot.data().count;
+    const skillRef = collection(db, 'skill');
+    const countQuery = query(skillRef, where('job', '==', parseInt(parameter.get('job'))));
+    const countSnapshot = await getCountFromServer(countQuery);
+    totalCount = countSnapshot.data().count;
+
+    const listQuery = query(skillRef, where('job', '==', parseInt(parameter.get('job'))), limit(10));
+    await getDocs(listQuery).then((result) => {
+      const data = result.docs.map((doc) => ({
+        id: doc.id,
+        title: doc.data().title,
+        like: doc.data().like,
+        date: doc.data().date
+      }));
+      
+      setDataList(data);
+    });
+
+    // listSnapshot.forEach((doc) => {
+    //   console.log(doc.data());
+    // });
+
+    // const last = listSnapshot.docs[listSnapshot.docs.length - 1];
+    // const next = query(skillRef, startAfter(last), limit(10));
 
     // $(function() {
     //   $.getJSON("https://api64.ipify.org?format=jsonp&callback=?", function(json) {
@@ -201,13 +264,50 @@
 
   <script>
     var userIp;
-    var job;
+    var job = '0';
     var page = 0;
     var totalCount;
+    moment.locale('ko');
+    $('.list-ul').hide();
 
     $(document).ready(function() {
       // Kakao.init('5472dfb0e36ff14873f3613a0e9b9d50');
+
+      const parameter = new URLSearchParams(window.location.search);
+      if (parameter.get('job') && ['0', '1', '2', '3', '4', '5', '6', '7', '8'].includes(parameter.get('job'))) job = parameter.get('job');
+
+      for (var i=0; i<$('.job-btn').length; i++) {
+        if ($('.job-btn').eq(i).attr('data-id') == job) {
+          $('.job-btn').eq(i).addClass('active');
+        }
+      }
+
+      $('.job-btn').on('click', function() {
+        window.location.href = 'skilltree.html?job=' + $(this).attr('data-id');
+      });
     });
+
+    function setDataList(data) {
+      $('.list-ul').show();
+      var now = moment();
+
+      var html = '';
+      for (var i=0; i<data.length; i++) {
+        html += '<li class="list-li">';
+        html += '<a href="skill.html?job=' + job + '&id=' + data[i].id + '">';
+        html += '<h3><span>' + data[i].title + '</span>';
+        if (moment.duration(now.diff(moment.unix(data[i].date).utc().subtract(1969, 'years'))).asDays() < 3) {
+          html += '<span class="icon-new"></span>';
+        }
+        html += '</h3></a>';
+        html += '<div class="list-info">';
+        html += '<span class="list-date">' + moment.unix(data[i].date).utc().subtract(1969, 'years').fromNow() + '</span>';
+        html += '<span class="list-like ri-heart-3-fill">' + data[i].like + '</span>';
+        html += '</div></li>';
+      }
+
+      $('.list-ul').append(html);
+    }
   </script>
 </body>
 </html>
