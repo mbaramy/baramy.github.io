@@ -742,6 +742,7 @@
       if (id && id != '' && loginUid != '') {
         const countQuery = query(collection(db, 'likes'), where('sid', '==', id), where('uid', '==', loginUid));
         getCountFromServer(countQuery).then((result) => {
+          console.log(result.data().count);
           if (result.data().count > 0) {
             $('.skill-like > i').removeClass('bi-star');
             $('.skill-like > i').addClass('bi-star-fill');
