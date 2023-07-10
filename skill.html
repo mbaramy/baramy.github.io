@@ -118,9 +118,11 @@
       <div class="job-container">
         <div class="job-btn active">
         </div>
-        <div class="title-container">
+        <div class="title-container d-flex">
           <input type="text" class="title-input" placeholder="제목" maxlength="50"/>
-          <span class="skill-like ri-heart-3-fill" style="display: none;">즐겨찾기</span>
+          <button type="button" class="btn btn-primary skill-like" style="display: none;">
+            즐겨찾기 <i class="bi bi-star"></i>
+          </button>
         </div>
       </div>
 
@@ -739,10 +741,12 @@
     function checkLike(id) {
       if (id && id != '' && loginUid != '') {
         const countQuery = query(collection(db, 'likes'), where('sid', '==', id), where('uid', '==', loginUid));
-        const countSnapshot = getCountFromServer(countQuery);
-        if (countSnapshot.data().count > 0) {
-          $('.skill-like').addClass('active');
-        }
+        getCountFromServer(countQuery).then((result) => {
+          if (result.data().count > 0) {
+            $('.skill-like > i').removeClass('bi-star');
+            $('.skill-like > i').addClass('bi-star-fill');
+          }
+        });
       }
     }
 
@@ -1395,7 +1399,8 @@
               title: docTitle,
               job: parseInt(job)
             }).then((docRef) => {
-              $('.skill-like').addClass('active');
+              $('.skill-like > i').removeClass('bi-star');
+              $('.skill-like > i').addClass('bi-star-fill');
               isRunLike = false;
             }).catch((error) => {
               alert('일시적인 오류로 즐겨찾기에 추가히자 못했습니다.');
@@ -1414,7 +1419,8 @@
             updateDoc(skillQuery, {
               like: increment(-1)
             }).then((docRef) => {
-              $('.skill-like').removeClass('active');
+              $('.skill-like > i').removeClass('bi-star-fill');
+              $('.skill-like > i').addClass('bi-star');
               isRunLike = false;
             });
           }
