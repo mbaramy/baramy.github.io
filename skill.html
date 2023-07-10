@@ -1376,7 +1376,8 @@
               uid: loginUid,
               id: docId,
               date: serverTimestamp(),
-              title: docTitle
+              title: docTitle,
+              job: job
             }).then((docRef) => {
               $('.skill-like').addClass('active');
               isRunLike = false;
