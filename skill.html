@@ -729,8 +729,19 @@
       });
     };
 
+    function checkLike(id) {
+      if (id && id != '' && loginUid != '') {
+        const countQuery = query(collection(db, 'likes'), where('sid', '==', id), where('uid', '==', loginUid));
+        const countSnapshot = getCountFromServer(countQuery);
+        if (countSnapshot.data().count > 0) {
+          $('.skill-like').addClass('active');
+        }
+      }
+    }
+
     if (docId != '') {
       await getSkill(docId);
+      await checkLike(docId);
     } else {
       $('.loading-container').removeClass('active');
       $('.loading-container').html('');
@@ -1365,7 +1376,7 @@
         isRunLike = true;
         const likeRef = collection(db, 'likes');
         const skillRef = collection(db, 'skill');
-        const likeQuery = query(likeRef, where('uid', '==', loginUid), where('id', '==', docId));
+        const likeQuery = query(likeRef, where('uid', '==', loginUid), where('sid', '==', docId));
         const skillQuery = query(doc(skillRef, docId));
 
         getDocs(likeQuery).then((result) => {
