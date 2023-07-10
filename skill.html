@@ -739,6 +739,7 @@
     };
 
     function checkLike(id) {
+      console.log('sid: ' + id + ' / uid:' + loginUid);
       if (id && id != '' && loginUid != '') {
         const countQuery = query(collection(db, 'likes'), where('sid', '==', id), where('uid', '==', loginUid));
         getCountFromServer(countQuery).then((result) => {
