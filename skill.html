@@ -571,9 +571,6 @@
       }
     }
 
-    const parameter = new URLSearchParams(window.location.search);
-    if (parameter.get('id')) docId = parameter.get('id');
-
     var userIp;
     const dataList = (new GlobalSkill().getData())();
     var jobSkill = [];
@@ -587,6 +584,7 @@
     var docTitle = '';
     var upgrade = [0, 0, 0];
 
+    const parameter = new URLSearchParams(window.location.search);
     if (parameter.get('job') && ['0', '1', '2', '3', '4', '5', '6', '7', '8'].includes(parameter.get('job'))) job = parameter.get('job');
     if (parameter.get('id')) docId = parameter.get('id');
 
@@ -1361,7 +1359,6 @@
 
     var isRunLike = false;
     $('.skill-like').on('click', function() {
-      console.log('likeTest: ' + docUid + ' == ' + loginUid);
       if (docUid == loginUid) {
         alert('나의 스킬 트리 페이지에서 확인 할 수 있습니다!');
       } else if (!isRunLike && docUid != '' && loginUid != '') {
@@ -1375,7 +1372,7 @@
           if (result.docs.length == 0) {
             addDoc(likeRef, {
               uid: loginUid,
-              id: docId,
+              sid: docId,
               date: serverTimestamp(),
               title: docTitle,
               job: parseInt(job)

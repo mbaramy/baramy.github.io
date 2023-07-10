@@ -418,7 +418,7 @@
         
         if (result) {
           const data = result.docs.map((doc) => ({
-            id: doc.id,
+            id: (job = 0 ? doc.id : doc.sid),
             title: doc.data().title,
             like: doc.data().like,
             date: doc.data().date,
