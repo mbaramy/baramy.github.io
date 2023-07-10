@@ -738,8 +738,9 @@
 
     function checkLike(id) {
       console.log('sid: ' + id + ' / uid:' + loginUid);
-      if (id && id != '' && loginUid != '') {
-        const countQuery = query(collection(db, 'likes'), where('sid', '==', id), where('uid', '==', loginUid));
+      console.log('checkAuth.currentUser.uid: ' + checkAuth.currentUser.uid);
+      if (id && id != '' && checkAuth.currentUser.uid != '') {
+        const countQuery = query(collection(db, 'likes'), where('sid', '==', id), where('uid', '==', checkAuth.currentUser.uid));
         getCountFromServer(countQuery).then((result) => {
           console.log(result.data().count);
           if (result.data().count > 0) {
@@ -752,7 +753,7 @@
 
     if (docId != '') {
       await getSkill(docId);
-      
+
       checkLike(docId);
     } else {
       $('.loading-container').removeClass('active');
