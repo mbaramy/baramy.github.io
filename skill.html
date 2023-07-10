@@ -469,6 +469,7 @@
         $('.auth-name').text(user.displayName);
         $('.rounded-circle').attr('src', user.photoURL);
         $('.sign-btn-label').text('로그아웃');
+        checkLike();
       } else {
         $('.auth-name').text('계정');
         $('.rounded-circle').attr('src', 'assets/img/android-chrome-192x192.png');
@@ -736,11 +737,9 @@
       });
     };
 
-    function checkLike(id) {
-      console.log('sid: ' + id + ' / uid:' + loginUid);
-      console.log('checkAuth.currentUser.uid: ' + checkAuth.currentUser.uid);
-      if (id && id != '' && checkAuth.currentUser.uid != '') {
-        const countQuery = query(collection(db, 'likes'), where('sid', '==', id), where('uid', '==', checkAuth.currentUser.uid));
+    function checkLike() {
+      if (docId && docId != '' && loginUid != '') {
+        const countQuery = query(collection(db, 'likes'), where('sid', '==', docId), where('uid', '==', loginUid));
         getCountFromServer(countQuery).then((result) => {
           console.log(result.data().count);
           if (result.data().count > 0) {
