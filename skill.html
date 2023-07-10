@@ -514,7 +514,7 @@
     }
 
     function addSkill(job, hunt, boss, pvp, coast, awake, title) {
-      if (getAuth().currentUser && getAuth().currentUser.uid) {
+      if (loginUid != '') {
         try {
           const skillsRef = collection(db, 'skill');
           addDoc(skillsRef, {
@@ -525,7 +525,7 @@
               coast: coast,
               awake: awake,
               title: title,
-              uid: getAuth().currentUser.uid,
+              uid: loginUid,
               like: 0,
               date: serverTimestamp()
           }).then((docRef) => {
@@ -545,9 +545,9 @@
     };
 
     function updateSkill(job, hunt, boss, pvp, coast, awake, title) {
-      if (getAuth().currentUser && getAuth().currentUser.uid) {
+      if (loginUid != '') {
         try {
-          const updateQuery = query(collection(db, 'skill'), where('uid', '==', getAuth().currentUser.uid), where('id', '==', docId));
+          const updateQuery = query(collection(db, 'skill'), where('uid', '==', loginUid), where('id', '==', docId));
           updateDoc(updateQuery, {
               hunt: hunt,
               boss: boss,
@@ -653,7 +653,7 @@
         if (data) {
           docUid = data.uid;
           docTitle = data.title;
-          if (data.uid == getAuth().currentUser.uid) {
+          if (data.uid == loginUid) {
             $('.btn-save').text('수정');
           }
           $('.title-input').prop('disabled', true);
