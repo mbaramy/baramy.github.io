@@ -471,7 +471,9 @@
 
     $('.sign-btn').on('click', function() {
       if (checkAuth.currentUser) {
-        checkAuth.signOut();
+        checkAuth.signOut().then(function() {
+          location.reload();
+        });
       } else {
         handleGoogleLogin();
       }
@@ -543,7 +545,7 @@
     function updateSkill(job, hunt, boss, pvp, coast, awake, title) {
       if (loginUid != '') {
         try {
-          const updateQuery = query(collection(db, 'skill'), where('uid', '==', loginUid), where('id', '==', docId));
+          const updateQuery = query(doc(collection(db, 'skill'), docId));
           updateDoc(updateQuery, {
               hunt: hunt,
               boss: boss,
@@ -553,8 +555,7 @@
               title: title
           }).then((docRef) => {
               location.href = 'skilltree.html?job=' + job;
-          })
-          .catch((error) => {
+          }).catch((error) => {
               console.error("Error adding document: ", error);
               alert('등록 실패');
           });
