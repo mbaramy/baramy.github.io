@@ -19,9 +19,9 @@ function getJobName(id) {
         case '2':
             return '도적';
         case '3':
-            return '도사';
-        case '4':
             return '주술사';
+        case '4':
+            return '도사';
         case '5':
             return '격투가';
         case '6':
