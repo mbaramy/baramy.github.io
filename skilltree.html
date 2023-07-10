@@ -361,12 +361,14 @@
       getDocs(query).then((result) => {
         if (result) {
           const data = result.docs.map((doc) => ({
-            id: (job = 0 ? doc.data().sid : doc.id),
+            id: (job = '0' ? doc.data().sid : doc.id),
             title: doc.data().title,
             like: doc.data().like,
             date: doc.data().date,
             job: doc.data().job
           }));
+
+          console.log(data);
           
           currentCount += data.length;
           isLoading = false;
