@@ -114,6 +114,14 @@
         </ol>
       </nav>
     </div>
+    
+    <div class="row mb-4">
+      <ins class="kakao_ad_area" style="display:none;"
+      data-ad-unit = "DAN-lOqeBgJ4uYAgcjX8"
+      data-ad-width = "320"
+      data-ad-height = "100"></ins>
+    </div>
+
     <section class="section">
       <div class="job-container m-0 bg-white">
         <div class="job-btn" data-id="0">
@@ -296,14 +304,14 @@
     });
 
     const skillRef = collection(db, 'skill');
-    const countQuery = query(skillRef, where('job', '==', parseInt(parameter.get('job'))));
+    var countQuery = query(skillRef, where('job', '==', parseInt(parameter.get('job'))));
     if (job == 0 && checkAuth.currentUser) {
       countQuery = query(collection(db, 'likes'), where('uid', '==', checkAuth.currentUser.uid));
     }
     const countSnapshot = await getCountFromServer(countQuery);
     totalCount = countSnapshot.data().count;
 
-    const listQuery = query(skillRef, where('job', '==', parseInt(parameter.get('job'))), limit(10));
+    var listQuery = query(skillRef, where('job', '==', parseInt(parameter.get('job'))), limit(10));
     if (job == 0 && checkAuth.currentUser) {
       listQuery = query(collection(db, 'likes'), orderBy('date'), where('uid', '==', checkAuth.currentUser.uid), limit(10));
     }
@@ -360,37 +368,47 @@
       });
     }
 
-    // $(function() {
-    //   $.getJSON("https://api64.ipify.org?format=jsonp&callback=?", function(json) {
-    //     userIp = json.ip;
+    $('.btn-skill-add').on('click', function() {
+      if (job == '0') {
+        alert('즐겨찾기 하고싶은 스킬 세팅을 추가해보세요!');
+      } else if (checkAuth.currentUser) {
+        location.href = 'skill.html?job' = job;
+      } else {
+        alert('로그인이 필요합니다.');
+      }
+    });
 
-    //     setTimeout(function() {
-    //       document.querySelectorAll('.kakao_ad_area').forEach((ad) => { 
-    //         let adUnit = $(ad).attr('data-ad-unit');
-    //         ad.querySelectorAll('iframe').forEach((iframe) => {
-    //           $('#' + iframe.id).iframeTracker({
-    //             blurCallback: e => {
-    //               ipLog("DAN-lOqeBgJ4uYAgcjX8", (new Date()).toLocaleString(), navigator.userAgent, window.location.href, userIp);
-    //             }
-    //           });
-    //         });
-    //       });
-    //     }, 1000);
-    //   });
-    // });
+    $(function() {
+      $.getJSON("https://api64.ipify.org?format=jsonp&callback=?", function(json) {
+        userIp = json.ip;
 
-    // function ipLog(adUnit, date, userAgent, url, ip) {
-    //   try {
-    //     const docRef = addDoc(collection(db, "ADLog"), {
-    //       adUnit: adUnit,
-    //       date: date,
-    //       userAgent: userAgent,
-    //       ip: ip,
-    //       url: url
-    //     });
-    //   } catch (e) {
-    //   }
-    // }
+        setTimeout(function() {
+          document.querySelectorAll('.kakao_ad_area').forEach((ad) => { 
+            let adUnit = $(ad).attr('data-ad-unit');
+            ad.querySelectorAll('iframe').forEach((iframe) => {
+              $('#' + iframe.id).iframeTracker({
+                blurCallback: e => {
+                  ipLog("DAN-lOqeBgJ4uYAgcjX8", (new Date()).toLocaleString(), navigator.userAgent, window.location.href, userIp);
+                }
+              });
+            });
+          });
+        }, 1000);
+      });
+    });
+
+    function ipLog(adUnit, date, userAgent, url, ip) {
+      try {
+        const docRef = addDoc(collection(db, "ADLog"), {
+          adUnit: adUnit,
+          date: date,
+          userAgent: userAgent,
+          ip: ip,
+          url: url
+        });
+      } catch (e) {
+      }
+    }
   </script>
 
   <script>
@@ -405,7 +423,7 @@
     $('.list-ul').hide();
 
     $(document).ready(function() {
-      // Kakao.init('5472dfb0e36ff14873f3613a0e9b9d50');
+      Kakao.init('5472dfb0e36ff14873f3613a0e9b9d50');
 
       const parameter = new URLSearchParams(window.location.search);
       if (parameter.get('job') && ['0', '1', '2', '3', '4', '5', '6', '7', '8'].includes(parameter.get('job'))) job = parameter.get('job');
@@ -437,9 +455,9 @@
     }
 
     function appendDataList(data) {
-      var now = moment();
+      const now = moment();
       var html = '';
-      
+
       for (var i=0; i<data.length; i++) {
         html += '<li class="list-li">';
         html += '<a href="skill.html?job=' + job + '&id=' + data[i].id + '">';
