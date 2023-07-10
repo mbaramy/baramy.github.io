@@ -123,7 +123,7 @@
     </section>
 
     <section class="section">
-      <div class="row">
+      <div class="row m-auto">
         <div class="col-sm-12 col-md-6 col-lg-6 skill-list-container mb-2 p-0">
           <div class="btn-group mb-2" role="group">
             <button type="button" class="btn bystyle-tab bystyle-tab-off" data-id="0">전투</button>
@@ -316,7 +316,7 @@
           
         </div>
 
-        <div class="col-sm-12 col-md-6 col-lg-6 pe-0 mb-2" style="position: relative;">
+        <div class="col-sm-12 col-md-6 col-lg-6 pe-0 mb-2" style="position: relative; min-width: 320px;">
           <div class="btn-group mb-2 w-100" role="group">
             <ul class="nav nav-tabs nav-tabs-bordered w-100" id="type-tab" role="tablist">
               <li class="nav-item flex-fill" role="presentation">
@@ -351,11 +351,12 @@
             저장
           </button>
 
-          <button class="bystyle-btn-red btn btn-login col-4" type="button">
-            로그인
-          </button>
-
           <div class="safe-container2"></div>
+          <div class="loading-container">
+            <div class="spinner-border text-light loading-spinner" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
       </div>
     </section>
   </main><!-- End #main -->
@@ -424,9 +425,8 @@
     const checkAuth = getAuth();
 
     if (checkAuth.currentUser) {
-      var profile = checkAuth.currentUser.get().getBasicProfile();
-      $('.auth-name').text(profile.getName());
-      $('.rounded-circle').attr('src', profile.getImageUrl());
+      $('.auth-name').text(checkAuth.currentUser.displayName);
+      $('.rounded-circle').attr('src', checkAuth.currentUser.photoURL);
       $('.sign-btn').text('로그아웃');
     } else {
       $('.auth-name').text('계정');
@@ -438,28 +438,20 @@
       signInWithPopup(getAuth(), provider)
         .then((result) => {
           const user = result.user;
-          if (user) {
-            console.log('currentUser: ' + user.uid);
-          }
+          $('.auth-name').text(user.displayName);
+          $('.rounded-circle').attr('src', user.photoURL);
+          $('.sign-btn').text('로그아웃');
         }).catch((error) => {
-          // Handle Errors here.
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          // The email of the user's account used.
-          const email = error.customData.email;
-          // The AuthCredential type that was used.
-          const credential = GoogleAuthProvider.credentialFromError(error);
-          // ...
-
-          console.log('credential: ' + credential + ' / errorCode: ' + errorCode + ' / errorMessage: ' + errorMessage);
+          $('.auth-name').text('계정');
+          $('.rounded-circle').attr('src', 'assets/img/android-chrome-192x192.png');
+          $('.sign-btn').text('로그인');
         });
     }
 
     onAuthStateChanged(getAuth(), (user) => {
       if (user) {
-        var profile = user.get().getBasicProfile();
-        $('.auth-name').text(profile.getName());
-        $('.rounded-circle').attr('src', profile.getImageUrl());
+        $('.auth-name').text(user.displayName);
+        $('.rounded-circle').attr('src', user.photoURL);
         $('.sign-btn').text('로그아웃');
       } else {
         $('.auth-name').text('계정');
@@ -609,6 +601,7 @@
     
     function getSkill(id) {
       const docRef = doc(db, "skill", id);
+      $('.loading-container').addClass('active');
       getDoc(docRef).then((item) => {
         const data = item.data();
         if (data) {
@@ -644,13 +637,13 @@
 
               //boss
               if (jobSkill[i].no == boss.skill[0][j]) {
-                if (boss.priority[0][j] != '') jobSkill[i].priority[0] = boss.priority[0][j];
+                if (boss.priority[0][j] != '') jobSkill[i].priority[1] = boss.priority[0][j];
                 if (coast[0][j] != null) jobSkill[i].use = coast[0][j];
                 if (jobSkill[i].no == 'C0') jobSkill[i].skills = hunt.C0;
                 if (jobSkill[i].no == 'C1') jobSkill[i].skills = hunt.C1;
                 docSkill[1][0][j] = jobSkill[i].no;
               } else if (jobSkill[i].no == boss.skill[1][j]) {
-                if (boss.priority[1][j] != '') jobSkill[i].priority[0] = boss.priority[1][j];
+                if (boss.priority[1][j] != '') jobSkill[i].priority[1] = boss.priority[1][j];
                 if (coast[0][j] != null) jobSkill[i].use = coast[0][j];
                 if (jobSkill[i].no == 'C0') jobSkill[i].skills = hunt.C0;
                 if (jobSkill[i].no == 'C1') jobSkill[i].skills = hunt.C1;
@@ -659,13 +652,13 @@
 
               //pvp
               if (jobSkill[i].no == pvp.skill[0][j]) {
-                if (pvp.priority[0][j] != '') jobSkill[i].priority[0] = pvp.priority[0][j];
+                if (pvp.priority[0][j] != '') jobSkill[i].priority[2] = pvp.priority[0][j];
                 if (coast[0][j] != null) jobSkill[i].use = coast[0][j];
                 if (jobSkill[i].no == 'C0') jobSkill[i].skills = hunt.C0;
                 if (jobSkill[i].no == 'C1') jobSkill[i].skills = hunt.C1;
                 docSkill[2][0][j] = jobSkill[i].no;
               } else if (jobSkill[i].no == pvp.skill[1][j]) {
-                if (pvp.priority[1][j] != '') jobSkill[i].priority[0] = pvp.priority[1][j];
+                if (pvp.priority[1][j] != '') jobSkill[i].priority[2] = pvp.priority[1][j];
                 if (coast[0][j] != null) jobSkill[i].use = coast[0][j];
                 if (jobSkill[i].no == 'C0') jobSkill[i].skills = hunt.C0;
                 if (jobSkill[i].no == 'C1') jobSkill[i].skills = hunt.C1;
@@ -673,12 +666,24 @@
               }
             }
           }
+
+          if (job == '8') {
+            upgrade[0] = hunt.upgrade;
+            upgrade[1] = boss.upgrade;
+            upgrade[2] = pvp.upgrade;
+          }
+
+        } else {
+          $('.loading-container').html('');
         }
       });
     };
 
     if (docId != '') {
       await getSkill(docId);
+    } else {
+      $('.loading-container').removeClass('active');
+      $('.loading-container').html('');
     }
 
     var skill_slot_items = ['', '', '', '', '', ''];
@@ -746,8 +751,10 @@
     setSkillInfo($('.skill-item').eq(0).attr('data-id'));
 
     setTimeout(() => {
+      console.log(jobSkill);
       for (var i=0; i<$('.page-contents').length; i++) {
         var docSkillPage = docSkill[i];
+        console.log(docSkillPage);
         var first = '<div class="skill-container mb-3" data-tab="' + i + '">';
         var second = '<div class="skill-container" data-tab="' + i + '">';
         
@@ -787,7 +794,10 @@
           }
         }
       }
-    }, 1000);
+
+      $('.loading-container').removeClass('active');
+      $('.loading-container').html('');
+    }, 2000);
 
     $(document).on('click', '.skill-list > .skill-item', function() {
       if (comboSelectSkill == null) {
@@ -1037,8 +1047,6 @@
       $('#mp-label').text('마력 ' + $(this).val() + '%');
       setCoast();
     });
-
-    
 
     function setCoast() {
       var coast = ['', ''];
@@ -1304,7 +1312,8 @@
           if (result.docs.length == 0) {
             addDoc(likeRef, {
               uid: getAuth().currentUser.uid,
-              id: docId
+              id: docId,
+              date: serverTimestamp()
             }).then((docRef) => {
               $('.skill-like').addClass('active');
               isRunLike = false;
