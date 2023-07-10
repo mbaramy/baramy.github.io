@@ -364,7 +364,8 @@
             id: doc.id,
             title: doc.data().title,
             like: doc.data().like,
-            date: doc.data().date
+            date: doc.data().date,
+            job: doc.data().job
           }));
           
           currentCount += data.length;
@@ -420,7 +421,8 @@
             id: doc.id,
             title: doc.data().title,
             like: doc.data().like,
-            date: doc.data().date
+            date: doc.data().date,
+            job: doc.data().job
           }));
           isLoading = false;
           $('.list-li').remove();
