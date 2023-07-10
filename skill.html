@@ -72,7 +72,7 @@
   <aside id="sidebar" class="sidebar" data-include-path="common/sidebar.html">
     <ul class="sidebar-nav" id="sidebar-nav">
       <li class="nav-item">
-        <a class="nav-link" href="index.html">
+        <a class="nav-link collapsed" href="index.html">
           <i class="bi bi-card-list"></i>
           <span>환수 정보</span>
         </a>
@@ -99,6 +99,13 @@
         <a class="nav-link collapsed" href="option.html">
           <i class="ri-magic-fill"></i>
           <span>성능 추가</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="skilltree.html?job=1">
+          <i class="bi bi-ui-checks-grid"></i>
+          <span>스킬 트리</span>
+          <span class="badge bg-secondary ms-2">Beta</span>
         </a>
       </li>
     </ul>
@@ -407,7 +414,7 @@
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-analytics.js";
-    import { getFirestore, collection, doc, addDoc, getDoc, getDocs, setDoc, deleteDoc, serverTimestamp, increment, query, where, updateDoc } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-firestore.js";
+    import { getFirestore, collection, doc, addDoc, getDoc, getDocs, setDoc, deleteDoc, serverTimestamp, increment, query, where, updateDoc, getCountFromServer } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-firestore.js";
     import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-auth.js";
     // TODO: Add SDKs for Firebase products that you want to use
     // https://firebase.google.com/docs/web/setup#available-libraries
