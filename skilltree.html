@@ -379,7 +379,9 @@
             }
           }
 
-          if (totalCount >= currentCount) {
+          if (job == '0') {
+            $('.btn-expand').remove();
+          } else if (totalCount >= currentCount) {
             $('.btn-expand').remove();
           } else {
             if (!$('.btn-expand').hasClass('active')) {
@@ -503,7 +505,7 @@
 
       for (var i=0; i<data.length; i++) {
         html += '<li class="list-li">';
-        html += '<a href="skill.html?job=' + job + '&id=' + data[i].id + '">';
+        html += '<a href="skill.html?job=' + data[i].job + '&id=' + data[i].id + '">';
         html += '<h3><span>' + data[i].title + '</span>';
         if (moment.duration(now.diff(moment.unix(data[i].date).utc().subtract(1969, 'years').add(1, 'days'))).asDays() < 3) {
           html += '<span class="icon-new"></span>';
