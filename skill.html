@@ -457,7 +457,6 @@
         .then((result) => {
           location.reload();
         }).catch((error) => {
-          loginUid = '';
           $('.auth-name').text('계정');
           $('.rounded-circle').attr('src', 'assets/img/android-chrome-192x192.png');
           $('.sign-btn-label').text('로그인');
@@ -471,7 +470,6 @@
         $('.rounded-circle').attr('src', user.photoURL);
         $('.sign-btn-label').text('로그아웃');
       } else {
-        loginUid = '';
         $('.auth-name').text('계정');
         $('.rounded-circle').attr('src', 'assets/img/android-chrome-192x192.png');
         $('.sign-btn-label').text('로그인');
@@ -754,7 +752,8 @@
 
     if (docId != '') {
       await getSkill(docId);
-      await checkLike(docId);
+      
+      checkLike(docId);
     } else {
       $('.loading-container').removeClass('active');
       $('.loading-container').html('');
