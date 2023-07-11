@@ -679,48 +679,48 @@
             }
             for (var j=0; j<13; j++) {
               // hunt
-              if (jobSkill[i].no == hunt.skill[0][j]) {
-                if (hunt.priority[0][j] != '') jobSkill[i].priority[0] = hunt.priority[0][j];
+              if (jobSkill[i].no == hunt.skill[0][j] && hunt.skill[0][j] != '') {
+                if (hunt.priority[0][j] != '') jobSkill[i].priority[0] = parseInt(hunt.priority[0][j]);
                 if (coast[0][j] != null) jobSkill[i].use = coast[0][j];
                 if (jobSkill[i].no == 'C0') jobSkill[i].skills = hunt.C0;
                 if (jobSkill[i].no == 'C1') jobSkill[i].skills = hunt.C1;
-                docSkill[0][0][j] = jobSkill[i].no;
-              } else if (jobSkill[i].no == hunt.skill[1][j]) {
-                if (hunt.priority[1][j] != '') jobSkill[i].priority[0] = hunt.priority[1][j];
+                docSkill[0][0][j] = '' + jobSkill[i].no;
+              } else if (jobSkill[i].no == hunt.skill[1][j] && hunt.skill[1][j] != '') {
+                if (hunt.priority[1][j] != '') jobSkill[i].priority[0] = parseInt(hunt.priority[1][j]);
                 if (coast[0][j] != null) jobSkill[i].use = coast[0][j];
                 if (jobSkill[i].no == 'C0') jobSkill[i].skills = hunt.C0;
                 if (jobSkill[i].no == 'C1') jobSkill[i].skills = hunt.C1;
-                docSkill[0][1][j] = jobSkill[i].no;
+                docSkill[0][1][j] = '' + jobSkill[i].no;
               }
 
               //boss
-              if (jobSkill[i].no == boss.skill[0][j]) {
-                if (boss.priority[0][j] != '') jobSkill[i].priority[1] = boss.priority[0][j];
+              if (jobSkill[i].no == boss.skill[0][j] && boss.skill[0][j] != '') {
+                if (boss.priority[0][j] != '') jobSkill[i].priority[1] = parseInt(boss.priority[0][j]);
                 if (coast[0][j] != null) jobSkill[i].use = coast[0][j];
                 if (jobSkill[i].no == 'C0') jobSkill[i].skills = hunt.C0;
                 if (jobSkill[i].no == 'C1') jobSkill[i].skills = hunt.C1;
-                docSkill[1][0][j] = jobSkill[i].no;
-              } else if (jobSkill[i].no == boss.skill[1][j]) {
-                if (boss.priority[1][j] != '') jobSkill[i].priority[1] = boss.priority[1][j];
+                docSkill[1][0][j] = '' + jobSkill[i].no;
+              } else if (jobSkill[i].no == boss.skill[1][j] && boss.skill[1][j] != '') {
+                if (boss.priority[1][j] != '') jobSkill[i].priority[1] = parseInt(boss.priority[1][j]);
                 if (coast[0][j] != null) jobSkill[i].use = coast[0][j];
                 if (jobSkill[i].no == 'C0') jobSkill[i].skills = hunt.C0;
                 if (jobSkill[i].no == 'C1') jobSkill[i].skills = hunt.C1;
-                docSkill[1][1][j] = jobSkill[i].no;
+                docSkill[1][1][j] = '' + jobSkill[i].no;
               }
 
               //pvp
-              if (jobSkill[i].no == pvp.skill[0][j]) {
-                if (pvp.priority[0][j] != '') jobSkill[i].priority[2] = pvp.priority[0][j];
+              if (jobSkill[i].no == pvp.skill[0][j] && pvp.skill[0][j] != '') {
+                if (pvp.priority[0][j] != '') jobSkill[i].priority[2] = parseInt(pvp.priority[0][j]);
                 if (coast[0][j] != null) jobSkill[i].use = coast[0][j];
                 if (jobSkill[i].no == 'C0') jobSkill[i].skills = hunt.C0;
                 if (jobSkill[i].no == 'C1') jobSkill[i].skills = hunt.C1;
-                docSkill[2][0][j] = jobSkill[i].no;
-              } else if (jobSkill[i].no == pvp.skill[1][j]) {
-                if (pvp.priority[1][j] != '') jobSkill[i].priority[2] = pvp.priority[1][j];
+                docSkill[2][0][j] = '' + jobSkill[i].no;
+              } else if (jobSkill[i].no == pvp.skill[1][j] && pvp.skill[1][j] != '') {
+                if (pvp.priority[1][j] != '') jobSkill[i].priority[2] = parseInt(pvp.priority[1][j]);
                 if (coast[0][j] != null) jobSkill[i].use = coast[0][j];
                 if (jobSkill[i].no == 'C0') jobSkill[i].skills = hunt.C0;
                 if (jobSkill[i].no == 'C1') jobSkill[i].skills = hunt.C1;
-                docSkill[2][1][j] = jobSkill[i].no;
+                docSkill[2][1][j] = '' + jobSkill[i].no;
               }
             }
           }
@@ -770,7 +770,7 @@
       if (jobSkill[i].awake == '') jobSkill[i].awake = 0;
       if (jobSkill[i].passive == '') jobSkill[i].passive = 0;
       if (jobSkill[i].effect == '') jobSkill[i].effect = 0;
-      jobSkill[i].priority = [1, 1, 1];
+      if (!jobSkill[i].priority) jobSkill[i].priority = [1, 1, 1];
 
       if (jobSkill[i].no == 'C0' || jobSkill[i].no == 'C1') {
         continue;
@@ -863,6 +863,30 @@
               }
               break;
             }
+          }
+        }
+      }
+
+      if (job == '8') {
+        $('.upgrade-input').eq(upgrade[0]).prop('checked', true);
+      }
+
+      for (var i=0; i<$('.skill-list > .skill-item').length; i++) {
+        for (var j=0; j<jobSkill.length; j++) {
+          if ($('.skill-icon').attr('data-id') == jobSkill[j].no) {
+            const priority = ['slot1', 'slot2', 'slot3', 'slot4'][jobSkill[j].priority[0]];
+            if (!$('.skill-icon').find('.skill-bg').hasClass(priority)) {
+              $('.skill-icon').find('.skill-bg').removeClass('slot1').removeClass('slot2').removeClass('slot3').removeClass('slot4');
+              $('.skill-icon').find('.skill-bg').addClass(priority);
+            }
+          }
+          if ($('.skill-list > .skill-item').eq(i).attr('data-id') == jobSkill[j].no) {
+            const priority = ['slot1', 'slot2', 'slot3', 'slot4'][jobSkill[j].priority[0]];
+            if (!$('.skill-list > .skill-item').eq(i).find('.skill-bg').hasClass(priority)) {
+              $('.skill-list > .skill-item').eq(i).find('.skill-bg').removeClass('slot1').removeClass('slot2').removeClass('slot3').removeClass('slot4');
+              $('.skill-list > .skill-item').eq(i).find('.skill-bg').addClass(priority);
+            }
+            break;
           }
         }
       }
