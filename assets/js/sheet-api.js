@@ -166,7 +166,7 @@ var skillQuery = function (sql, callback) {
         params = {
             key: '1YNepNSqpcV4Xeggpl7Nfh0Ty7VWUFtEybAjdqNlYjrc',
             tq: encodeURIComponent(sql),
-            range: 'Sheet4!A1:N305',
+            range: 'Sheet4!A1:N329',
             tqx: 'responseHandler:' + callback
         },
         qs = [];
