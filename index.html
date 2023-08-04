@@ -252,7 +252,7 @@
   <script src="assets/js/main.js"></script>
   <script src="assets/js/jquery.iframetracker.js"></script>
   <script src="assets/js/unite.min.js?ver=20230223"></script>
-  <script src="assets/js/sheet.min.js?ver=20230727"></script>
+  <script src="assets/js/sheet.min.js?ver=20230804"></script>
 
   <script type="module">
     // Import the functions you need from the SDKs you need
@@ -456,7 +456,7 @@
 
     function setOption(option, grade, level) {
       const value = getOption(grade, option, level);
-      var html_o = '<h5 class="card-title">소환 효과</h5><table class="table"><tbody>';
+      var html_o = '<h5 class="card-title">등록 효과</h5><table class="table"><tbody>';
       var html_e = '<h5 class="card-title">결속 장착 효과</h5><table class="table"><tbody>';
       for (var key of Object.keys(value.o)) {
         html_o += '<tr><th>' + key + '</th><td class="text-align-right">' + addComma(value.o[key]) + '</td></tr>';
@@ -479,7 +479,7 @@
         Kakao.Share.sendDefault({
         objectType: 'feed',
         content: {
-          title: '소환 효과, 결속 장착 효과 정보 보기',
+          title: '등록 효과, 결속 장착 효과 정보 보기',
           imageUrl: '',
           link: {
             mobileWebUrl: 'https://mbaramy.github.io/index.html?type=' + encodeURIComponent(shareObj.type) + '&id=' + shareObj.id + '&grade=' + encodeURIComponent(shareObj.grade) + '&name=' + encodeURIComponent(shareObj.name) + '&level=' + shareObj.level,
