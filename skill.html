@@ -321,6 +321,24 @@
                   </div>
                 </div>
               </div>
+
+              <div class="row mb-3 skill-fire-container">
+                <label class="col-sm-2 col-form-label text-light">도깨비불</label>
+                <div class="col-sm-10">
+                  <div class="col-sm-12 mb-3">
+                    <div>
+                      <div class="btn-group" style="float: right;">
+                        <input type="radio" class="btn-check" name="fire-options" id="btn-fire-1" autocomplete="off" data-id="0" checked/>
+                        <label class="btn btn-secondary" for="btn-fire-1">상관 없음</label>
+                      
+                        <input type="radio" class="btn-check" name="fire-options" id="btn-fire-2" autocomplete="off" data-id="1"/>
+                        <label class="btn btn-secondary" for="btn-fire-2">최대 개수</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
             </div>
 
             <div class="safe-container">
@@ -410,7 +428,7 @@
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
   <script src="assets/js/jquery.iframetracker.js"></script>
-  <script src="assets/js/skill.min.js?ver=20230804"></script>
+  <script src="assets/js/skill.min.js?ver=20230922"></script>
 
   <script type="module">
     // Import the functions you need from the SDKs you need
@@ -439,7 +457,7 @@
     const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
     const checkAuth = getAuth();
-    var loginUid = '';
+    var loginUid = 'fjNAGqQ8aVdCjfEmMuN2MJJOn9l1';
 
     if (checkAuth.currentUser) {
       loginUid = checkAuth.currentUser.uid;
@@ -590,7 +608,7 @@
     var upgrade = [0, 0, 0];
 
     const parameter = new URLSearchParams(window.location.search);
-    if (parameter.get('job') && ['0', '1', '2', '3', '4', '5', '6', '7', '8'].includes(parameter.get('job'))) job = parameter.get('job');
+    if (parameter.get('job') && ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(parameter.get('job'))) job = parameter.get('job');
     if (parameter.get('id')) docId = parameter.get('id');
 
     $('.job-btn').append('<img src="assets/img/icon_job_' + job + '_6.png">');
@@ -600,6 +618,12 @@
       $('.upgrade-group').css('display', 'flex');
     } else {
       $('.upgrade-group').remove();
+    }
+
+    if (job == '9') {
+      $('.skill-fire-container').css('display', 'flex');
+    } else {
+      $('.skill-fire-container').remove();
     }
 
     for (var i=0; i<dataList.length; i++) {
@@ -684,6 +708,7 @@
                 if (coast[0][j] != null) jobSkill[i].use = coast[0][j];
                 if (jobSkill[i].no == 'C0') jobSkill[i].skills = hunt.C0;
                 if (jobSkill[i].no == 'C1') jobSkill[i].skills = hunt.C1;
+                if (hunt.fire.includes(String(jobSkill[i].no))) jobSkill[i].upgrade = 'Y'; 
                 docSkill[0][0][j] = '' + jobSkill[i].no;
               } else if (jobSkill[i].no == hunt.skill[1][j] && hunt.skill[1][j] != '') {
                 if (hunt.priority[1][j] != '') jobSkill[i].priority[0] = parseInt(hunt.priority[1][j]);
@@ -691,6 +716,7 @@
                 if (jobSkill[i].no == 'C0') jobSkill[i].skills = hunt.C0;
                 if (jobSkill[i].no == 'C1') jobSkill[i].skills = hunt.C1;
                 docSkill[0][1][j] = '' + jobSkill[i].no;
+                if (hunt.fire.includes(String(jobSkill[i].no))) jobSkill[i].upgrade = 'Y';
               }
 
               //boss
@@ -700,12 +726,14 @@
                 if (jobSkill[i].no == 'C0') jobSkill[i].skills = hunt.C0;
                 if (jobSkill[i].no == 'C1') jobSkill[i].skills = hunt.C1;
                 docSkill[1][0][j] = '' + jobSkill[i].no;
+                if (boss.fire.includes(String(jobSkill[i].no))) jobSkill[i].upgrade = 'Y';
               } else if (jobSkill[i].no == boss.skill[1][j] && boss.skill[1][j] != '') {
                 if (boss.priority[1][j] != '') jobSkill[i].priority[1] = parseInt(boss.priority[1][j]);
                 if (coast[0][j] != null) jobSkill[i].use = coast[0][j];
                 if (jobSkill[i].no == 'C0') jobSkill[i].skills = hunt.C0;
                 if (jobSkill[i].no == 'C1') jobSkill[i].skills = hunt.C1;
                 docSkill[1][1][j] = '' + jobSkill[i].no;
+                if (boss.fire.includes(String(jobSkill[i].no))) jobSkill[i].upgrade = 'Y';
               }
 
               //pvp
@@ -715,12 +743,14 @@
                 if (jobSkill[i].no == 'C0') jobSkill[i].skills = hunt.C0;
                 if (jobSkill[i].no == 'C1') jobSkill[i].skills = hunt.C1;
                 docSkill[2][0][j] = '' + jobSkill[i].no;
+                if (pvp.fire.includes(String(jobSkill[i].no))) jobSkill[i].upgrade = 'Y';
               } else if (jobSkill[i].no == pvp.skill[1][j] && pvp.skill[1][j] != '') {
                 if (pvp.priority[1][j] != '') jobSkill[i].priority[2] = parseInt(pvp.priority[1][j]);
                 if (coast[0][j] != null) jobSkill[i].use = coast[0][j];
                 if (jobSkill[i].no == 'C0') jobSkill[i].skills = hunt.C0;
                 if (jobSkill[i].no == 'C1') jobSkill[i].skills = hunt.C1;
                 docSkill[2][1][j] = '' + jobSkill[i].no;
+                if (pvp.fire.includes(String(jobSkill[i].no))) jobSkill[i].upgrade = 'Y';
               }
             }
           }
@@ -741,7 +771,6 @@
       if (docId && docId != '' && loginUid != '') {
         const countQuery = query(collection(db, 'likes'), where('sid', '==', docId), where('uid', '==', loginUid));
         getCountFromServer(countQuery).then((result) => {
-          console.log(result.data().count);
           if (result.data().count > 0) {
             $('.skill-like > i').removeClass('bi-star');
             $('.skill-like > i').addClass('bi-star-fill');
@@ -942,7 +971,7 @@
 
           $('.skill-title').text(jobSkill[i].skill);
           $('.skill-desc').text(jobSkill[i].desc);
-          if (jobSkill[i].upgrade != 'NULL') {
+          if (jobSkill[i].upgrade != 'NULL' && jobSkill[i].upgrade != 'N' && jobSkill[i].upgrade != 'Y') {
             $('.skill-upgrade').text('[' + jobSkill[i].type + '] ' + jobSkill[i].upgrade);
             $('.skill-upgrade').show();
           } else {
@@ -1053,6 +1082,19 @@
           } else {
             $('.skill-coast-container').show();
             $('.skill-combo-container').hide();
+          }
+
+          if (job == '9') {
+            if (jobSkill[i].upgrade == 'N' || jobSkill[i].upgrade == 'Y') {
+              $('.skill-fire-container').css('display', 'flex');
+              if (jobSkill[i].upgrade == 'N') {
+                $('input[name=fire-options]').eq(0).prop('checked', true);
+              } else {
+                $('input[name=fire-options]').eq(1).prop('checked', true);
+              }
+            } else {
+              $('.skill-fire-container').hide();
+            }
           }
           break;
         }
@@ -1179,6 +1221,19 @@
     $('.skill-set-done-btn').on('click', function() {
       $('.skill-set-btn').attr('data-active', 'false');
       $('.safe-container').removeClass('active');
+    });
+
+    $('input[name=fire-options]').on('change', function() {
+      var upgrade = 'N';
+      if ($('input[name=fire-options]:checked').attr('data-id') == '1') {
+        upgrade = 'Y';
+      }
+      for (var i=0; i<jobSkill.length; i++) {
+        if (jobSkill[i].no == selectSkill.no) {
+          jobSkill[i].upgrade = upgrade;
+          break;
+        }
+      }
     });
 
     $(document).on('click', '.skill-slot', function() {
@@ -1336,6 +1391,12 @@
       var list = [{'skill': [['', '', '', '', '', '', '', '', '', '', '', '', ''], ['', '', '', '', '', '', '', '', '', '', '', '', '']], 'priority': [['', '', '', '', '', '', '', '', '', '', '', '', ''], ['', '', '', '', '', '', '', '', '', '', '', '', '']], 'upgrade': '', 'C0': [], 'C1': []},
                   {'skill': [['', '', '', '', '', '', '', '', '', '', '', '', ''], ['', '', '', '', '', '', '', '', '', '', '', '', '']], 'priority': [['', '', '', '', '', '', '', '', '', '', '', '', ''], ['', '', '', '', '', '', '', '', '', '', '', '', '']], 'upgrade': '', 'C0': [], 'C1': []},
                   {'skill': [['', '', '', '', '', '', '', '', '', '', '', '', ''], ['', '', '', '', '', '', '', '', '', '', '', '', '']], 'priority': [['', '', '', '', '', '', '', '', '', '', '', '', ''], ['', '', '', '', '', '', '', '', '', '', '', '', '']], 'upgrade': '', 'C0': [], 'C1': []}];
+
+      if (job == '9') {
+        list[0].fire = [];
+        list[1].fire = [];
+        list[2].fire = [];
+      }
       var coast = [['', '', '', '', '', '', '', '', '', '', '', '', ''], ['', '', '', '', '', '', '', '', '', '', '', '', '']];
       var awake = '';
 
@@ -1357,18 +1418,22 @@
             if (skillHash[id].isAwake) {
               awake = id;
             }
+
+            if (id == 'C0' || id == 'C1') {
+              list[i][id] = skillHash[id].skills;
+            }
+            
+            if (job == '9' && skillHash[id].upgrade == 'Y') {
+              list[i].fire.push(id);
+            }
           }
 
           if (list[i].upgrade == '' && job == '8') {
             list[i].upgrade = upgrade[i];
           }
-
-          if (id == 'C0' || id == 'C1') {
-            list[i][id] = skillHash[id].skills;
-          }
         }
 
-        for (var j=0; j<slot1.length; j++) {
+        for (var j=0; j<slot2.length; j++) {
           var id = slot2.eq(j).attr('data-id');
           if (id) {
             list[i].skill[1][j] = id;
@@ -1381,14 +1446,18 @@
             if (skillHash[id].isAwake) {
               awake = id;
             }
+
+            if (id == 'C0' || id == 'C1') {
+              list[i][id] = skillHash[id].skills;
+            }
+
+            if (job == '9' && skillHash[id].upgrade == 'Y') {
+              list[i].fire.push(id);
+            }
           }
 
           if (list[i].upgrade == '' && job == '8') {
             list[i].upgrade = upgrade[i];
-          }
-
-          if (id == 'C0' || id == 'C1') {
-            list[i][id] = skillHash[id].skills;
           }
         }
       }

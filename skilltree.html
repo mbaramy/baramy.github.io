@@ -175,6 +175,11 @@
           <img src="assets/img/icon_job_8_6.png">
           <span>천인</span>
         </div>
+
+        <div class="job-btn" data-id="9">
+          <img src="assets/img/icon_job_9_6.png">
+          <span>도깨비</span>
+        </div>
       </div>
     </section>
 
@@ -285,7 +290,7 @@
       $('.sign-btn-label').text('로그인');
     }
 
-    if (parameter.get('job') && ['0', '1', '2', '3', '4', '5', '6', '7', '8'].includes(parameter.get('job'))) job = parameter.get('job');
+    if (parameter.get('job') && ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(parameter.get('job'))) job = parameter.get('job');
     
     if (job > 4) {
       $('.job-container').animate({scrollLeft: $('.job-btn').eq(job-1).offset().left}, 1000);
