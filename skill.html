@@ -708,7 +708,7 @@
                 if (coast[0][j] != null) jobSkill[i].use = coast[0][j];
                 if (jobSkill[i].no == 'C0') jobSkill[i].skills = hunt.C0;
                 if (jobSkill[i].no == 'C1') jobSkill[i].skills = hunt.C1;
-                if (hunt.fire.includes(String(jobSkill[i].no))) jobSkill[i].upgrade = 'Y'; 
+                if (hunt.fire && hunt.fire.includes(String(jobSkill[i].no))) jobSkill[i].upgrade = 'Y'; 
                 docSkill[0][0][j] = '' + jobSkill[i].no;
               } else if (jobSkill[i].no == hunt.skill[1][j] && hunt.skill[1][j] != '') {
                 if (hunt.priority[1][j] != '') jobSkill[i].priority[0] = parseInt(hunt.priority[1][j]);
@@ -716,7 +716,7 @@
                 if (jobSkill[i].no == 'C0') jobSkill[i].skills = hunt.C0;
                 if (jobSkill[i].no == 'C1') jobSkill[i].skills = hunt.C1;
                 docSkill[0][1][j] = '' + jobSkill[i].no;
-                if (hunt.fire.includes(String(jobSkill[i].no))) jobSkill[i].upgrade = 'Y';
+                if (hunt.fire && hunt.fire.includes(String(jobSkill[i].no))) jobSkill[i].upgrade = 'Y';
               }
 
               //boss
@@ -726,14 +726,14 @@
                 if (jobSkill[i].no == 'C0') jobSkill[i].skills = hunt.C0;
                 if (jobSkill[i].no == 'C1') jobSkill[i].skills = hunt.C1;
                 docSkill[1][0][j] = '' + jobSkill[i].no;
-                if (boss.fire.includes(String(jobSkill[i].no))) jobSkill[i].upgrade = 'Y';
+                if (boss.fire && boss.fire.includes(String(jobSkill[i].no))) jobSkill[i].upgrade = 'Y';
               } else if (jobSkill[i].no == boss.skill[1][j] && boss.skill[1][j] != '') {
                 if (boss.priority[1][j] != '') jobSkill[i].priority[1] = parseInt(boss.priority[1][j]);
                 if (coast[0][j] != null) jobSkill[i].use = coast[0][j];
                 if (jobSkill[i].no == 'C0') jobSkill[i].skills = hunt.C0;
                 if (jobSkill[i].no == 'C1') jobSkill[i].skills = hunt.C1;
                 docSkill[1][1][j] = '' + jobSkill[i].no;
-                if (boss.fire.includes(String(jobSkill[i].no))) jobSkill[i].upgrade = 'Y';
+                if (boss.fire && boss.fire.includes(String(jobSkill[i].no))) jobSkill[i].upgrade = 'Y';
               }
 
               //pvp
@@ -743,14 +743,14 @@
                 if (jobSkill[i].no == 'C0') jobSkill[i].skills = hunt.C0;
                 if (jobSkill[i].no == 'C1') jobSkill[i].skills = hunt.C1;
                 docSkill[2][0][j] = '' + jobSkill[i].no;
-                if (pvp.fire.includes(String(jobSkill[i].no))) jobSkill[i].upgrade = 'Y';
+                if (pvp.fire && pvp.fire.includes(String(jobSkill[i].no))) jobSkill[i].upgrade = 'Y';
               } else if (jobSkill[i].no == pvp.skill[1][j] && pvp.skill[1][j] != '') {
                 if (pvp.priority[1][j] != '') jobSkill[i].priority[2] = parseInt(pvp.priority[1][j]);
                 if (coast[0][j] != null) jobSkill[i].use = coast[0][j];
                 if (jobSkill[i].no == 'C0') jobSkill[i].skills = hunt.C0;
                 if (jobSkill[i].no == 'C1') jobSkill[i].skills = hunt.C1;
                 docSkill[2][1][j] = '' + jobSkill[i].no;
-                if (pvp.fire.includes(String(jobSkill[i].no))) jobSkill[i].upgrade = 'Y';
+                if (pvp.fire && pvp.fire.includes(String(jobSkill[i].no))) jobSkill[i].upgrade = 'Y';
               }
             }
           }
