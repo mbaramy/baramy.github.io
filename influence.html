@@ -275,7 +275,7 @@
   <script src="assets/js/main.js"></script>
   <script src="assets/js/jquery.iframetracker.js"></script>
   <script src="assets/js/unite.min.js?ver=20230317"></script>
-  <script src="assets/js/sheet.min.js?ver=20231026"></script>
+  <script src="assets/js/sheet.min.js?ver=20231101"></script>
 
   <script type="module">
     // Import the functions you need from the SDKs you need
@@ -466,12 +466,12 @@
       for (var i = 0; i< li.length; i++) {
         const selectedItem = $('.mob-item-selected');
         if (li.eq(i).attr('data-grade') == $(this).attr('data-type')) {
-          if (selectedItem.length < 40) {
+          if (selectedItem.length < 45) {
             li.eq(i).removeClass('mob-item');
             li.eq(i).addClass('mob-item-selected');
             addHistory(li.eq(i).attr('data-name'));
           } else {
-            alert("경우의 수가 너무 많습니다. 최대 40개 까지 선택 가능합니다.");
+            alert("경우의 수가 너무 많습니다. 최대 45개 까지 선택 가능합니다.");
             break;
           }
         }
@@ -490,12 +490,12 @@
 
     $(document).on('click', '.mob-item', function() {
       const selectedItem = $('.mob-item-selected');
-      if (selectedItem.length < 35) {
+      if (selectedItem.length < 45) {
         $(this).removeClass('mob-item');
         $(this).addClass('mob-item-selected');
         addHistory($(this).attr('data-name'));
       } else {
-        alert("경우의 수가 너무 많습니다. 최대 35개 까지 선택 가능합니다.");
+        alert("경우의 수가 너무 많습니다. 최대 45개 까지 선택 가능합니다.");
       }
       $(this).focusout();
     });
