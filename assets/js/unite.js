@@ -16,7 +16,7 @@ function parseSelectedItem(data) {
         var input = parseInt(data.eq(i).find('.mob-level').val());
         if (input > level) { level = input; }
         if (obj.grade == '보물' && level > 15) level = 15;
-        if (obj.grade == '전설' && level > 20) level = 20;
+        if (obj.grade == '전설' && level > 25) level = 25;
         obj.level = level;
         
         const option = getOption(obj.grade, optionObj[obj.ic], level);
@@ -38,8 +38,18 @@ function getOption(grade, option, level) {
         if (option[key][0] != option[key][15] && isEmpty) isEmpty = false;
 
         const rate = getRate(key, level, grade);
-        var equipValue =  Math.floor(value * rate.value);
-        if (rate.value > 0 && rate.roundup <= rate.index && equipValue < 1) equipValue = 1;
+        var equipValue = 0;
+
+        if (rate.roundup > 0) {
+            const roundup = Math.pow(10, rate.roundup);
+            equipValue = Math.floor(Math.round(value * rate.value * roundup) / roundup);
+        } else {
+            equipValue = Math.floor(value * rate.value);
+        }
+
+        if (rate.value > 0 && rate.roundup <= rate.index && equipValue < 1) {
+            equipValue = 1;
+        }
         equipObj[key] = equipValue;
     }
     result.o = optionObj;

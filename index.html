@@ -100,6 +100,13 @@
       </nav>
     </div><!-- End Page Title -->
 
+    <div class="row mb-4">
+      <ins class="kakao_ad_area" style="display:none;"
+      data-ad-unit = "DAN-lOqeBgJ4uYAgcjX8"
+      data-ad-width = "320"
+      data-ad-height = "100"></ins>
+    </div>
+
     <section class="section">
       <div class="row">
         <div class="col-lg-12">
@@ -166,13 +173,6 @@
               </div>
               <button id="btn-share" type="button" class="btn btn-warning ms-3" style="color: #39252a; width: 150px;" onclick="share();"><i class="ri-kakao-talk-fill" style="margin-right: 8px;"></i>공유</button>
             </div>
-          </div>
-
-          <div class="row mb-4">
-            <ins class="kakao_ad_area" style="display:none;"
-            data-ad-unit = "DAN-lOqeBgJ4uYAgcjX8"
-            data-ad-width = "320"
-            data-ad-height = "100"></ins>
           </div>
 
           <div class="card">
@@ -251,8 +251,8 @@
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
   <script src="assets/js/jquery.iframetracker.js"></script>
-  <script src="assets/js/unite.min.js?ver=20230223"></script>
-  <script src="assets/js/sheet.min.js?ver=20231102"></script>
+  <script src="assets/js/unite.min.js?ver=20231118"></script>
+  <script src="assets/js/sheet.min.js?ver=20231118"></script>
 
   <script type="module">
     // Import the functions you need from the SDKs you need
@@ -423,7 +423,7 @@
 
     $('#btn-plus').on('click', function() {
       var level = parseInt($('#option-level').val());
-      if (($('.opt-img').attr('data-grade') == '전설' && level < 20) || ($('.opt-img').attr('data-grade') == '보물' && level < 15)) {
+      if (($('.opt-img').attr('data-grade') == '전설' && level < 25) || ($('.opt-img').attr('data-grade') == '보물' && level < 15)) {
         level += 1;
         $('#option-level').val(level);
         shareObj.level = level;
@@ -436,8 +436,8 @@
       var level = 0;
       if (value != undefined && value.length > 0) {
         level = parseInt(value);
-        if ($('.opt-img').attr('data-grade') == '전설' && level > 20) {
-          level = 20;
+        if ($('.opt-img').attr('data-grade') == '전설' && level > 25) {
+          level = 25;
           $('#option-level').val(level);
         } else if ($('.opt-img').attr('data-grade') == '보물' && level > 15) {
           level = 15;
