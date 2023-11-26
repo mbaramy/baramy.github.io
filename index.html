@@ -316,7 +316,7 @@
     var optionObj = {};
     var optionRate = [];
     var shareObj = {'type': '탑승', 'id': '0', 'grade': '보물', 'name': '', 'level': '0'};
-    const exp = [717,789,867,1302,1431,1575,1732,1905,3239,3563,3919,4312,4742,9484,10433,11476,17214,18935,28403,31243];
+    const exp = [717,789,867,1302,1431,1575,1732,1905,3239,3563,3919,4312,4742,9484,10433,11476,17214,18935,28403,31243,31868,32505,33155,33818,34494];
     var userIp;
 
     $(document).ready(function() {
@@ -374,8 +374,8 @@
       var expHtml = '';
       for (var i=0; i<exp.length; i++) {
         expHtml += '<tr><td>' + (i + 1) + '</td><td>' + addComma(exp[i]) + '</td></tr>';
-        if (i == 9 || i == exp.length - 1) {
-          var table = i < 10 ? $('#exp-table-a') : $('#exp-table-b');
+        if (i == 12 || i == exp.length - 1) {
+          var table = i < 13 ? $('#exp-table-a') : $('#exp-table-b');
           table.html(expHtml);
           expHtml = '';
         }
