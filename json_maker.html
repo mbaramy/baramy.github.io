@@ -50,6 +50,8 @@
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
   <script src="assets/js/sheet-api.js"></script>
+  <script src="assets/js/unite.js?ver=20240101"></script>
+  <script src="assets/js/sheet.min.js?ver=20240101"></script>
 
   <script>
     $(document).ready(function() {
@@ -62,8 +64,61 @@
         optionQuery("SELECT *", 'option_callback');
       } else if (url.indexOf('skill') > -1) {
         skillQuery("SELECT *", 'skill_callback');
+      } else if (url.indexOf('influence') > -1) {
+        const mobArray = (new GlobalData().getData())();
+        optionRate = (new GlobalData().getRateData())();
+        var filteredArray = [];
+        for (var i = 0; i < mobArray.length; i++) {
+          if (mobArray[i].grade == '전설') {
+            if (mobArray[i].type == '수호' && url.indexOf('_s') > -1) {
+              filteredArray.push(mobArray[i]);
+              optionObj[mobArray[i].ic] = mobArray[i].option;
+            } else if (mobArray[i].type == '변신' && url.indexOf('_b') > -1) {
+              filteredArray.push(mobArray[i]);
+              optionObj[mobArray[i].ic] = mobArray[i].option;
+            }
+          }
+        }
+
+        var result = [];
+        for (var i=0; i<filteredArray.length; i++) {
+            var obj = filteredArray[i];
+            obj.level = 25;
+            
+            const option = getOption(obj.grade, optionObj[obj.ic], 25);
+            for (var key of Object.keys(option.e)) {
+              if (isNaN(option.e[key])) {
+                console.log('error: ' + filteredArray[i].name + ' / ' + key);
+              }
+            }
+            obj.option = option.o;
+            obj.equip_option = option.e;
+            result.push(obj);
+        }
+        const data = getRecommendTopData(result, "피해저항", "체력");
+        $('#json').html(JSON.stringify(data));
       }
     });
+
+    function getRecommendTopData(t, pa, pb) {
+      if (t.length < 6) {
+        return {};
+      }
+    
+      const combine = combination(t, 6);
+      var maxArray = [];
+    
+      for (var i = 0; i < combine.length; i++) {
+        const scoreObj = getScore(combine[i], pa, pb);
+        maxArray.push(scoreObj);
+      }
+
+      maxArray = maxArray.sort(function(a, b) {
+          return b.sum - a.sum;
+      });
+    
+      return maxArray.slice(0, 20);
+    }
 
     var my_callback = function (data) {
       data = parse(data);

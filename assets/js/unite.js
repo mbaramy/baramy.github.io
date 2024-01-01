@@ -99,18 +99,24 @@ const uniteInfo = {
 };
 const priorityInfo = ['피해저항관통', '피해저항'];
 
-function combination(arr, n, bucket = [], results = []) {
-    if (n === 0) {
-        results.push(bucket);
-        return results;
+function combination(arr, n) {
+    const answer = [];
+    const temp = Array(n);
+
+    function DFS(L, s) {
+      if (L === n) answer.push(temp.slice());
+      else {
+        for (let i = s; i < arr.length; i++) {
+          temp[L] = arr[i];
+          DFS(L + 1, i + 1);
+        }
+      }
     }
-  
-    for (let i = 0; i < arr.length; i++) {
-        let rest = arr.slice(i + 1).filter((elem) => !bucket.includes(elem));
-        combination(rest, n - 1, bucket.concat(arr[i]), results);
-    }
-    return results;
-}
+
+    DFS(0, 0);
+
+    return answer;
+  }
 
 function getRecommendData(t, pa, pb) {
     if (t.length < 6) {
