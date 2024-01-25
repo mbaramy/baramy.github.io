@@ -199,7 +199,7 @@
   <script src="assets/js/main.js"></script>
   <script src="assets/js/jquery.iframetracker.js"></script>
   <script src="assets/js/unite.min.js?ver=20240101"></script>
-  <script src="assets/js/recommend.min.js?ver=20240101"></script>
+  <script src="assets/js/recommend.min.js?ver=20240125"></script>
 
   <script type="module">
     // Import the functions you need from the SDKs you need
@@ -282,7 +282,7 @@
 
         var unitBadge = '';
         for (var k of Object.keys(mobS[i].count.unit)) {
-            if (mobS[i].count.unit[k] > 1) {
+            if (mobS[i].count.unit[k] > 0) {
                 var colorSet = getUniteColor(k);
                 unitBadge += '<span class="badge me-1" style="background-color: ' + colorSet.background + '; color: ' + colorSet.font + ';">' + k +' X ' + mobS[i].count.unit[k] + '</span>';
             }
@@ -312,7 +312,7 @@
 
         var unitBadge = '';
         for (var k of Object.keys(mobB[i].count.unit)) {
-            if (mobB[i].count.unit[k] > 1) {
+            if (mobB[i].count.unit[k] > 0) {
                 var colorSet = getUniteColor(k);
                 unitBadge += '<span class="badge me-1" style="background-color: ' + colorSet.background + '; color: ' + colorSet.font + ';">' + k +' X ' + mobB[i].count.unit[k] + '</span>';
             }
@@ -332,10 +332,9 @@
         }
         $('#mob-result-card').show();
         $('#result-justified').html(getHTML(data));
-        // document.getElementById("result-justified").scrollIntoView();
+
         var scrollDiv = $('#mob-result-card').offset().top;
         window.scrollTo({ top: scrollDiv - 80, behavior: 'smooth'});
-
       });
 
       $(document).on('click', '.btn-simple', function() {
@@ -403,7 +402,7 @@
 
         var gradeBadge = '';
         for (var k of Object.keys(obj.count.grade)) {
-            if (obj.count.grade[k] > 1) {
+            if (obj.count.grade[k] > 0) {
                 var colorSet = getGradeColor(k);
                 gradeBadge += '<span class="badge me-1" style="background-color: ' + colorSet.background + '; color: ' + colorSet.font + ';">' + k +' X ' + obj.count.grade[k] + '</span>';
             }
@@ -415,7 +414,7 @@
 
         var unitBadge = '';
         for (var k of Object.keys(obj.count.unit)) {
-            if (obj.count.unit[k] > 1) {
+            if (obj.count.unit[k] > 0) {
                 var colorSet = getUniteColor(k);
                 unitBadge += '<span class="badge me-1" style="background-color: ' + colorSet.background + '; color: ' + colorSet.font + ';">' + k +' X ' + obj.count.unit[k] + '</span>';
             }
