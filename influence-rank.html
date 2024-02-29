@@ -156,6 +156,7 @@
               <ul>
                 <li>환수 레벨은 최대치로 계산됩니다.</li>
                 <li>피해저항관통과 피해저항을 합한 값을 순위로 매겨집니다.</li>
+                <li>대인피해%, 대인방어%는 1당 10점으로 합산됩니다.</li>
                 <li>신규 환수가 출시될 때 마다 갱신됩니다.</li>
               </ul>
             </figcaption>
@@ -288,7 +289,7 @@
             }
         }
         mobSHtml += unitBadge + '</td>';
-        mobSHtml += '<td class="align-middle">' + addComma(mobS[i].sum) + '</td>';
+        mobSHtml += '<td class="align-middle">' + addComma(mobS[i].pvp) + '</td>';
       }
       mobSHtml += '</tbody>';
       $('#mob-table-s').html(mobSHtml);
@@ -318,7 +319,7 @@
             }
         }
         mobBHtml += unitBadge + '</td>';
-        mobBHtml += '<td class="align-middle">' + addComma(mobB[i].sum) + '</td>';
+        mobBHtml += '<td class="align-middle">' + addComma(mobB[i].pvp) + '</td>';
       }
       mobBHtml += '</tbody>';
       $('#mob-table-b').html(mobBHtml);
@@ -432,16 +433,18 @@
         }
 
         var importantValue = 0;
+        var pvpValue = 0;
         for (var k of Object.keys(totalObj)) {
             if (totalObj[k] > 0) {
                 tTable += '<tr class="tr-left"><th class="' + (['피해저항', '피해저항관통'].indexOf(k) > -1 ? ' table-active">' : '">') + k + '</th><td class="text-align-right'  + (['피해저항', '피해저항관통'].indexOf(k) > -1 ? ' table-active' : '') +  '">' + addComma(totalObj[k]) + '</td></tr>';
             }
 
             if (k == '피해저항' || k == '피해저항관통') importantValue += totalObj[k];
+            if (k == '대인피해%' || k == '대인방어%') pvpValue += totalObj[k];
         }
 
         mobTable += '</div>';
-        mobTable += '<div class="mt-3 mb-3"><div class="btn-group" role="group"><button type="button" class="btn btn-outline-primary active btn-simple">간단히 보기</button><button type="button" class="btn btn-outline-primary btn-detail">자세히 보기</button></div><button type="button" class="btn btn-outline-danger ms-3" disabled><i class="bx bxs-meteor"></i>' + addComma(importantValue) + '</button></div>';
+        mobTable += '<div class="mt-3 mb-3"><div class="btn-group" role="group"><button type="button" class="btn btn-outline-primary active btn-simple">간단히 보기</button><button type="button" class="btn btn-outline-primary btn-detail">자세히 보기</button></div><button type="button" class="btn btn-outline-danger ms-3" disabled><i class="bx bxs-meteor"></i>' + addComma(importantValue) + ' (' + addComma(pvpValue) + '%)</button></div>';
         gTable += '</tbody></table></div>';
         iTable += '</tbody></table></div>';
         eTable += '</tbody></table></div>';
