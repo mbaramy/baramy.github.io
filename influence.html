@@ -85,12 +85,12 @@
           <span>성능 추가</span>
         </a>
       </li>
-      <li class="nav-item">
+      <!-- <li class="nav-item">
         <a class="nav-link collapsed" href="skilltree.html?job=1">
           <i class="bi bi-ui-checks-grid"></i>
           <span>스킬 트리</span>
         </a>
-      </li>
+      </li> -->
     </ul>
   </aside>
   <!-- End Sidebar-->
@@ -236,8 +236,7 @@
             <div class="card-footer">
               <div class="row mt-3">
                 <div class="col-md-6 mb-3">
-                  <button type="button" class="btn bystyle-btn-orange btn-type" data-type="보물" style="margin-right: 8px;">보물 전체 선택</button>
-                  <button type="button" class="btn bystyle-btn-orange btn-type" data-type="전설" style="margin-right: 8px;">전설 전체 선택</button>
+                  <button type="button" class="btn bystyle-btn-orange btn-type" data-type="전설" style="margin-right: 8px;">전체 선택</button>
                   <button type="button" class="btn btn-secondary" id="btn-type-remove" style="float: right;"><i class="bi bi-trash"></i></button>
                 </div>
                 <div class="col-md-6 mb-3">
@@ -286,7 +285,7 @@
   <script src="assets/js/main.js"></script>
   <script src="assets/js/jquery.iframetracker.js"></script>
   <script src="assets/js/unite.min.js?ver=20240101"></script>
-  <script src="assets/js/sheet.min.js?ver=20240229"></script>
+  <script src="assets/js/sheet.min.js?ver=20240328"></script>
 
   <script type="module">
     // Import the functions you need from the SDKs you need
@@ -477,12 +476,12 @@
       for (var i = 0; i< li.length; i++) {
         const selectedItem = $('.mob-item-selected');
         if (li.eq(i).attr('data-grade') == $(this).attr('data-type')) {
-          if (selectedItem.length < 45) {
+          if (selectedItem.length <= 40) {
             li.eq(i).removeClass('mob-item');
             li.eq(i).addClass('mob-item-selected');
             addHistory(li.eq(i).attr('data-name'));
           } else {
-            alert("경우의 수가 너무 많습니다. 최대 45개 까지 선택 가능합니다.");
+            alert("경우의 수가 너무 많습니다. 최대 40개 까지 선택 가능합니다.");
             break;
           }
         }
@@ -501,12 +500,12 @@
 
     $(document).on('click', '.mob-item', function() {
       const selectedItem = $('.mob-item-selected');
-      if (selectedItem.length < 45) {
+      if (selectedItem.length <= 40) {
         $(this).removeClass('mob-item');
         $(this).addClass('mob-item-selected');
         addHistory($(this).attr('data-name'));
       } else {
-        alert("경우의 수가 너무 많습니다. 최대 45개 까지 선택 가능합니다.");
+        alert("경우의 수가 너무 많습니다. 최대 40개 까지 선택 가능합니다.");
       }
       $(this).focusout();
     });
