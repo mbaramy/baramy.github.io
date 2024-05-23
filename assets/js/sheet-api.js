@@ -76,7 +76,7 @@ var query = function (sql, callback) {
         params = {
             key: '1YNepNSqpcV4Xeggpl7Nfh0Ty7VWUFtEybAjdqNlYjrc',
             tq: encodeURIComponent(sql),
-            range: 'Sheet1!A1:F142',
+            range: 'Sheet1!A1:F148',
             tqx: 'responseHandler:' + callback
         },
         qs = [];
@@ -150,7 +150,7 @@ var summonQuery = function (sql, callback) {
         params = {
             key: '1YNepNSqpcV4Xeggpl7Nfh0Ty7VWUFtEybAjdqNlYjrc',
             tq: encodeURIComponent(sql),
-            range: 'Sheet3!A1:G507',
+            range: 'Sheet3!A1:G522',
             tqx: 'responseHandler:' + callback
         },
         qs = [];
