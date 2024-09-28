@@ -51,7 +51,7 @@
   <script src="assets/js/main.js"></script>
   <script src="assets/js/sheet-api.js"></script>
   <script src="assets/js/unite.js?ver=20240101"></script>
-  <script src="assets/js/sheet.min.js?ver=20240830"></script>
+  <script src="assets/js/sheet.min.js?ver=20240926"></script>
 
   <script>
     $(document).ready(function() {
@@ -70,13 +70,14 @@
         var filteredArray = [];
         for (var i = 0; i < mobArray.length; i++) {
           if (mobArray[i].grade == '전설') {
+            const mobIc = parseInt(mobArray[i].ic);
             if (mobArray[i].type == '수호' && url.indexOf('_s') > -1) {
-              if (parseInt(mobArray[i].ic) > 116) {
+              if (mobIc > 116 && [560].indexOf(mobIc) == -1 ) {
                 filteredArray.push(mobArray[i]);
                 optionObj[mobArray[i].ic] = mobArray[i].option;
               }
             } else if (mobArray[i].type == '변신' && url.indexOf('_b') > -1) {
-              if (parseInt(mobArray[i].ic) > 168) {
+              if (mobIc > 168 && [566].indexOf(mobIc) == -1) {
                 filteredArray.push(mobArray[i]);
                 optionObj[mobArray[i].ic] = mobArray[i].option;
               }
