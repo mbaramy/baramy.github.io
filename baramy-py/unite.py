@@ -251,6 +251,30 @@ def get_score(arr, pa, pb):
 
     return result
 
+def get_simple_score(arr, pa, pb):
+    result = 0
+    score_obj = score_to_dictionary(option_rate, pb)
+    pvp_option = [
+        '피해저항관통',
+        '피해저항',
+        '대인방어%',
+        '대인피해%',
+        '상태이상저항',
+        '상태이상적중',
+    ]
+
+    for item in arr:
+        for key, value in item['option'].items():
+            if value > 0 and score_obj[key] > 0 and key in pvp_option:
+                result += value / score_obj[key]
+
+        for key, value in item['equip_option'].items():
+            if value > 0 and score_obj[key] > 0 and key in pvp_option:
+                result += value / score_obj[key]
+
+
+    return result
+
 def is_other_influence(array):
     influence = {'결의': 0, '고요': 0, '의지': 0, '침착': 0, '냉정': 0, '활력': 0}
     for i in array:
@@ -285,11 +309,18 @@ def get_recommend_top_data(tt, pa, pb):
     if len(t) < 6:
         return {}
 
-    start_time = time.time()
-    # combine = list(combinations(result, 6))
-    # print(len(combine))
+    # 2365.068661 초 -> 62.052567 초
+    for i, data in enumerate(result):
+        result[i]['score'] = get_simple_score([data], pa, pb)
+        # print(f"{result[i]['name']} : {result[i]['score']}")
+        # print(json.dumps(get_score([data], pa, pb), ensure_ascii=False))
+        # print(json.dumps(get_simple_score([data], pa, pb), ensure_ascii=False))
 
-    # max_array = Parallel(n_jobs=-1)(delayed(get_score)(i, pa, pb) for i in combine)
+    # print(json.dumps(sorted(heapq.nlargest(35, result, key=lambda p: p['score']), key=lambda p: p['score']), ensure_ascii=False))
+    result = heapq.nlargest(36, result, key=lambda p: p['score'])
+    print(json.dumps(result, ensure_ascii=False))
+
+    start_time = time.time()
     max_array = Parallel(n_jobs=-1)(
         delayed(lambda comb: get_score(comb, pa, pb))(comb) for comb in combinations(result, 6)
     )
@@ -299,5 +330,6 @@ def get_recommend_top_data(tt, pa, pb):
     print(f"걸린 시간 : {elapsed_time:.6f} 초")
 
     return json.dumps(heapq.nlargest(20, max_array, key=lambda p:p['pvp']), ensure_ascii=False)
+    # return ''
 
-print(get_recommend_top_data('s', '피해저항', '체력'))
+print(get_recommend_top_data('b', '피해저항', '체력'))
