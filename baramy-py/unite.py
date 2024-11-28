@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-import math
-import json
-from itertools import combinations
 import heapq
+import json
+import math
 import time
+from itertools import combinations
+
 from joblib import Parallel, delayed
 
 option_obj = {}
@@ -332,4 +333,4 @@ def get_recommend_top_data(tt, pa, pb):
     return json.dumps(heapq.nlargest(20, max_array, key=lambda p:p['pvp']), ensure_ascii=False)
     # return ''
 
-print(get_recommend_top_data('b', '피해저항', '체력'))
+print(get_recommend_top_data('s', '피해저항', '체력'))
